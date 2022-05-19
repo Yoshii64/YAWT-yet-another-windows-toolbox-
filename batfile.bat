@@ -7,21 +7,21 @@ if %q1%==no goto :end
 :menu
 cls
 
-echo - type in 'network' to optimize network options
-echo - type 'cleartemp' to clear temp files
-echo - type 'runoptimize' to run optimizing software
-echo - type 'fix' to check and fix errors in Windows
-echo - type 'install' to install a program
-echo - type 'exit' to exit
+echo - type in 1 to optimize network options
+echo - type 2 to clear temp files
+echo - type 3 to run optimizing software
+echo - type 4 to check and fix errors in Windows
+echo - type 5 to install a program
+echo - type 6 to exit
 set  /p message1= - to list these again type in 'help' or 'menu'
 if %message1%==help goto :menu
 if %message1%==menu goto :menu
-if %message1%==network goto :network
-if %message1%==cleartemp goto :cleartemp
-if %message1%==runoptimize goto :runoptimize
-if %message1%==fix goto :fix
-if %message1%==install goto :install
-if %message1%==exit goto :end
+if %message1%==1 goto :network
+if %message1%==2 goto :cleartemp
+if %message1%==3 goto :runoptimize
+if %message1%==4 goto :fix
+if %message1%==5 goto :install
+if %message1%==6 goto :end
 
 
 
