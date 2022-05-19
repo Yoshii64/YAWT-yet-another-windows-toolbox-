@@ -1,19 +1,20 @@
 @echo off
 
+color 9
 set /p q1=do you want to run this? 
 if %q1%==yes goto :menu
 if %q1%==no goto :end
 
 :menu
 cls
-
+color 1
 echo - type in 1 to optimize network options
 echo - type 2 to clear temp files
 echo - type 3 to run optimizing software
 echo - type 4 to check and fix errors in Windows
 echo - type 5 to install a program
 echo - type 6 to exit
-set  /p message1= - to list these again type in 'help' or 'menu'
+set  /p message1= - to list these again type in 'help' or 'menu' 
 if %message1%==help goto :menu
 if %message1%==menu goto :menu
 if %message1%==1 goto :network
@@ -21,7 +22,8 @@ if %message1%==2 goto :cleartemp
 if %message1%==3 goto :runoptimize
 if %message1%==4 goto :fix
 if %message1%==5 goto :install
-if %message1%==6 goto :end
+if %message1%==6 exit
+if %message1%==exit exit
 
 
 
@@ -82,7 +84,7 @@ goto :diskcheckquestion
 
 :diskcheckquestion
 cls
-color A
+color F6
 set /p check=do you want to check the disk for errors? warning: it may ask you to reboot. checking disk may take a while.
 if %check%==yes goto :checkdisk
 if %check%==no goto :menu
@@ -108,8 +110,7 @@ if %back%==no goto :menu
 
 pause
 
-:end
-exit
+
 
 
 
