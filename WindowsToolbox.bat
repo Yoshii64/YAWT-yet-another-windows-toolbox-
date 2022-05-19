@@ -85,20 +85,12 @@ echo fixing errors in Windows...
 sfc /scannow
 DISM /online /cleanup-image /RestoreHealth
 sfc /scannow
-goto :diskcheckquestion
-
-:diskcheckquestion
 cls
 color F6
-set /p check=do you want to check the disk for errors? warning: it may ask you to reboot. checking disk may take a while.
-if %check%==yes goto :checkdisk
-if %check%==no goto :menu
-
-:checkdisk
-CHKDSK /f
+ set /p check=do you want to check the disk for errors? warning: it may ask you to reboot. checking disk may take a while. 
+if %check%==yes CHKDSK /F
 pause
 goto :menu
-
 
 :install
 cls
