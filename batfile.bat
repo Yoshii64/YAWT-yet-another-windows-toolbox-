@@ -28,7 +28,10 @@ if %message1%==exit goto :end
 
 :network
 cls
-echo test
+IPCONFIG /release
+IPCONFIG /renew
+IPCONFIG /flushdns
+IPCONFIG /registerdns
 pause
 goto :menu
 
