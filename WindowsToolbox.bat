@@ -8,12 +8,13 @@ if %q1%==no goto :end
 :menu
 cls
 color 1
-echo - type in 1 to optimize network options
+echo - type 1 to optimize network options
 echo - type 2 to clear temp files
 echo - type 3 to run optimizing software
 echo - type 4 to check and fix errors in Windows
 echo - type 5 to install a program
-echo - type 6 to exit
+echo - type 6 for a menu that shows more optimizations
+echo - type exit to exit
 set  /p message1= - to list these again type in 'help' or 'menu' 
 if %message1%==help goto :menu
 if %message1%==menu goto :menu
@@ -22,7 +23,7 @@ if %message1%==2 goto :cleartemp
 if %message1%==3 goto :runoptimize
 if %message1%==4 goto :fix
 if %message1%==5 goto :install
-if %message1%==6 exit
+if %message1%==6 goto :misc
 if %message1%==exit exit
 
 
@@ -30,10 +31,13 @@ if %message1%==exit exit
 
 :network
 cls
+echo clearing network cache...
 IPCONFIG /release
 IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
+done
+
 pause
 goto :menu
 
@@ -106,3 +110,19 @@ if %back%==yes goto :install
 if %back%==no goto :menu
 
 pause
+
+
+:misc
+cls
+color F
+echo type 1 to disable backround apps
+echo type in 2 to enable backround apps
+echo type in 3 to uninstall onedrive
+set /p menu2msg=type in 4 to install onedrive 
+if %menu2msg%==1 Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 1 /f
+if %menu2msg%==2 Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 0 /f
+if %menu2msg%==3 taskkill /f /im OneDrive.exe
+%Systemroot%\System32\OneDriveSetup.exe /uninstall
+if %menu2msg%==4 winget install Microsoft.OneDrive
+pause
+goto :menu
