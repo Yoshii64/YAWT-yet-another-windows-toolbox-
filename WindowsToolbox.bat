@@ -14,6 +14,7 @@ echo - type 3 to run optimizing software
 echo - type 4 to check and fix errors in Windows
 echo - type 5 to install a program
 echo - type 6 for a menu that shows more optimizations
+echo - type 7 to debloat Windows
 echo - type exit to exit
 set  /p message1= - to list these again type in 'help' or 'menu' 
 if %message1%==help goto :menu
@@ -24,7 +25,10 @@ if %message1%==3 goto :runoptimize
 if %message1%==4 goto :fix
 if %message1%==5 goto :install
 if %message1%==6 goto :misc
+if %message1%==7 goto :debloat
 if %message1%==exit exit
+else echo - invalid input
+goto :menu
 
 
 
@@ -124,5 +128,14 @@ if %menu2msg%==2 Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\Backgr
 if %menu2msg%==3 taskkill /f /im OneDrive.exe
 %Systemroot%\System32\OneDriveSetup.exe /uninstall
 if %menu2msg%==4 winget install Microsoft.OneDrive
+pause
+goto :menu
+
+
+:debloat
+cls
+set /p debloat=do you want to remove all the programs that are not needed?
+if %debloat%==yes powershell.exe -ExecutionPolicy Unrestricted -Command ./debloat.ps1
+if %debloat%==no goto :menu
 pause
 goto :menu
