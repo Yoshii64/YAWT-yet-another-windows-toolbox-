@@ -29,10 +29,8 @@ Get-Appxpackage *Microsoft.GamingApp* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.BingNews*  | Remove-AppxPackage
 Get-Appxpackage *Microsoft.BingWeather* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.GetHelp* | Remove-AppxPackage
-Get-AppxPackage *Microsoft.People* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.StorePurchaseApp* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.WindowsTerminal* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.Xbox.TCUI* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage
-Get-AppxPackage *Microsoft.Windows.PeopleExperienceHost* | Remove-AppxPackage
