@@ -40,7 +40,9 @@ IPCONFIG /release
 IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
-done
+netsh int tcp set supplemental
+netsh int tcp set heuristics disabled
+echo done
 
 pause
 goto :menu
@@ -123,14 +125,29 @@ echo type 1 to disable backround apps
 echo type in 2 to enable backround apps
 echo type in 3 to uninstall onedrive
 set /p menu2msg=type in 4 to install onedrive 
-if %menu2msg%==1 Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 1 /f
-if %menu2msg%==2 Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 0 /f
-if %menu2msg%==3 taskkill /f /im OneDrive.exe
-%Systemroot%\System32\OneDriveSetup.exe /uninstall
-if %menu2msg%==4 winget install Microsoft.OneDrive
+if %menu2msg%==1 goto :backroundstop
+if %menu2msg%==2 goto :backroundstart
+if %menu2msg%==3 goto :onedriveuninstall
+if %menu2msg%==4 goto :onedriveinstall
 pause
 goto :menu
 
+:backroundstop
+Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 1 /f
+goto :misc
+
+:backroundstart
+Reg Add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 0 /f
+goto :misc
+
+:OneDriveuninstall
+taskkill /f /im OneDrive.exe
+%Systemroot%\System32\OneDriveSetup.exe /uninstall
+goto :misc
+
+:onedriveinstall
+winget install Microsoft.OneDrive
+goto :misc
 
 :debloat
 cls
