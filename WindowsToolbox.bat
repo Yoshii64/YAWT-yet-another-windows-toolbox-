@@ -56,7 +56,7 @@ echo clearing uneeded files...
 cd C:\Windows\Temp
 del *.* /F 
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-cd C:\Users\yoshi11\AppData\Local\Temp
+cd %UserProfile%\AppData\Local\Temp
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 cd C:\$Recycle.Bin\S-1-5-21-610696990-1213007965-522507228-1001
@@ -107,10 +107,14 @@ cls
 echo supported programs:
 echo 7zip
 echo brave
+echo VScode
+echo Discord
 set /p program= git
 if %program%==7zip winget install 7zip.7zip
 if %program%==brave winget install brave
 if %program%==git winget install git.git
+if %program%==VScode winget install VScode
+if %program%==Discord winget install Discord
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
@@ -124,11 +128,13 @@ color F
 echo type 1 to disable backround apps
 echo type in 2 to enable backround apps
 echo type in 3 to uninstall onedrive
-set /p menu2msg=type in 4 to install onedrive 
+echo type in 4 to install onedrive 
+set /p menu2msg=type in 5 to uninstall edge
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
 if %menu2msg%==3 goto :onedriveuninstall
 if %menu2msg%==4 goto :onedriveinstall
+if %menu2msg%==5 goto :edgeuninstall
 pause
 goto :menu
 
@@ -148,6 +154,16 @@ goto :misc
 :onedriveinstall
 winget install Microsoft.OneDrive
 goto :misc
+
+:edgeuninstall
+taskkill "msedge.exe"
+taskkill "msedgewebview2.exe"
+cd "%UserProfile%\AppData\Local\Microsoft"
+DEL "Edge"
+DEL "Internet Explorer"
+cd "%UserProfile%\AppData\LocalLow\Microsoft"
+DEL "Internet Explorer"
+cd "%UserProfile%\AppData\Roaming\Microsoft"
 
 :debloat
 cls
