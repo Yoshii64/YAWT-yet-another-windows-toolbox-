@@ -4,11 +4,11 @@ Get-AppxPackage *Microsoft.WindowsCalculator* | Remove-AppxPackage
 Get-Appxpackage *MicrosoftTeams_22115.300.1313.2464_x64__8wekyb3d8bbwe* | Remove-AppxPackage
 Get-Appxpackage *Microsoft.YourPhone* | Remove-AppxPackage
 Get-Appxpackage *Microsoft.MicrosoftEdge.Stable* | Remove-AppxPackage
-Get-Appxpackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage
-Get-Appxpackage *Microsoft.XboxGameUI* | Remove-AppxPackage
+Get-Appxpackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage 
+Get-Appxpackage *Microsoft.XboxGameUI* | Remove-AppxPackage 
 Get-Appxpackage *Microsoft.Todos* | Remove-AppxPackage
 Get-Appxpackage *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage
-Get-Appxpackage *Microsoft.Windows.Cortana* | Remove-AppxPackage
+Get-Appxpackage *Microsoft.Windows.Cortana* | Remove-AppxPackage 
 Get-Appxpackage *Clipchamp.Clipchamp* | Remove-AppxPackage
 Get-Appxpackage *Microsoft.WindowsStore* | Remove-AppxPackage
 Get-Appxpackage *Microsoft.PowerAutomateDesktop* | Remove-AppxPackage
@@ -34,3 +34,13 @@ Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.WindowsTerminal* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.Xbox.TCUI* | Remove-AppxPackage
 Get-AppxPackage *Microsoft.XboxSpeechToTextOverlay* | Remove-AppxPackage
+Get-AppxPackage *Microsoft.OneDriveSync* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.WindowsNotepad* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.Windows.ParentalControls* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.MicrosoftEdgeDevToolsClient* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.Windows.NarratorQuickStart* |Remove-AppxPackage
+Get-AppxPackage *Windows.PrintDialog* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.Windows.OOBENetworkConnectionFlow* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.Windows.OOBENetworkCaptivePortal* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.MicrosoftEdge* |Remove-AppxPackage
+Get-AppxPackage *Microsoft.BioEnrollment* |Remove-AppxPackage
