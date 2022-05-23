@@ -105,16 +105,18 @@ goto :menu
 :install
 cls
 echo supported programs:
-echo 7zip
-echo brave
-echo VScode
-echo Discord
-set /p program= git
-if %program%==7zip winget install 7zip.7zip
-if %program%==brave winget install brave
-if %program%==git winget install git.git
-if %program%==VScode winget install VScode
-if %program%==Discord winget install Discord
+echo type 1 to install 7zip
+echo type 2 to install brave
+echo type 3 to install VScode
+echo type 4 to install Discord
+echo type 5 to install Github Desktop
+set /p program=type 6 to install git
+if %program%==1 winget install 7zip.7zip
+if %program%==2 winget install brave
+if %program%==6 winget install git.git
+if %program%==3 winget install VScode
+if %program%==4 winget install Discord.Discord
+if %program%==5 winget install GitHub.GitHubDesktop
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
