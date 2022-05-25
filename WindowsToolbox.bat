@@ -2,8 +2,14 @@
 
 color 9
 set /p q1=do you want to run this? 
-if %q1%==yes goto :menu
+if %q1%==yes goto :restore
 if %q1%==no exit
+:restore
+set /p message0=it is hightly recommended to create a restore point. would you like to make one now?
+if %message0%==yes Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "My Restore Point", 100, 12
+ goto :menu
+if %message0%==no goto :menu
+
 
 :menu
 cls
@@ -44,6 +50,11 @@ IPCONFIG /flushdns
 IPCONFIG /registerdns
 netsh int tcp set supplemental
 netsh int tcp set heuristics disabled
+netsh interface ip delete dnsservers "Local Area Connection" all
+netsh interface ip add dns name="Local Area Connection" addr=8.8.4.4 index=1
+netsh interface ip add dns name="Local Area Connection" addr=8.8.8.8 index=2
+ipconfig /all | findstr /c:"8.8.4.4"
+ipconfig /all | findstr /c:"8.8.8.8"
 echo done
 
 pause
@@ -55,7 +66,8 @@ goto :menu
 :cleartemp
 cls
 echo clearing uneeded files...
-cd C:\Windows\Temp
+cd C:\Windows\Temp+
+
 del *.* /F 
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 cd %UserProfile%\AppData\Local\Temp
@@ -113,14 +125,16 @@ echo type 3 to install VScode
 echo type 4 to install Discord
 echo type 5 to install Github Desktop
 echo type 6 to install powertoys
-set /p program=type 7 to install git
+echo type 7 to install Windows Command Terminal
+set /p program=type 8 to install git
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
-if %program%==7 winget install git.git
+if %program%==8 winget install git.git
 if %program%==3 winget install VScode
 if %program%==4 winget install Discord.Discord
 if %program%==5 winget install GitHub.GitHubDesktop
-if %program%==7 winget install Microsoft.PowerToys
+if %program%==6 winget install Microsoft.PowerToys
+if %program%==7 winget install Microsoft.WindowsTerminal
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
@@ -160,6 +174,12 @@ taskkill /F /IM "explorer.exe"
 DEL "." /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 start Explorer.exe
+cd %UserProfile%\AppData\Local\OneDrive
+DEL "."
+for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+pause
+goto :misc
+
 
 
 
@@ -199,3 +219,9 @@ goto :menu
 :others
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 del %UserProfile%\AppData\Roaming\Microsoft\Windows\StartMenu\Programs\Startup
+wusa /uninstall /kb:3035583 /quiet /norestart
+taskkill /f /im explorer.exe
+Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
+start explorer.exe
+pause
+goto :menu
