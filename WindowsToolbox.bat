@@ -34,6 +34,8 @@ if %message1%==5 goto :install
 if %message1%==6 goto :misc
 if %message1%==7 goto :debloat
 if %message1%==8 goto :others
+if %message1%==easteregg you looked in the source code to 
+see this.
 if %message1%==exit exit
 else echo - invalid input
 goto :menu
@@ -177,6 +179,10 @@ start Explorer.exe
 cd %UserProfile%\AppData\Local\OneDrive
 DEL "."
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+reg delete "HKCR\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F
+reg delete "HKCR\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F
+reg delete "HKCR\Environment\OneDrive" /F
+reg delete "HKCR\Software\Microsoft\OneDrive"
 pause
 goto :misc
 
@@ -205,12 +211,77 @@ cd %UserProfile%\AppData\Local\Microsoft
 taskkill /F /IM "COM surrogate"
 DEL "Internet Explorer"
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+reg delete "HKCR\Software\Microsoft\Edge" /F
+reg delete "HKCR\Software\Microsoft\EdgeUpdate" /F
+reg delete "HKCR\Software\Microsoft\Internet Explorer" /F
+reg delete "HKCR\Software\Policies\Microsoft\Edge" /F
+reg delete "HKLM\SOFTWARE\Microsoft\Edge"
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer"
+reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge"
 pause
+goto :misc
 
 :debloat
 cls
 set /p debloat=do you want to remove all the programs that are not needed?
-if %debloat%==yes powershell.exe -ExecutionPolicy Unrestricted -Command ./debloat.ps1
+if %debloat%==yes reg add "HKLM\Software\Microsoft\PolicyManager\current\device\System" /v "AllowExperimentation" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
+ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t "REG_DWORD" /d "0" /f
+ reg add "HKLM\SYSTEM\CurrentControlSet\Services\UserDataSvc" /v "Start" /t "REG_DWORD" /d "4" /F
+ reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocation" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
+ reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableWindowsLocationProvider" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
+ reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocationScripting" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
+ sc delete "DiagTrack"
+ sc delete "AJRouter"
+ sc delete "PhoneSvc"
+ sc delete "TermService"
+ sc delete "RemoteRegistry"
+ sc delete "RetailDemo"
+ sc delete "RemoteAccess"
+ sc delete "OneSyncSvc"
+ sc delete "UevAgentService"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-appxpackage *Microsoft.WindowsCamera* | remove-appxpackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *MicrosoftTeams_22115.300.1313.2464_x64__8wekyb3d8bbwe* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.YourPhone* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftEdge.Stable* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.XboxGameUI* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Todos* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Windows.Cortana* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Clipchamp.Clipchamp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsStore* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.PowerAutomateDesktop* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Windows.Photos* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *MicrosoftTeams* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ZuneVideo* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ZuneMusic* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *microsoft.windowscommunicationsapps* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ScreenSketch* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Getstarted* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.GamingApp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.BingNews*  | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.BingWeather* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.GetHelp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.StorePurchaseApp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Xbox.TCUI* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.XboxSpeechToTextOverlay* | Remove-Appxpackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsNotepad* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.ParentalControls* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdgeDevToolsClient* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.NarratorQuickStart* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Windows.PrintDialog* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.OOBENetworkConnectionFlow* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.OOBENetworkCaptivePortal* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdge* |Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.BioEnrollment* |Remove-AppxPackage"
 if %debloat%==no goto :menu
 pause
 goto :menu
@@ -222,6 +293,24 @@ del %UserProfile%\AppData\Roaming\Microsoft\Windows\StartMenu\Programs\Startup
 wusa /uninstall /kb:3035583 /quiet /norestart
 taskkill /f /im explorer.exe
 Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
+REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d 1 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
+reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "EnableActivityFeed" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
+REG ADD "HKCR\*\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
+REG ADD "HKCR\*\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
+REG ADD "HKCR\*\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
+REG ADD "HKCR\*\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
+REG ADD "HKCR\*\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
+REG ADD "HKCR\Directory\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
+REG ADD "HKCR\Directory\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
+REG ADD "HKCR\Directory\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
+REG ADD "HKCR\Directory\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
+REG ADD "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
+PowerShell -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "Internet-Explorer-Optional-amd64"
+PowerShell -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
 start explorer.exe
 pause
 goto :menu
