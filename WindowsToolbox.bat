@@ -1,9 +1,4 @@
 @echo off
-
-color 9
-set /p q1=do you want to run this? 
-if %q1%==yes goto :restore
-if %q1%==no exit
 :restore
 set /p message0=it is hightly recommended to create a restore point. would you like to make one now?
 if %message0%==yes Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "My Restore Point", 100, 12
@@ -23,9 +18,7 @@ echo - type 6 for a menu that shows more optimizations
 echo - type 7 to debloat Windows
 echo - type 8 for other optimizations
 echo - type exit to exit
-set  /p message1= - to list these again type in 'help' or 'menu' 
-if %message1%==help goto :menu
-if %message1%==menu goto :menu
+set  /p message1=
 if %message1%==1 goto :network
 if %message1%==2 goto :cleartemp
 if %message1%==3 goto :runoptimize
@@ -34,8 +27,7 @@ if %message1%==5 goto :install
 if %message1%==6 goto :misc
 if %message1%==7 goto :debloat
 if %message1%==8 goto :others
-if %message1%==easteregg you looked in the source code to 
-see this.
+if %message1%==easteregg "you looked in the source code to see this."
 if %message1%==exit exit
 else echo - invalid input
 goto :menu
@@ -50,6 +42,7 @@ IPCONFIG /release
 IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
+netsh winsock reset
 netsh int tcp set supplemental
 netsh int tcp set heuristics disabled
 netsh interface ip delete dnsservers "Local Area Connection" all
@@ -185,12 +178,6 @@ reg delete "HKCR\Software\Microsoft\OneDrive"
 pause
 goto :misc
 
-
-
-
-pause
-goto :misc
-
 :onedriveinstall
 winget install Microsoft.OneDrive
 goto :misc
@@ -206,11 +193,8 @@ DEL "Internet Explorer"
 cd "%UserProfile%\AppData\Roaming\Microsoft"
 DEL "Internet Explorer"
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-cd %UserProfile%\AppData\Local\Microsoft
-taskkill /F /IM "COM surrogate"
-DEL "Internet Explorer"
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 reg delete "HKCR\Software\Microsoft\Edge" /F
+
 reg delete "HKCR\Software\Microsoft\EdgeUpdate" /F
 reg delete "HKCR\Software\Microsoft\Internet Explorer" /F
 reg delete "HKCR\Software\Policies\Microsoft\Edge" /F
@@ -277,8 +261,6 @@ if %debloat%==yes reg add "HKLM\Software\Microsoft\PolicyManager\current\device\
  powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdgeDevToolsClient* |Remove-AppxPackage"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.NarratorQuickStart* |Remove-AppxPackage"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Windows.PrintDialog* |Remove-AppxPackage"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.OOBENetworkConnectionFlow* |Remove-AppxPackage"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.OOBENetworkCaptivePortal* |Remove-AppxPackage"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdge* |Remove-AppxPackage"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.BioEnrollment* |Remove-AppxPackage"
 if %debloat%==no goto :menu
