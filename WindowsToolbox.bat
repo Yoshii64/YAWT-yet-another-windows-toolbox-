@@ -8,26 +8,22 @@ if %message0%==no goto :menu
 
 :menu
 cls
-color 1
 echo - type 1 to optimize network options
 echo - type 2 to clear temp files
-echo - type 3 to run optimizing software
-echo - type 4 to check and fix errors in Windows
-echo - type 5 to install a program
-echo - type 6 for a menu that shows more optimizations
-echo - type 7 to debloat Windows
-echo - type 8 for other optimizations
+echo - type 3 to check and fix errors in Windows
+echo - type 4 to install a program
+echo - type 5 for a menu that shows more optimizations
+echo - type 6 to debloat Windows
+echo - type 7 for other optimizations
 echo - type exit to exit
 set  /p message1=
 if %message1%==1 goto :network
 if %message1%==2 goto :cleartemp
-if %message1%==3 goto :runoptimize
-if %message1%==4 goto :fix
-if %message1%==5 goto :install
-if %message1%==6 goto :misc
-if %message1%==7 goto :debloat
-if %message1%==8 goto :others
-if %message1%==easteregg "you looked in the source code to see this."
+if %message1%==3 goto :fix
+if %message1%==4 goto :install
+if %message1%==5 goto :misc
+if %message1%==6 goto :debloat
+if %message1%==7 goto :others
 if %message1%==exit exit
 else echo - invalid input
 goto :menu
@@ -79,23 +75,6 @@ for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 echo files now cleared.
 pause
 goto :menu
-
-
-
-:runoptimize
-cls
-echo click "clean up system files" and check everything. then click OK
-start cleanmgr.exe
-pause
-cls
-color 47
-echo CLOSE PROGRAM IF ON SSD. IF YOU ARE NOT SURE, CLOSE PROGRAM.
-start dfrgui.exe
-pause
-goto :menu
-
-
-
 
 :fix
 cls
@@ -270,7 +249,6 @@ goto :menu
 
 :others
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-del %UserProfile%\AppData\Roaming\Microsoft\Windows\StartMenu\Programs\Startup
 wusa /uninstall /kb:3035583 /quiet /norestart
 taskkill /f /im explorer.exe
 Reg Add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
