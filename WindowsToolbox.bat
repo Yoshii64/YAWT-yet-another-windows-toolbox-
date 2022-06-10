@@ -178,6 +178,9 @@ echo uninstalling edge...
 echo killing edge processes...
 taskkill "msedge.exe"
 taskkill "msedgewebview2.exe"
+sc delete "edgeupdate"
+sc delete "edgeupdatem"
+sc delete "MicrosoftEdgeElevationService"
 echo deleting edge files...
 cd "%UserProfile%\AppData\Local\Microsoft"
 DEL "Edge"
@@ -213,104 +216,182 @@ if %debloat%==yes echo debloating Windows...
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocationScripting" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
  echo disabling Services...
  echo DiagTrack
- sc delete "DiagTrack"
+ sc config "DiagTrack" start= disabled
+    NET STOP DiagTrack
  echo AJRouter
- sc delete "AJRouter"
+ sc config "AJRouter" start= disabled
+    NET STOP AJRouter
  echo PhoneSvc
- sc delete "PhoneSvc"
+ sc config "PhoneSvc" start= disabled
+    NET STOP PhoneSvc
  echo TermService
- sc delete "TermService"
+ sc config "TermService" start= disabled
+    NET STOP TermService
  echo RemoteRegistry
- sc delete "RemoteRegistry"
+ sc config "RemoteRegistry" start= disabled
+    NET STOP RemoteRegistry
  echo RetailDemo
- sc delete "RetailDemo"
+ sc config "RetailDemo" start= disabled
+    NET STOP RetailDemo
  echo RemoteAccess
- sc delete "RemoteAccess"
+ sc config "RemoteAccess" start= disabled
+    NET STOP RemoteAccess
  echo OneSyncSvc
- sc delete "OneSyncSvc"
+ sc config "OneSyncSvc"
+    NET STOP OneSyncSvc
  echo UevAgentService
- sc delete "UevAgentService"
+ sc config "UevAgentService" start= disabled
+    NET STOP UevAgentService
+ echo WbioSrvc
+ sc config "WbioSrvc" start= disabled
+    NET STOP WbioSrvc
+ echo XblAuthManager
+ sc config "XblAuthManager" start= disabled
+    NET STOP XblAuthManager
+ echo XblGameSave
+ sc config "XblGameSave" start= disabled
+    NET STOP XblGameSave
+ echo XboxNetApiSvc
+ sc config "XboxNetApiSvc" start= disabled
+    NET STOP XboxNetApiSvc
+ echo XboxGipSvc
+ sc config "XboxGipSvc" start= disabled
+    NET STOP XboxGipSvc
+ echo FontCache
+ sc config "FontCache" start= disabled
+    NET STOP FontCache
+ echo iphlpsvc
+ sc config "iphlpsvc" start= disabled
+    NET STOP iphlpsvc
+ echo BcastDVRUserService_48486de
+ sc config "BcastDVRUserService_48486de" start= disabled
+    NET STOP BcastDVRUserService_48486de
+ echo WpnService
+ sc config "WpnService" start= disabled
+    NET STOP WpnService
  schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
  echo uninstalling Windows programs...
  echo Windowscamera
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-appxpackage *Microsoft.WindowsCamera* | remove-appxpackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-appxpackage -AllUsers *Microsoft.WindowsCamera* | remove-appxpackage"
  echo WindowsCalculator
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
  echo MicrosoftTeams_22115
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *MicrosoftTeams_22115.300.1313.2464_x64__8wekyb3d8bbwe* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *MicrosoftTeams_22115.300.1313.2464_x64__8wekyb3d8bbwe* | Remove-AppxPackage"
  echo YourPhone
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.YourPhone* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.YourPhone* | Remove-AppxPackage"
  echo MicrosoftEdge.Stable
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftEdge.Stable* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftEdge.Stable* | Remove-AppxPackage"
  echo XboxGameOverlay
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
  echo XboxGameUI
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.XboxGameUI* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
  echo Todos
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Todos* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Todos* | Remove-AppxPackage"
  echo MicrosoftStickyNotes
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
  echo Cortana
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Windows.Cortana* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Windows.Cortana* | Remove-AppxPackage"
  echo Clipchamp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Clipchamp.Clipchamp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Clipchamp.Clipchamp* | Remove-AppxPackage"
  echo WindowsStore
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsStore* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
  echo PowerAutomateDesktop
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.PowerAutomateDesktop* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.PowerAutomateDesktop* | Remove-AppxPackage"
  echo WindowsPhotos
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Windows.Photos* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Windows.Photos* | Remove-AppxPackage"
  echo MicrosoftTeams
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *MicrosoftTeams* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *MicrosoftTeams* | Remove-AppxPackage"
  echo ZuneVideo
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ZuneVideo* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ZuneVideo* | Remove-AppxPackage"
  echo ZuneMusic
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ZuneMusic* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ZuneMusic* | Remove-AppxPackage"
  echo WindowsSoundRecorder
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage"
  echo WindowsFeedbackHub
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage"
  echo windowscommunicationsapps
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *microsoft.windowscommunicationsapps* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *microsoft.windowscommunicationsapps* | Remove-AppxPackage"
  echo ScreenSketch
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.ScreenSketch* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ScreenSketch* | Remove-AppxPackage"
  echo MicrosoftSolitaireCollection
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage"
  echo MicrosoftOfficeHub
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage"
  echo Getstarted
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.Getstarted* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Getstarted* | Remove-AppxPackage"
  echo GamingApp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.GamingApp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.GamingApp* | Remove-AppxPackage"
  echo BingNews
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.BingNews*  | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingNews*  | Remove-AppxPackage"
  echo BingWeather
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage *Microsoft.BingWeather* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.BingWeather* | Remove-AppxPackage"
  echo GetHelp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.GetHelp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.GetHelp* | Remove-AppxPackage"
  echo StorePurchaseApp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.StorePurchaseApp* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.StorePurchaseApp* | Remove-AppxPackage"
  echo WindowsMaps
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsMaps* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsMaps* | Remove-AppxPackage"
  echo Xbox.TCUI
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Xbox.TCUI* | Remove-AppxPackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.Xbox.TCUI* | Remove-AppxPackage"
  echo XboxSpeechToTextOverlay
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.XboxSpeechToTextOverlay* | Remove-Appxpackage"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.XboxSpeechToTextOverlay* | Remove-Appxpackage"
  echo WindowsNotepad
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.WindowsNotepad* |Remove-AppxPackage"
- echo ParentalControls
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.ParentalControls* |Remove-AppxPackage"
- echo MicrosoftEdgeDevToolsClient
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdgeDevToolsClient* |Remove-AppxPackage"
- echo NarratorQuickStart
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.Windows.NarratorQuickStart* |Remove-AppxPackage"
- echo PrintDialog
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Windows.PrintDialog* |Remove-AppxPackage"
- echo MicrosoftEdge
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.MicrosoftEdge* |Remove-AppxPackage"
- echo BioEnrollment
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage *Microsoft.BioEnrollment* |Remove-AppxPackage"
- echo done
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsNotepad* |Remove-AppxPackage"
+ echo 3DBuilder
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.3DBuilder* |Remove-AppxPackage"
+ echo Microsoft3DViewer
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.Microsoft3DViewer* |Remove-AppxPackage"
+ echo BingFinance
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingFinance* |Remove-AppxPackage"
+ echo BingNews
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingNews* |Remove-AppxPackage"
+ echo BingSports
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingSports* |Remove-AppxPackage"
+ echo BingWeather
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingWeather* |Remove-AppxPackage"
+ echo BingTranslator
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingTranslator* |Remove-AppxPackage"
+ echo BingFoodAndDrink
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingFoodAndDrink* |Remove-AppxPackage"
+ echo BingHealthAndFitness
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingHealthAndFitness* |Remove-AppxPackage"
+ echo BingTravel
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingTravel* |Remove-AppxPackage"
+ echo Cortana
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers * Microsoft.549981C3F5F10* |Remove-AppxPackage"
+ echo blocking telemetry IP addresses...
+ NETSH advfirewall firewall add rule name="telemetry_service.xbox.com" dir=out action=block remoteip=157.55.129.21 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft22.com" dir=out action=block remoteip=52.178.178.16 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft21.com" dir=out action=block remoteip=65.55.64.54 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft20.com" dir=out action=block remoteip=40.80.145.27 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft17.com" dir=out action=block remoteip=40.80.145.78 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft16.com" dir=out action=block remoteip=23.99.116.116 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft15.com" dir=out action=block remoteip=77.67.29.176 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft14.com" dir=out action=block remoteip=65.55.223.0-65.55.223.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft13.com" dir=out action=block remoteip=65.39.117.230 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft12.com" dir=out action=block remoteip=64.4.23.0-64.4.23.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft11.com" dir=out action=block remoteip=23.223.20.82 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft10.com" dir=out action=block remoteip=213.199.179.0-213.199.179.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft09.com" dir=out action=block remoteip=2.22.61.66 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft08.com" dir=out action=block remoteip=195.138.255.0-195.138.255.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft07.com" dir=out action=block remoteip=157.55.56.0-157.55.56.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft06.com" dir=out action=block remoteip=157.55.52.0-157.55.52.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft05.com" dir=out action=block remoteip=157.55.236.0-157.55.236.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft04.com" dir=out action=block remoteip=157.55.235.0-157.55.235.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft03.com" dir=out action=block remoteip=157.55.130.0-157.55.130.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft02.com" dir=out action=block remoteip=111.221.64.0-111.221.127.255 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft01.com" dir=out action=block remoteip=11.221.29.253 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_microsoft.com" dir=out action=block remoteip=104.96.147.3 enable=yes
+ NETSH advfirewall firewall add rule name="telemetry_telemetry.microsoft.com" dir=out action=block remoteip=65.52.100.9 enable=yes
+ echo disabling Windows to repair itself through updates...
+ REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "UseWindowsUpdate" /t REG_DWORD /d 2 /f
+ REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "LocalSourcePath" /t REG_EXPAND_SZ /d %NOURL% /f
+ REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /f
+ REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "UseWindowsUpdate" /t REG_DWORD /d 2 /f
+ REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "LocalSourcePath" /t REG_EXPAND_SZ /d %NOURL% /f
+ REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "**del.RepairContentServerSource" /t REG_SZ /d " " /f
+ REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /f
+ echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
 pause
 goto :menu
@@ -331,6 +412,8 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTas
 REG ADD "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "506" /f
 REG ADD "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_SZ /d "122" /f
 taskkill /f /im explorer.exe
+REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d 0 /f
+REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d 0 /f
 start explorer.exe
 REG ADD "HKCR\*\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
 REG ADD "HKCR\*\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
@@ -344,7 +427,6 @@ REG ADD "HKCR\Directory\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeow
 REG ADD "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 echo disabling unused Windows features...
-PowerShell -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "Internet-Explorer-Optional-amd64"
 PowerShell -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
 echo done
 pause
