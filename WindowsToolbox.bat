@@ -101,15 +101,18 @@ echo type 4 to install Discord
 echo type 5 to install Github Desktop
 echo type 6 to install powertoys
 echo type 7 to install Windows Command Terminal
-set /p program=type 8 to install git
+echo type 8 to install git
+echo type 9 to go back to the main menu
+set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
-if %program%==8 winget install git.git
 if %program%==3 winget install VScode
 if %program%==4 winget install Discord.Discord
 if %program%==5 winget install GitHub.GitHubDesktop
 if %program%==6 winget install Microsoft.PowerToys
 if %program%==7 winget install Microsoft.WindowsTerminal
+if %program%==8 winget install git.git
+if %program%==9 goto :menu
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
@@ -124,12 +127,17 @@ echo type 1 to disable backround apps
 echo type in 2 to enable backround apps
 echo type in 3 to uninstall onedrive
 echo type in 4 to install onedrive 
-set /p menu2msg=type in 5 to uninstall edge
+echo type in 5 to uninstall edge
+echo type in 6 to disable Cortana
+echo type in 7 to go back to the main menu
+set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
 if %menu2msg%==3 goto :onedriveuninstall
 if %menu2msg%==4 goto :onedriveinstall
 if %menu2msg%==5 goto :edgeuninstall
+if %menu2msg%==6 goto :cortana
+if %menu2msg%==7 goto :menu
 pause
 goto :menu
 
@@ -148,7 +156,12 @@ echo uninstalling onedrive...
 echo killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
-%Systemroot%\System32\OneDriveSetup.exe /uninstall
+IF EXIST "C:\Windows\System32\OneDrive.exe" (
+    %SystemRoot%\System32\OneDrive.exe /uninstall
+) ELSE (
+    goto :OneDriveuninstall2
+)
+:OneDriveuninstall2 
 cd %UserProfile%\AppData\Local\Microsoft\OneDrive
 taskkill /F /IM "explorer.exe"
 DEL "." /F
@@ -202,6 +215,12 @@ reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge"
 echo done
 pause
 goto :misc
+
+
+:cortana
+echo disabling Cortana...
+REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "CortanaEnabled" /t REG_DWORD /d 0 /f
+REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f
 
 :debloat
 cls
