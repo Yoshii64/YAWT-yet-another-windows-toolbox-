@@ -1,4 +1,4 @@
-﻿add-type -AssemblyName System.Windows.Forms
+﻿ add-type -AssemblyName System.Windows.Forms
 
 $FormObject = [System.Windows.Forms.Form]
 $LabelObject = [System.Windows.Forms.Label]
@@ -6,7 +6,7 @@ $ButtonObject = [System.Windows.Forms.Button]
 
 
 $Window=New-Object $FormObject
-$Window.ClientSize ='650,650'
+$Window.ClientSize ='400,400'
 $Window.BackColor = '#ffffff'
 $Window.Text ='Windows Toolbox'
 $Window.StartPosition ='CenterScreen'
@@ -15,39 +15,39 @@ $Window.StartPosition ='CenterScreen'
 $CleanupSystem = New-Object $ButtonObject
 $CleanupSystem.text ='Clean up System'
 $CleanupSystem.ClientSize ='100,100'
-$CleanupSystem.location = New-Object System.Drawing.Point(300,0)
+$CleanupSystem.location = New-Object System.Drawing.Point(200,0)
 $CleanupSystem.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $network = New-Object $ButtonObject
 $network.text = 'optimize network'
 $network.CLientSize = '100,100'
-$network.location = New-Object System.Drawing.Point(300,100)
+$network.location = New-Object System.Drawing.Point(200,100)
 $network.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $fix = New-Object $ButtonObject
 $fix.text = 'fix errors in Windows'
 $fix.ClientSize = '100,100'
-$fix.location = New-Object System.Drawing.Point(300,200)
+$fix.location = New-Object System.Drawing.Point(200,200)
 $fix.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 $OneDriveUninstall = New-Object $ButtonObject
 $OneDriveUninstall.text = 'uninstall OneDrive'
 $OneDriveUninstall.ClientSize = '100,100'
-$OneDriveUninstall.Location = New-Object System.Drawing.Point(200,0)
+$OneDriveUninstall.Location = New-Object System.Drawing.Point(100,100)
 $OneDriveUninstall.Font = New-Object System.Drawing.Font('Microsoft Sans Serif', 12)
 
 
 $OneDriveinstall = New-Object $ButtonObject
 $OneDriveinstall.Text = 'install OneDrive'
 $OneDriveinstall.ClientSize = '100,100'
-$oneDriveinstall.Location = New-Object System.Drawing.Point(200,100)
+$oneDriveinstall.Location = New-Object System.Drawing.Point(100,200)
 $OneDriveinstall.Font = New-Object System.Drawing.Font('Microsoft Sans Serif', 12)
 
 
 $debloat = New-Object $ButtonObject
 $debloat.Text = 'debloat Windows'
 $debloat.ClientSize = '100,100'
-$debloat.Location = New-Object System.Drawing.Point(200,200)
+$debloat.Location = New-Object System.Drawing.Point(100,300)
 $debloat.Font = New-Object System.Drawing.Font('Microsoft Sans Serif', 12)
 
 $OtherStuff = New-Object $ButtonObject
@@ -57,7 +57,22 @@ $OtherStuff.Location = New-Object System.Drawing.Point(100,0)
 $OtherStuff.Font = New-Object System.Drawing.Font('Microsoft Sans Serif', 12)
 
 
-$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff))
+$7zip = New-Object $ButtonObject
+$7zip.text = 'install 7Zip'
+$7zip.ClientSize = '100,100'
+$7zip.Location = New-Object System.Drawing.Point(0,0)
+$7zip.Font = New-Object System.Drawing.Font('Microsoft Sans Serif', 12)
+
+
+$brave = New-Object $ButtonObject
+$brave.text = 'install brave'
+$brave.ClientSize = '100,100'
+$brave.Location = New-Object System.Drawing.Point(0,100)
+$brave.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+
+
+$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff, $7zip,$brave))
 
 
 $CleanupSystem.Add_Click({
@@ -254,6 +269,16 @@ REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTas
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d 0 /f
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
+})
+
+
+$7Zip.Add_Click({
+winget install 7zip.7zip
+})
+
+
+$brave.Add_Click({
+winget install brave
 })
 
 
