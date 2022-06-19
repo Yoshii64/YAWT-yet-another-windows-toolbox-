@@ -6,7 +6,7 @@ $ButtonObject = [System.Windows.Forms.Button]
 
 
 $Window=New-Object $FormObject
-$Window.ClientSize ='400,400'
+$Window.ClientSize ='300,400'
 $Window.BackColor = '#ffffff'
 $Window.Text ='Windows Toolbox'
 $Window.StartPosition ='CenterScreen'
@@ -71,8 +71,21 @@ $brave.Location = New-Object System.Drawing.Point(0,100)
 $brave.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
 
+$VScode = New-Object $ButtonObject
+$VScode.text = 'install VScode'
+$VScode.ClientSize = '100,100'
+$VScode.Location = New-Object System.Drawing.Point(0,200)
+$VScode.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff, $7zip,$brave))
+
+$Discord = New-Object $ButtonObject
+$Discord.text = 'install Discord'
+$Discord.ClientSize = '100,100'
+$Discord.Location = New-Object System.Drawing.Point(0,300)
+$Discord.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+
+$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff, $7zip, $brave, $VScode, $Discord))
 
 
 $CleanupSystem.Add_Click({
@@ -281,6 +294,13 @@ $brave.Add_Click({
 winget install brave
 })
 
+$VScode.Add_Click({
+winget install VScode
+})
+
+$Discord.Add_Click({
+winget install Discord.Discord
+})
 
 $Window.ShowDialog()
 $Window.Dispose()
