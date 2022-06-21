@@ -1,4 +1,8 @@
-﻿ add-type -AssemblyName System.Windows.Forms
+﻿$version = 1.0.0 
+$BuildNumber = 6464X
+# the lower the build number gets the closer it is ready for the next version
+ 
+add-type -AssemblyName System.Windows.Forms
 
 $FormObject = [System.Windows.Forms.Form]
 $LabelObject = [System.Windows.Forms.Label]
@@ -6,7 +10,7 @@ $ButtonObject = [System.Windows.Forms.Button]
 
 
 $Window=New-Object $FormObject
-$Window.ClientSize ='300,400'
+$Window.ClientSize ='300,500'
 $Window.BackColor = '#ffffff'
 $Window.Text ='Windows Toolbox'
 $Window.StartPosition ='CenterScreen'
@@ -84,8 +88,27 @@ $Discord.ClientSize = '100,100'
 $Discord.Location = New-Object System.Drawing.Point(0,300)
 $Discord.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
+$GitHub = New-Object $buttonObject
+$GitHub.text = 'install GitHub Desktop'
+$GitHub.ClientSize = '100,100'
+$GitHub.Location = New-Object System.Drawing.Point(0,400)
+$GitHub.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
 
-$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff, $7zip, $brave, $VScode, $Discord))
+
+$PowerToys = New-Object $ButtonObject
+$PowerToys.text= 'install PowerToys'
+$PowerToys.ClientSize = '100,100'
+$PowerToys.Location = New-Object System.Drawing.Point(100,400)
+$PowerToys.Font = New-Object System.Drawing.Font('Microsoft Sans Serif',12)
+
+
+
+$Terminal = New-Object $ButtonObject
+$Terminal.text = 'install Windows Command Terminal'
+$Terminal.ClientSize = '100,100'
+
+
+$Window.Controls.AddRange(@($CleanupSystem, $network, $fix, $OneDriveUninstall, $OneDriveinstall, $debloat, $OtherStuff, $7zip, $brave, $VScode, $Discord, $GitHub, $PowerToys, $Terminal))
 
 
 $CleanupSystem.Add_Click({
@@ -301,6 +324,19 @@ winget install VScode
 $Discord.Add_Click({
 winget install Discord.Discord
 })
+
+$GitHub.Add_Click({
+winget install GitHub.GitHubDesktop
+})
+
+
+$PowerToys.Add_Click({
+install Microsoft.PowerToys
+})
+
+
+
+
 
 $Window.ShowDialog()
 $Window.Dispose()
