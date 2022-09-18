@@ -1,29 +1,28 @@
 @echo off
-:restore
-set /p message0=it is hightly recommended to create a restore point. would you like to make one now?
-if %message0%==yes Wmic.exe /Namespace:\\root\default Path SystemRestore Call CreateRestorePoint "My Restore Point", 100, 12
- goto :menu
-if %message0%==no goto :menu
 
 
 :menu
 cls
-echo - type 1 to optimize network options
-echo - type 2 to clear temp files
-echo - type 3 to check and fix errors in Windows
-echo - type 4 to install a program
-echo - type 5 for a menu that shows more optimizations
-echo - type 6 to debloat Windows
-echo - type 7 for other optimizations
+echo - type 1 for restore Windows Restore Point options
+echo - type 2 to optimize network options
+echo - type 3 to clear temp files
+echo - type 4 to check and fix errors in Windows
+echo - type 5 to install a program
+echo - type 6 for a menu that shows more optimizations
+echo - type 7 to debloat Windows
+echo - type 8 to enhance security
+echo - type 9 for other optimizations
 echo - type exit to exit
-set  /p message1=
-if %message1%==1 goto :network
-if %message1%==2 goto :cleartemp
-if %message1%==3 goto :fix
-if %message1%==4 goto :install
-if %message1%==5 goto :misc
-if %message1%==6 goto :debloat
-if %message1%==7 goto :others
+set /p message1=
+if %message1% == 1 goto :RestoreOptions
+if %message1%==2 goto :network
+if %message1%==3 goto :cleartemp
+if %message1%==4 goto :fix
+if %message1%==5 goto :install
+if %message1%==6 goto :misc
+if %message1%==7 goto :debloat
+if %message1%==8 goto :security
+if %message1%==9 goto :others
 if %message1%==exit exit
 else echo - invalid input
 goto :menu
@@ -74,6 +73,7 @@ for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 cd C:\Windows\Prefetch
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+IF EXIST
 echo files now cleared.
 pause
 goto :menu
@@ -156,12 +156,8 @@ echo uninstalling onedrive...
 echo killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
-IF EXIST "C:\Windows\System32\OneDrive.exe" (
-    %SystemRoot%\System32\OneDrive.exe /uninstall
-) ELSE (
-    goto :OneDriveuninstall2
-)
-:OneDriveuninstall2 
+%SystemRoot%\System32\OneDriveSetup.exe /uninstall
+%SystemRoot%\System32\OneDrive.exe /uninstall
 cd %UserProfile%\AppData\Local\Microsoft\OneDrive
 taskkill /F /IM "explorer.exe"
 DEL "." /F
@@ -212,6 +208,7 @@ reg delete "HKCR\Software\Policies\Microsoft\Edge" /F
 reg delete "HKLM\SOFTWARE\Microsoft\Edge"
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer"
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge"
+reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
 echo done
 pause
 goto :misc
@@ -233,6 +230,9 @@ if %debloat%==yes echo debloating Windows...
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocation" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableWindowsLocationProvider" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocationScripting" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
+ REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.ParentalControls_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
+REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.PeopleExperienceHost_10.0.22000.1_neutral_neutral_cw5n1h2txyewy"
+REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
  echo disabling Services...
  echo DiagTrack
  sc config "DiagTrack" start= disabled
@@ -410,6 +410,19 @@ if %debloat%==yes echo debloating Windows...
  REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "LocalSourcePath" /t REG_EXPAND_SZ /d %NOURL% /f
  REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "**del.RepairContentServerSource" /t REG_SZ /d " " /f
  REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /f
+ echo deleting uneeded files
+ cd C:\Program Files\WindowsApps\DeletedAllUserPackages
+ DEL *.* /f
+ DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2021.427.138.0_neutral_~_8wekyb3d8bbwe" /F
+ DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2105.900.24.0_neutral_split.scale-100_8wekyb3d8bbwe" /F
+ DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2105.900.24.0_x64__8wekyb3d8bbwe" /f
+ DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_neutral_~_8wekyb3d8bbwe" /f
+ DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_neutral_split.scale-100_8wekyb3d8bbwe" /f
+ DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_x64__8wekyb3d8bbwe" /F
+
+ echo disabling PowerShell telemetry
+ powershell.exe -ExecutionPolicy -Unrestricted -Command "$POWERSHELL_Telemetry_OPTOUT = $true"
+
  echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
 pause
@@ -431,13 +444,14 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTas
 REG ADD "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "506" /f
 REG ADD "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_SZ /d "122" /f
 taskkill /f /im explorer.exe
+
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d 0 /f
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d 0 /f
 start explorer.exe
 REG ADD "HKCR\*\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
 REG ADD "HKCR\*\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
 REG ADD "HKCR\*\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
-REG ADD "HKCR\*\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
+REG ADD "HKCR\*\shell\runas\command" /v /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
 REG ADD "HKCR\*\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
 REG ADD "HKCR\Directory\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
 REG ADD "HKCR\Directory\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
@@ -446,7 +460,25 @@ REG ADD "HKCR\Directory\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeow
 REG ADD "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 echo disabling unused Windows features...
-PowerShell -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
+PowerShell -ExecutionPolicy Unrestricted -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
 echo done
+pause
+goto :menu
+
+
+:security
+cls
+REG ADD "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d 72 /F
+REG ADD "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d 3 /F
+REG ADD "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Virtualization" /v "MinVmVersionForCpuBasedMitigations" /t String /d "1.0" /F
+REG ADD "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /v "Value" /t String /d "Deny" /F
+REG ADD "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AlwaysUseAutoLangDetection" /t REG_DWORD /d 0 /F
+powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550 -AttackSurfaceReductionRules_Actions Enabled"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids D3E037E1-3EB8-44C8-A917-57927947596D -AttackSurfaceReductionRules_Actions Enabled"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4 -AttackSurfaceReductionRules_Actions Enabled"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2Root' -NoRestart"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2' -NoRestart"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-MpPreference -DisableRemovableDriveScanning 0"
+schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
 pause
 goto :menu
