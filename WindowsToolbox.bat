@@ -102,23 +102,37 @@ echo type 5 to install Github Desktop
 echo type 6 to install powertoys
 echo type 7 to install Windows Command Terminal
 echo type 8 to install git
-echo type 9 to go back to the main menu
+echo type 9 to install VLC
+echo type 10 to install Firefox
+echo type 11 to go back to the main menu
 set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
-if %program%==3 winget install VScode
+if %program%==3 goto :VScode
 if %program%==4 winget install Discord.Discord
 if %program%==5 winget install GitHub.GitHubDesktop
 if %program%==6 winget install Microsoft.PowerToys
 if %program%==7 winget install Microsoft.WindowsTerminal
 if %program%==8 winget install git.git
-if %program%==9 goto :menu
+if %program%==9 winget install VideoLAN.VLC
+if %program%==10 winget install Mozilla.Firefox
+if %program%==11 goto :menu
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
 
-pause
 
+:VScode
+winget install VScode
+powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Force"
+PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Name TurnOffSwitch -Type 'DWORD' -Value 1 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Forcez'
+powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
+goto :install
 
 :misc
 cls
@@ -231,8 +245,8 @@ if %debloat%==yes echo debloating Windows...
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableWindowsLocationProvider" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
  reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocationScripting" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
  REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.ParentalControls_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
-REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.PeopleExperienceHost_10.0.22000.1_neutral_neutral_cw5n1h2txyewy"
-REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
+ REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.PeopleExperienceHost_10.0.22000.1_neutral_neutral_cw5n1h2txyewy"
+ REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
  echo disabling Services...
  echo DiagTrack
  sc config "DiagTrack" start= disabled
@@ -423,6 +437,17 @@ REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\Pack
  echo disabling PowerShell telemetry
  powershell.exe -ExecutionPolicy -Unrestricted -Command "$POWERSHELL_Telemetry_OPTOUT = $true"
 
+
+ echo disabling VScode telemetry
+ powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Force"
+ PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Name TurnOffSwitch -Type 'DWORD' -Value 1 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Forcez'
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
+
  echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
 pause
@@ -466,13 +491,24 @@ pause
 goto :menu
 
 
+:RestoreOptions
+cls
+Echo will be here soon
+goto :menu
+
+
 :security
 cls
-REG ADD "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d 72 /F
-REG ADD "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d 3 /F
-REG ADD "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Virtualization" /v "MinVmVersionForCpuBasedMitigations" /t String /d "1.0" /F
-REG ADD "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /v "Value" /t String /d "Deny" /F
-REG ADD "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AlwaysUseAutoLangDetection" /t REG_DWORD /d 0 /F
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name 'FeatureSettingsOverride' -Type DWORD -Value 72 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name 'FeatureSettingsOverrideMask' -Type DWORD -Value 3 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Virtualization' -Name 'MinVmVersionForCpuBasedMitigations' -Type String -Value '1.0' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks' -Name 'Value' -Type String -Value 'Deny' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AlwaysUseAutoLangDetection' -type DWORD -Value 0 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'Wpad' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\' -Name 'Wpad' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'WpadOverride' -Type 'DWORD' -Value 1 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'WpadOverride' -Type 'DWORD' -Value 1 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\SecurityProviders\Wdigest' -Name 'UseLogonCredential' -Type DWORD -Value 0 -Force"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550 -AttackSurfaceReductionRules_Actions Enabled"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids D3E037E1-3EB8-44C8-A917-57927947596D -AttackSurfaceReductionRules_Actions Enabled"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4 -AttackSurfaceReductionRules_Actions Enabled"
