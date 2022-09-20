@@ -42,6 +42,7 @@ echo setting optimizations for network...
 netsh int tcp set supplemental
 netsh int tcp set heuristics disabled
 netsh int tcp set global timestamps=disabled
+netsh int tcp set global autotuninglevel=normal
 echo setting up DNS optimizations...
 netsh interface ip delete dnsservers "Local Area Connection" all
 netsh interface ip add dns name="Local Area Connection" addr=8.8.4.4 index=1
@@ -104,7 +105,10 @@ echo type 7 to install Windows Command Terminal
 echo type 8 to install git
 echo type 9 to install VLC
 echo type 10 to install Firefox
-echo type 11 to go back to the main menu
+echo type 11 to install Python 3.10
+echo type 12 to install EarTrumpet
+
+echo type 13 to go back to the main menu
 set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
@@ -116,7 +120,9 @@ if %program%==7 winget install Microsoft.WindowsTerminal
 if %program%==8 winget install git.git
 if %program%==9 winget install VideoLAN.VLC
 if %program%==10 winget install Mozilla.Firefox
-if %program%==11 goto :menu
+if %program%==11 winget install Python
+if %program%==12 winget install File-New-Project.EarTrumpet
+if %program%==13 goto :menu
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
@@ -223,6 +229,9 @@ reg delete "HKLM\SOFTWARE\Microsoft\Edge"
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer"
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge"
 reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
+reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
+reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Protocol\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
+reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.File\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
 echo done
 pause
 goto :misc
@@ -439,6 +448,7 @@ if %debloat%==yes echo debloating Windows...
 
 
  echo disabling VScode telemetry
+ IF EXIST "C:\Users\yoshii11\AppData\Local\Programs\Microsoft VS Code"(
  powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Force"
  PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Name TurnOffSwitch -Type 'DWORD' -Value 1 -Force"
  powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Force"
@@ -447,6 +457,9 @@ if %debloat%==yes echo debloating Windows...
  powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Forcez'
  powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
  powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
+ reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.Windows.ParentalControls_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
+ reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
+ )
 
  echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
@@ -515,6 +528,10 @@ powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackS
 powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2Root' -NoRestart"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2' -NoRestart"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-MpPreference -DisableRemovableDriveScanning 0"
+powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ServerMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -FOrce"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ClientMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name Enabled -Type 'DWORD' -Value 0x00000001 -Force"
 schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
 pause
 goto :menu
