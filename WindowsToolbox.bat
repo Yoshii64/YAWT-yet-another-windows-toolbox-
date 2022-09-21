@@ -49,6 +49,8 @@ netsh interface ip add dns name="Local Area Connection" addr=8.8.4.4 index=1
 netsh interface ip add dns name="Local Area Connection" addr=8.8.8.8 index=2
 ipconfig /all | findstr /c:"8.8.4.4"
 ipconfig /all | findstr /c:"8.8.8.8"
+int ipv4 set glob defaultcurhoplimit=65
+int ipv6 set glob defaultcurhoplimit=65
 echo done
 pause
 goto :menu
@@ -74,7 +76,10 @@ for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 cd C:\Windows\Prefetch
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-IF EXIST
+cd C:\ProgramData\Microsoft\Windows\WER\Temp
+del *.* /F
+for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+Cmd.exe /c Cleanmgr /sagerun:65535
 echo files now cleared.
 pause
 goto :menu
@@ -107,8 +112,8 @@ echo type 9 to install VLC
 echo type 10 to install Firefox
 echo type 11 to install Python 3.10
 echo type 12 to install EarTrumpet
-
-echo type 13 to go back to the main menu
+echo type 13 to upgrade all installs from winget
+echo type 14 to go back to the main menu
 set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
@@ -122,7 +127,8 @@ if %program%==9 winget install VideoLAN.VLC
 if %program%==10 winget install Mozilla.Firefox
 if %program%==11 winget install Python
 if %program%==12 winget install File-New-Project.EarTrumpet
-if %program%==13 goto :menu
+if %program%==13 winget upgrade --all
+if %program%==14 goto :menu
 set /p back= do you want to install another program?
 if %back%==yes goto :install
 if %back%==no goto :menu
@@ -149,7 +155,10 @@ echo type in 3 to uninstall onedrive
 echo type in 4 to install onedrive 
 echo type in 5 to uninstall edge
 echo type in 6 to disable Cortana
-echo type in 7 to go back to the main menu
+echo type in 7 to disable Windows Search Indexing
+echo type in 8 to disable User Account Control
+echo type in 9 to enable User Account Control
+echo type in 10 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -157,7 +166,10 @@ if %menu2msg%==3 goto :onedriveuninstall
 if %menu2msg%==4 goto :onedriveinstall
 if %menu2msg%==5 goto :edgeuninstall
 if %menu2msg%==6 goto :cortana
-if %menu2msg%==7 goto :menu
+if %menu2msg%==7 goto :Indexing
+if %menu2msg%==8 goto :DisableUAC
+if %menu2msg%==9 goto :EnableUAC
+if %menu2msg%==10 goto :menu
 pause
 goto :menu
 
@@ -241,6 +253,24 @@ goto :misc
 echo disabling Cortana...
 REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "CortanaEnabled" /t REG_DWORD /d 0 /f
 REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f
+
+:Indexing 
+NET STOP "WSearch"
+sc config "WSearch" start=disabled
+pause
+goto :menu2msg
+
+
+:DisableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+pause
+goto :menu2msg
+
+:EnableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+pause
+goto :menu2msg
+
 
 :debloat
 cls
@@ -446,20 +476,10 @@ if %debloat%==yes echo debloating Windows...
  echo disabling PowerShell telemetry
  powershell.exe -ExecutionPolicy -Unrestricted -Command "$POWERSHELL_Telemetry_OPTOUT = $true"
 
-
- echo disabling VScode telemetry
- IF EXIST "C:\Users\yoshii11\AppData\Local\Programs\Microsoft VS Code"(
- powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Force"
- PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Name TurnOffSwitch -Type 'DWORD' -Value 1 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Forcez'
- powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
- reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.Windows.ParentalControls_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
- reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
- )
+ echo changing regkeys 
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Start_TrackProgs' -Value 0 -Type 'DWORD' -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'EnableActivityFeed' -Value '0' -Type 'DWORD' -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\WMDRM' -Name 'DisableOnline' -Type 'DWORD' -Value 1 -Force"
 
  echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
@@ -532,6 +552,10 @@ powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\SYS
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ServerMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -FOrce"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ClientMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -Force"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name Enabled -Type 'DWORD' -Value 0x00000001 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name 'HttpAcceptLanguageOptOut' -Type 'DWORD' -Value 1 -Force"
+PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\MRT' -Name 'DontReportInfectionInformation' -Type 'DWORD' -Value 1 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Policies\Microsoft\FindMyDevice' -Name AllowFindMyDevice -Type 'DWORD' -Value 0 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name HttpAcceptLanguageOptOut -Type 'DWORD' -Value 1 -Force"
 schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
 pause
 goto :menu
