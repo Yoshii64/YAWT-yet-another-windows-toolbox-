@@ -480,6 +480,11 @@ if %debloat%==yes echo debloating Windows...
  powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Start_TrackProgs' -Value 0 -Type 'DWORD' -Force"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'EnableActivityFeed' -Value '0' -Type 'DWORD' -Force"
  powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\WMDRM' -Name 'DisableOnline' -Type 'DWORD' -Value 1 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\MRT' -Name 'DontReportInfectionInformation' -Type 'DWORD' -Value 1 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'SpynetReporting' -Type 'DWORD' -Value 0 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'SubmitSamplesConsent' -Type 'DWORD' -Value 2 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Policies\Microsoft\Windows\EdgeUI' -Name 'DisableRecentApps' -Type 'DWORD' -Value 1 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\MediaPlayer\Preferences' -Name 'UsageTracking' -Type 'DWORD' -Value 0 -Force"
 
  echo you may need to restart for all changes to take effect...
 if %debloat%==no goto :menu
@@ -549,13 +554,17 @@ powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFe
 powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2' -NoRestart"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-MpPreference -DisableRemovableDriveScanning 0"
 powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ServerMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -FOrce"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name ClientMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force -Name Enabled -Type 'DWORD' -Value 0x00000001 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name ServerMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -FOrce"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name ClientMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name Enabled -Type 'DWORD' -Value 0x00000001 -Force"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name 'HttpAcceptLanguageOptOut' -Type 'DWORD' -Value 1 -Force"
 PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\MRT' -Name 'DontReportInfectionInformation' -Type 'DWORD' -Value 1 -Force"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Policies\Microsoft\FindMyDevice' -Name AllowFindMyDevice -Type 'DWORD' -Value 0 -Force"
 powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name HttpAcceptLanguageOptOut -Type 'DWORD' -Value 1 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel\' -Name 'MitigationOptions' -Type 'QWORD' -Value '1000000000000' -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Input\TIPC' -Name 'Enabled' -Type 'DWORD' -Value 0 -Force"
+powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Input\TIPC' -Name 'Enabled' -Type 'DWORD' -Value 0 -Force"
+ powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings' -Name 'CallLegacyWCMPolicies' -Type 'DWORD' -Value 0 -Force"
 schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
 pause
-goto :menu
+goto :menu 
