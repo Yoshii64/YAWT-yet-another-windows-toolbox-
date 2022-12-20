@@ -4,4 +4,4 @@ yes i am making fun of the fact that this is a worse version of CTT Windows tool
 
 for all features make sure to run as administator
 
-no longer being updated
+could get updated again
