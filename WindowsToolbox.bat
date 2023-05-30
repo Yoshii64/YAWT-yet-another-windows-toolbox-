@@ -11,7 +11,7 @@ echo - type 5 to install a program
 echo - type 6 for a menu that shows more optimizations
 echo - type 7 to debloat Windows
 echo - type 8 to enhance security
-echo - type 9 for other optimizations
+echo - type 9 for other optimizations/performance tweaks
 echo - type exit to exit
 set /p message1=
 if %message1% == 1 goto :RestoreOptions
@@ -43,6 +43,9 @@ netsh int tcp set supplemental
 netsh int tcp set heuristics disabled
 netsh int tcp set global timestamps=disabled
 netsh int tcp set global autotuninglevel=normal
+netsh interface Teredo set state type=enterpriseclient
+netsh int tcp set global rsc=disabled
+netsh interface Teredo set state servername=default
 echo setting up DNS optimizations...
 netsh interface ip delete dnsservers "Local Area Connection" all
 netsh interface iADD dns name="Local Area Connection" addr=8.8.4.4 index=1
@@ -93,25 +96,19 @@ goto :menu
 :cleartemp
 cls
 echo clearing uneeded files...
-cd C:\Windows\Temp
-del *.* /F 
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-cd %UserProfile%\AppData\Local\Temp
-del *.* /F
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-cd C:\$Recycle.Bin\S-1-5-21-610696990-1213007965-522507228-1001
-del *.* /F
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+del /s /f /q %windir%\temp\*.*
+del /s /f /q %temp%\*.*
 cd C:\Windows\SoftwareDistribution\Download
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-cd C:\Windows\Prefetch
-del *.* /F
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
+del /s /f /q %windir%\Prefetch\*.*
+rd /s /q %WINDIR%\Logs
+del /q %WINDIR%\Downloaded Program Files\*.*
 cd C:\ProgramData\Microsoft\Windows\WER\Temp
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 Cmd.exe /c Cleanmgr /sagerun:65535
+rd /s /q %SYSTEMDRIVE%\$RECYCLE.BIN
 echo files now cleared.
 pause
 goto :menu
@@ -530,7 +527,6 @@ goto :menu
 :others
 echo setting power plan to high performance...
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-wusa /uninstall /kb:3035583 /quiet /norestart
 taskkill /f /im explorer.exe
 echo changing registry keys...
 sc config W32Time start=demand >nul 2>nul
@@ -581,20 +577,32 @@ REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled"
 REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
 REG ADD "HKLM\Software\Microsoft\FTH" /v "Enabled" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePageCombining" /t REG_DWORD /d "1" /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d "1" /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnablePrefetcher" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableSuperfetch" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableSuperfetch" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d 3 /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t reg_DWORD /d "0" /f >NUL 2>&1
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t reg_DWORD /d "0" /f >NUL 2>&1
 echo storage optimizations (which is what the DuckOS script told me? loks like memory ones too)
-fsutil behavior set memoryusage 2 >NUL 2>&1
-fsutil behavior set mftzone 2 >NUL 2>&1
-fsutil behavior set allowextchar 0 >NUL 2>&1
-fsutil behavior set Bugcheckoncorrupt 0 >NUL 2>&1
-fsutil behavior set disable8dot3 1 >NUL 2>&1
-fsutil behavior set disablecompression 1 >NUL 2>&1
-fsutil behavior set disabledeletenotify 0 >NUL 2>&1
-fsutil behavior set disabledeletenotify refs 0 >NUL 2>&1
-fsutil behavior set disableencryption 1 >NUL 2>&1
-fsutil behavior set disablelastaccess 1 >NUL 2>&1
-fsutil behavior set encryptpagingfile 0 >NUL 2>&1
-fsutil behavior set quotanotify 86400 > NUL 2>&1
-fsutil behavior set symlinkevaluation L2L:1 > NUL 2>&1
+fsutil behavior set memoryusage 2
+fsutil behavior set mftzone 2
+fsutil behavior set allowextchar 0
+fsutil behavior set Bugcheckoncorrupt 0
+fsutil behavior set disablecompression 1
+fsutil behavior set disabledeletenotify 0
+fsutil behavior set disabledeletenotify refs 0
+fsutil behavior set disableencryption
+fsutil behavior set disablelastaccess
+fsutil behavior set encryptpagingfile
+fsutil behavior set quotanotify 86400
+fsutil behavior set symlinkevaluation L2L:1
+fsutil behavior set disablelastaccess 1
+fsutil behavior set disable8dot3 1
 echo disabling unused Windows features...
 PowerShell -ExecutionPolicy Unrestricted -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
 echo done
