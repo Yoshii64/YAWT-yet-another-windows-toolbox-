@@ -2,8 +2,10 @@
 wmic process where name="cmd.exe" CALL setpriority 32768 >nul
 
 :menu
+echo needed to do before debloat
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance" /v "Enabled" /t REG_DWORD /d 0 /f
 cls
-echo - type 1 for restore Windows Restore Point options
+echo - type 1 to disable Windows Update
 echo - type 2 to optimize network options
 echo - type 3 to clear temp files
 echo - type 4 to check and fix errors in Windows
@@ -14,7 +16,7 @@ echo - type 8 to enhance security
 echo - type 9 for other optimizations/performance tweaks
 echo - type exit to exit
 set /p message1=
-if %message1% == 1 goto :RestoreOptions
+if %message1% == 1 goto :UpdateRemoval
 if %message1%==2 goto :network
 if %message1%==3 goto :cleartemp
 if %message1%==4 goto :fix
@@ -28,7 +30,34 @@ else echo - invalid input
 goto :menu
 
 
-
+:UpdateRemoval
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DisableWindowsUpdateAccess" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DisableDualScan" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "AUPowerManagement" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "SetAutoRestartNotificationDisable" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ManagePreviewBuilds" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ManagePreviewBuildsPolicyValue" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferFeatureUpdates" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "BranchReadinessLevel" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferFeatureUpdatesPeriodInDays" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferQualityUpdates" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferQualityUpdatesPeriodInDays" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "SetDisableUXWUAccess" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAUAsDefaultShutdownOption" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "RestartNotificationsAllowed2" /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "HideMCTLink" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" /v "SearchOrderConfig" /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "00000000-0000-0000-0000-000000000000" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "AllowBuildPreview" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableConfigFlighting" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableExperimentation" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "HideInsiderPage" /t REG_DWORD /d "1" /f
+:menu 
 
 :network
 cls
@@ -91,8 +120,6 @@ pause
 goto :menu
 
 
-
-
 :cleartemp
 cls
 echo clearing uneeded files...
@@ -146,7 +173,7 @@ echo type 14 to go back to the main menu
 set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
-if %program%==3 goto :VScode
+if %program%==3 winget install VScode
 if %program%==4 winget install Discord.Discord
 if %program%==5 winget install GitHub.GitHubDesktop
 if %program%==6 winget install Microsoft.PowerToys
@@ -163,18 +190,6 @@ if %back%==yes goto :install
 if %back%==no goto :menu
 
 
-:VScode
-winget install VScode
-powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Force"
-PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\VisualStudio\Telemetry' -Name TurnOffSwitch -Type 'DWORD' -Value 1 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command  "New-Item -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\14.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Forcez'
-powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\15.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command  "Set-ItemProperty -Path 'HKLM:\Software\Wow6432Node\Microsoft\VSCommon\16.0\SQM' -Name OptIn -Type 'DWORD' -Value 0 -Force"
-goto :install
-
 :misc
 cls
 color F
@@ -183,22 +198,24 @@ echo type in 2 to enable backround apps
 echo type in 3 to uninstall onedrive
 echo type in 4 to install onedrive 
 echo type in 5 to uninstall edge
-echo type in 6 to disable Cortana
+echo type in 6 to disable Defender
 echo type in 7 to disable Windows Search Indexing
 echo type in 8 to disable User Account Control
 echo type in 9 to enable User Account Control
-echo type in 10 to go back to the main menu
+echo type in 10 to disable Update Health Tools
+echo type in 11 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
 if %menu2msg%==3 goto :onedriveuninstall
 if %menu2msg%==4 goto :onedriveinstall
 if %menu2msg%==5 goto :edgeuninstall
-if %menu2msg%==6 goto :cortana
+if %menu2msg%==6 goto :defender
 if %menu2msg%==7 goto :Indexing
 if %menu2msg%==8 goto :DisableUAC
 if %menu2msg%==9 goto :EnableUAC
-if %menu2msg%==10 goto :menu
+if %menu2msg%==10 goto :HealthTools
+if %menu2msg%==11 goto :menu
 pause
 goto :menu
 
@@ -246,12 +263,19 @@ goto :misc
 :edgeuninstall
 echo uninstalling edge...
 echo killing edge processes...
-taskkill "msedge.exe"
-taskkill "msedgewebview2.exe"
-sc delete "edgeupdate"
-sc delete "edgeupdatem"
-sc delete "MicrosoftEdgeElevationService"
+taskkill /F /IM MicrosoftEdgeUpdate.exe >nul 2>&1
+taskkill /F /IM msedge.exe >nul 2>&1
+taskkill /F /IM MicrosoftEdge* >nul 2>&1
+taskkill /F /FI "MODULES eq edgehtml.dll" >nul 2>&1
+taskkill /F /FI "MODULES eq msedgewebview2.exe" >nul 2>&1
+
+sc delete edgeupdate >nul 2>&1
+sc delete edgeupdatem >nul 2>&1
+sc delete MicrosoftEdgeElevationService >nul 2>&1
 echo deleting edge files...
+del "C:\Users\Public\Desktop\Microsoft Edge.lnk" >nul 2>&1
+rmdir /s /q "C:\ProgramData\Microsoft\EdgeUpdate" >nul 2>&1
+del "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" >nul 2>&1
 cd "%UserProfile%\AppData\Local\Microsoft"
 DEL "Edge"
 DEL "Internet Explorer"
@@ -261,45 +285,84 @@ cd "%UserProfile%\AppData\Roaming\Microsoft"
 DEL "Internet Explorer"
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 reg delete "HKCR\Software\Microsoft\Edge" /F
+del /f /q "C:\Program Files (x86)\Microsoft\Edge" >nul 2>&1
+del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate" >nul 2>&1
+del /f /q "C:\Program Files (x86)\Microsoft\EdgeCore" >nul 2>&1
+rmdir /s /q "C:\Program Files (x86)\Microsoft\EdgeWebView"
 
 echo deleting regkeys associated with edge...
-reg delete "HKCR\Software\Microsoft\EdgeUpdate" /F
-reg delete "HKCR\Software\Microsoft\Internet Explorer" /F
-reg delete "HKCR\Software\Policies\Microsoft\Edge" /F
-reg delete "HKLM\SOFTWARE\Microsoft\Edge"
-reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer"
-reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge"
-reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
-reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Launch\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
-reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.Protocol\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
-reg delete "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.File\PackageId\Microsoft.MicrosoftEdge_44.22000.120.0_neutral__8wekyb3d8bbwe"
+reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarMigratedBrowserPin /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" /f >nul 2>&1
+reg delete "HKCR\CLSID\{1FCBE96C-1697-43AF-9140-2897C7C69767}" /f >nul 2>&1
+reg delete "HKCR\AppID\{1FCBE96C-1697-43AF-9140-2897C7C69767}" /f >nul 2>&1
+reg delete "HKCR\Interface\{C9C2B807-7731-4F34-81B7-44FF7779522B}" /f >nul 2>&1
+reg delete "HKCR\TypeLib\{C9C2B807-7731-4F34-81B7-44FF7779522B}" /f >nul 2>&1
+reg delete "HKCR\MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCR\MSEdgePDF" /f >nul 2>&1
+reg delete "HKCR\MSEdgeMHT" /f >nul 2>&1
+reg delete "HKCR\AppID\{628ACE20-B77A-456F-A88D-547DB6CEEDD5}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Clients\StartMenuInternet\Microsoft Edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\RegisteredApplications" /v "Microsoft Edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe" /f >nul 2>&1
+reg delete "HKCR\.htm\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.html\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.shtml\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.svg\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.xht\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.xhtml\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.webp\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKCR\.xml\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts" /v "MSEdgeHTM_microsoft-edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\EnterpriseMode" /v MSEdgePath /f >nul 2>&1
+reg delete "HKCR\AppID\ie_to_edge_bho.dll" /f >nul 2>&1
+reg delete "HKCR\AppID\{31575964-95F7-414B-85E4-0E9A93699E13}" /f >nul 2>&1
+reg delete "HKCR\CLSID\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKCR\WOW6432Node\CLSID\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKCR\ie_to_edge_bho.IEToEdgeBHO" /f >nul 2>&1
+reg delete "HKCR\ie_to_edge_bho.IEToEdgeBHO.1" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\EnterpriseMode" /v MSEdgePath /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{c9abcf16-8dc2-4a95-bae3-24fd98f2ed29}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{c9abcf16-8dc2-4a95-bae3-24fd98f2ed29}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\ProtocolExecute\microsoft-edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\ProtocolExecute\microsoft-edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\EdgeIntegration\AdapterLocations\C:\Program Files (x86)\Microsoft\Edge" /v Application /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Ext\PreApproved\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext\CLSID" /v "{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Edge" /f >nul 2>&1
+reg delete "HKCR\CLSID\{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
+reg delete "HKCR\WOW6432Node\CLSID\{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\PreviewHandlers" /v "{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
+reg delete "HKCR\.pdf\ShellEx\{8895b1c6-b41f-4c1c-a562-0d564250836f}" /v "(Default)" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
+reg delete "HKU\S-1-5-21-3476428458-2503407758-626446112-1002\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
+reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Microsoft\MediaPlayer\ShimInclusionList\msedge.exe" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge Update" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\RegisteredApplications" /v "Microsoft Edge" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.htm\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.html\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.shtml\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.svg\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.xht\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.xhtml\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Classes\.webp\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts" /v "MSEdgeHTM_microsoft-edge" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
+reg delete "HKCU\SOFTWARE\Microsoft\Edge" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView" /f
+reg delete "HKCU\SOFTWARE\Microsoft\EdgeWebView" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "DoNotUpdateToEdgeWithChromium" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "Install{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}" /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "Install{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "InstallDefault" /t REG_DWORD /d 0 /f
 echo done
 pause
 goto :misc
-
-
-:cortana
-echo disabling Cortana...
-REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "CortanaEnabled" /t REG_DWORD /d 0 /f
-REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d 0 /f
-
-:Indexing 
-NET STOP "WSearch"
-sc config "WSearch" start=disabled
-pause
-goto :menu2msg
-
-
-:DisableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
-pause
-goto :menu2msg
-
-:EnableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
-pause
-goto :menu2msg
-
 
 :debloat
 cls
@@ -308,6 +371,20 @@ if %debloat%==yes echo debloating Windows...
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
 setx POWERSHELL_TELEMETRY_OPTOUT 1
  echo changing registry keys...
+ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance" /v fAllowToGetHelp /t REG_DWORD /d 0 /f
+ reg add "HKCU\SOFTWARE\Microsoft\InputPersonalization" /v "RestrictImplicitInkCollection" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\InputPersonalization" /v "RestrictImplicitTextCollection" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore" /v "HarvestContacts" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Personalization\Settings" /v "AcceptedPrivacyPolicy" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /v "PreventHandwritingDataSharing" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" /v "PreventHandwritingErrorReports" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Input\Settings" /v "InsightsEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Input\TIPC" /v "Enabled" /t REG_DWORD /d "0" /f
+ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Diagnostics\Performance" /v "DisableDiagnosticTracing" /t REG_DWORD /d "1" /f
+ reg add "HKLM\SOFTWARE\Policies\Microsoft\AppV\CEIP" /v "CEIPEnable" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "0" /f
+ reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth" /v "AllowAdvertising" /t REG_DWORD /d "0" /f
  REG ADD "HKLM\Software\Policies\Microsoft\InternetManagement" /v "RestrictCommunication" /t REG_DWORD /d "1" /f
  REG ADD "HKLM\Software\Microsoft\PolicyManager\current\device\System" /v "AllowExperimentation" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
  REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t "REG_DWORD" /d "0" /f
@@ -318,152 +395,841 @@ setx POWERSHELL_TELEMETRY_OPTOUT 1
  REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.ParentalControls_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
  REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.PeopleExperienceHost_10.0.22000.1_neutral_neutral_cw5n1h2txyewy"
  REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
- echo disabling Services...
+echo disabling/deleting Services...
  echo DiagTrack
  sc config "DiagTrack" start= disabled
-    NET STOP DiagTrack
+ NET STOP DiagTrack
  echo AJRouter
  sc config "AJRouter" start= disabled
-    NET STOP AJRouter
+ NET STOP AJRouter
  echo PhoneSvc
  sc config "PhoneSvc" start= disabled
-    NET STOP PhoneSvc
+ NET STOP PhoneSvc
  echo TermService
  sc config "TermService" start= disabled
-    NET STOP TermService
+ NET STOP TermService
  echo RemoteRegistry
  sc config "RemoteRegistry" start= disabled
-    NET STOP RemoteRegistry
+ NET STOP RemoteRegistry
  echo RetailDemo
- sc config "RetailDemo" start= disabled
-    NET STOP RetailDemo
+ sc delete RetailDemo
+ NET STOP RetailDemo
  echo RemoteAccess
  sc config "RemoteAccess" start= disabled
-    NET STOP RemoteAccess
+ NET STOP RemoteAccess
  echo OneSyncSvc
  sc config "OneSyncSvc"
-    NET STOP OneSyncSvc
+ NET STOP OneSyncSvc
  echo UevAgentService
  sc config "UevAgentService" start= disabled
-    NET STOP UevAgentService
+ NET STOP UevAgentService
  echo WbioSrvc
  sc config "WbioSrvc" start= disabled
-    NET STOP WbioSrvc
+ NET STOP WbioSrvc
  echo XblAuthManager
  sc config "XblAuthManager" start= disabled
-    NET STOP XblAuthManager
+ NET STOP XblAuthManager
  echo XblGameSave
  sc config "XblGameSave" start= disabled
-    NET STOP XblGameSave
+ NET STOP XblGameSave
  echo XboxNetApiSvc
  sc config "XboxNetApiSvc" start= disabled
-    NET STOP XboxNetApiSvc
+ NET STOP XboxNetApiSvc
  echo XboxGipSvc
  sc config "XboxGipSvc" start= disabled
-    NET STOP XboxGipSvc
+ NET STOP XboxGipSvc
  echo FontCache
  sc config "FontCache" start= disabled
-    NET STOP FontCache
+ NET STOP FontCache
  echo iphlpsvc
  sc config "iphlpsvc" start= disabled
-    NET STOP iphlpsvc
+ NET STOP iphlpsvc
  echo BcastDVRUserService_48486de
  sc config "BcastDVRUserService_48486de" start= disabled
-    NET STOP BcastDVRUserService_48486de
+ NET STOP BcastDVRUserService_48486de
  echo WpnService
  sc config "WpnService" start= disabled
-    NET STOP WpnService
- schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
- echo uninstalling Windows programs...
- echo Windowscamera
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-appxpackage -AllUsers *Microsoft.WindowsCamera* | remove-appxpackage"
- echo WindowsCalculator
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
- echo MicrosoftTeams_22115
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *MicrosoftTeams_22115.300.1313.2464_x64__8wekyb3d8bbwe* | Remove-AppxPackage"
- echo YourPhone
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.YourPhone* | Remove-AppxPackage"
- echo MicrosoftEdge.Stable
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftEdge.Stable* | Remove-AppxPackage"
- echo XboxGameOverlay
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
- echo XboxGameUI
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
- echo Todos
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Todos* | Remove-AppxPackage"
- echo MicrosoftStickyNotes
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
- echo Cortana
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Windows.Cortana* | Remove-AppxPackage"
- echo Clipchamp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Clipchamp.Clipchamp* | Remove-AppxPackage"
- echo WindowsStore
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
- echo PowerAutomateDesktop
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.PowerAutomateDesktop* | Remove-AppxPackage"
- echo WindowsPhotos
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Windows.Photos* | Remove-AppxPackage"
- echo MicrosoftTeams
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *MicrosoftTeams* | Remove-AppxPackage"
- echo ZuneVideo
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ZuneVideo* | Remove-AppxPackage"
- echo ZuneMusic
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ZuneMusic* | Remove-AppxPackage"
- echo WindowsSoundRecorder
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsSoundRecorder* | Remove-AppxPackage"
- echo WindowsFeedbackHub
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsFeedbackHub* | Remove-AppxPackage"
- echo windowscommunicationsapps
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *microsoft.windowscommunicationsapps* | Remove-AppxPackage"
- echo ScreenSketch
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.ScreenSketch* | Remove-AppxPackage"
- echo MicrosoftSolitaireCollection
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftSolitaireCollection* | Remove-AppxPackage"
- echo MicrosoftOfficeHub
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage"
- echo Getstarted
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.Getstarted* | Remove-AppxPackage"
- echo GamingApp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.GamingApp* | Remove-AppxPackage"
- echo BingNews
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingNews*  | Remove-AppxPackage"
- echo BingWeather
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.BingWeather* | Remove-AppxPackage"
- echo GetHelp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.GetHelp* | Remove-AppxPackage"
- echo StorePurchaseApp
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.StorePurchaseApp* | Remove-AppxPackage"
- echo WindowsMaps
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsMaps* | Remove-AppxPackage"
- echo Xbox.TCUI
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.Xbox.TCUI* | Remove-AppxPackage"
- echo XboxSpeechToTextOverlay
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.XboxSpeechToTextOverlay* | Remove-Appxpackage"
- echo WindowsNotepad
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsNotepad* |Remove-AppxPackage"
- echo 3DBuilder
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.3DBuilder* |Remove-AppxPackage"
- echo Microsoft3DViewer
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.Microsoft3DViewer* |Remove-AppxPackage"
- echo BingFinance
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingFinance* |Remove-AppxPackage"
- echo BingNews
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingNews* |Remove-AppxPackage"
- echo BingSports
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingSports* |Remove-AppxPackage"
- echo BingWeather
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingWeather* |Remove-AppxPackage"
- echo BingTranslator
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingTranslator* |Remove-AppxPackage"
- echo BingFoodAndDrink
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingFoodAndDrink* |Remove-AppxPackage"
- echo BingHealthAndFitness
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingHealthAndFitness* |Remove-AppxPackage"
- echo BingTravel
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.BingTravel* |Remove-AppxPackage"
- echo Cortana
- powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers * Microsoft.549981C3F5F10* |Remove-AppxPackage"
- echo blocking telemetry IP addresses...
+ NET STOP WpnService
+ echo AssignedAccessManagerSvc
+ sc delete AssignedAccessManagerSvc
+ NET STOP AssignedAccessManagerSvc
+ echo diagnosticshub.standardcollector.service
+ sc config "diagnosticshub.standardcollector.service" start= disabled
+ NET STOP diagnosticshub.standardcollector.service
+ sc delete AssignedAccessManagerSvc
+ echo SharedAccess
+ sc config "SharedAccess" start= disabled
+ NET STOP SharedAccess
+ echo StorSvc
+ sc config "StorSvc" start= disabled
+ NET STOP StorSvc
+ echo BITS
+ sc config "bits" start= disabled
+ NET STOP bits
+ echo LicenseManager
+ sc config "LicenseManager" start= disabled
+ NET STOP LicenseManager
+ echo RemoteAccess
+ sc config RemoteAccess start= disabled
+ NET STOP RemoteAccess
+ echo RemoteRegistry
+ sc config RemoteRegistry start= disabled
+ NET STOP RemoteRegistry
+ echo AppIDSvc
+ sc config AppIDSvc start= disabled
+NET STOP AppIDSvc
+echo BluetoothUserService
+sc config BluetoothUserService start= disabled
+NET STOP BluetoothUserService
+echo BTAGService
+sc config BTAGService start= disabled
+NET STOP BTAGService
+echo BthAvctpSvc
+sc config BthAvctpSvc start= disabled
+NET STOP BthAvctpSvc
+echo bthserv
+sc config bthserv start= disabled
+NET STOP bthserv
+echo CryptSvc
+sc config CryptSvc start= disabled
+NET STOP CryptSvc
+echo diagsvc
+sc config diagsvc start= disabled
+NET STOP diagsvc
+echo DispBrokerDesktopSvc
+sc config DispBrokerDesktopSvc start= disabled
+NET STOP DispBrokerDesktopSvc
+echo DoSvc
+sc config DoSvc start= disabled
+NET STOP DoSvc
+echo DPS
+sc config DPS start= disabled
+NET STOP DPS
+echo fdPHost
+sc config fdPHost start= disabled
+NET STOP fdPHost
+echo FDResPub
+sc config FDResPub start= disabled
+NET STOP FDResPub
+echo InstallService
+sc config InstallService start= disabled
+NET STOP InstallService
+echo IpxlatCfgSvc
+sc config IpxlatCfgSvc start= disabled
+NET STOP IpxlatCfgSvc
+echo KtmRm
+sc config KtmRm start= disabled
+NET STOP KtmRm
+echo LanmanServer
+sc config LanmanServer start= disabled
+NET STOP LanmanServer
+echo LanmanWorkstation
+sc config LanmanWorkstation start= disabled
+NET STOP LanmanWorkstation
+echo lmhosts
+sc config lmhosts start= disabled
+NET STOP lmhosts
+echo luafv
+sc config luafv start= disabled
+NET STOP luafv
+echo MSDTC
+sc config MSDTC start= disabled
+NET STOP MSDTC
+echo PcaSvc
+sc config PcaSvc start= disabled
+NET STOP PcaSvc
+echo RasMan
+sc config RasMan start= disabled
+NET STOP RasMan
+echo SmsRouter
+sc config SmsRouter start= disabled
+NET STOP SmsRouter
+echo Spooler
+sc config Spooler start= disabled
+NET STOP Spooler
+echo SSDPSRV
+sc config SSDPSRV start= disabled
+NET STOP SSDPSRV
+echo sppsvc
+sc config sppsvc start= disabled
+NET STOP sppsvc
+echo SstpSvc
+sc config SstpSvc start= disabled
+NET STOP SstpSvc
+echo Themes
+sc config Themes start= disabled
+NET STOP Themes
+echo TrkWks
+sc config TrkWks start= disabled
+NET STOP TrkWks
+echo W32Time
+sc config W32Time start= disabled
+NET STOP W32Time
+echo WarpJITSvc
+sc config WarpJITSvc start= disabled
+NET STOP WarpJITSvc
+echo WdiServiceHost
+sc config WdiServiceHost start= disabled
+NET STOP WdiServiceHost
+echo WdiSystemHost
+sc config WdiSystemHost start= disabled
+NET STOP WdiSystemHost
+echo Wecsvc
+sc config Wecsvc start= disabled
+NET STOP Wecsvc
+echo wercplsupport
+sc config wercplsupport start= disabled
+NET STOP wercplsupport
+echo WerSvc
+sc config WerSvc start= disabled
+NET STOP WerSvc
+echo WEPHOSTSVC
+sc config WEPHOSTSVC start= disabled
+NET STOP WEPHOSTSVC
+echo WMPNetworkSvc
+sc config WMPNetworkSvc start= disabled
+NET STOP WMPNetworkSvc
+echo WPDBusEnum
+sc config WPDBusEnum start= disabled
+NET STOP WPDBusEnum
+echo WpnService
+sc config WpnService start= disabled
+NET STOP WpnService
+echo WSearch
+sc config WSearch start= disabled
+NET STOP WSearch
+echo wuauserv
+sc config wuauserv start= disabled
+NET STOP wuauserv
+echo SEMgrSvc
+sc config SEMgrSvc start= disabled
+NET STOP SEMgrSvc
+echo OneSyncSvc
+sc config OneSyncSvc start= disabled
+NET STOP OneSyncSvc
+echo wbengine
+sc config wbengine start= disabled
+NET STOP wbengine
+echo MapsBroker
+sc config MapsBroker start= disabled
+NET STOP MapsBroker
+echo lfsvc
+sc config lfsvc start= disabled
+NET STOP lfsvc
+echo MessagingService
+sc config MessagingService start= disabled
+NET STOP MessagingService
+echo GraphicsPerfSvc
+sc config GraphicsPerfSvc start= disabled
+NET STOP GraphicsPerfSvc
+echo autotimesvc
+sc config autotimesvc start= disabled
+NET STOP autotimesvc
+echo Smartcard
+sc config Smartcard start= disabled
+NET STOP Smartcard
+echo AarSvc
+sc config AarSvc start= disabled
+NET STOP AarSvc
+echo tzautoupdate
+sc config tzautoupdate start= disabled
+NET STOP tzautoupdate
+echo PeerDistSvc
+sc config PeerDistSvc start= disabled
+NET STOP PeerDistSvc
+echo embeddedmode
+sc config embeddedmode start= disabled
+NET STOP embeddedmode
+echo fhsvc
+sc config fhsvc start= disabled
+NET STOP fhsvc
+echo wlpasvc
+sc config wlpasvc start= disabled
+NET STOP wlpasvc
+echo AppVClient
+sc config AppVClient start= disabled
+NET STOP AppVClient
+
+echo removing unused apps/bloat
+echo 1527c705-839a-4832-9118-54d4Bd6a0c89
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '1527c705-839a-4832-9118-54d4Bd6a0c89*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.549981C3F5F10
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.549981C3F5F10*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MixedReality.Portal
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MixedReality.Portal*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.ContentDeliveryManager
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ContentDeliveryManager*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.OOBENetworkCaptivePortal
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkCaptivePortal*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.OOBENetworkConnectionFlow
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkConnectionFlow*'} | ForEach-Object { $_.Name }"
+
+echo microsoft.windowscommunicationsapps
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*microsoft.windowscommunicationsapps*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.SecureAssessmentBrowser
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.SecureAssessmentBrowser*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Advertising.Xaml
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Advertising.Xaml*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.BingWeather
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.BingWeather*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.GetHelp
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.GetHelp*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Getstarted
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Getstarted*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Microsoft3DViewer
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Microsoft3DViewer*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MicrosoftEdge
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdge*'} | ForEach-Object { $_.Name }"
+
+echo microsoft.microsoftedge.stable
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*microsoft.microsoftedge.stable*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MicrosoftEdgeDevToolsClient
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MicrosoftOfficeHub
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftOfficeHub*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MicrosoftSolitaireCollection
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftSolitaireCollection*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MicrosoftStickyNotes
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftStickyNotes*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.MSPaint
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MSPaint*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Office.OneNote
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Office.OneNote*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.People
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.People*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.PeopleExperienceHost
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.PeopleExperienceHost*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.ScreenSketch
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ScreenSketch*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.SkypeApp
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.SkypeApp*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Wallet
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Wallet*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.AssignedAccessLockApp
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.AssignedAccessLockApp*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.Windows.ParentalControls
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ParentalControls*'} | ForEach-Object { $_.Name }"
+
+echoMicrosoft.Windows.Photos
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.Photos*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.WindowsAlarms
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsAlarms*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.WindowsCamera
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsCamera*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.WindowsFeedbackHub
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsFeedbackHub*'} | ForEach-Object { $_.Name }"
+
+echo  Microsoft.WindowsMaps
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsMaps*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.WindowsSoundRecorder
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsSoundRecorder*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.YourPhone
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.YourPhone*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.ZuneMusic
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneMusic*'} | ForEach-Object { $_.Name }"
+
+echo Microsoft.ZuneVideo
+PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneVideo*'} | ForEach-Object { $_.Name }"
+echo XboxGameOverlay
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+
+echo XboxGameUI
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
+
+echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DesktopFileExplorer-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DesktopFileExplorer-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Internal-ShellCommon-FilePickerExperienceMEM
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Internal-ShellCommon-FilePickerExperienceMEM | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-OOBENetworkConnectionFlow.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-OOBENetworkConnectionFlow.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-PeopleExperienceHost.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-PeopleExperienceHost.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Disk-Failure-Diagnostic-Module
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-Module | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Disk-Failure-Diagnostic-User-Resolver
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-User-Resolver | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskDiagnosis-Events
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnosis-Events | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskDiagnostic-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnostic-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskManagement-Snapin
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-Snapin | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskManagement-VDSInterface
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-VDSInterface | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskManagement
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-dskquota
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquota | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-dskquoui
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquoui | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Diskraid
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Diskraid | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DiskQuota-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskQuota-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-EnhancedStorage-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-EnhancedStorage-API
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-API | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-EnhancedStorage-ClassDriver
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-ClassDriver | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-EnhancedStorage-EhStorTcgDrv
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-EhStorTcgDrv | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-Angle
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-Angle | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-AXHost
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-AXHost | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-EdgeContent
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeContent | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-EdgeManager
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeManager | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-MicrosoftEdgeBCHost
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeBCHost | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-MicrosoftEdgeCP
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeCP | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-MicrosoftEdgeDevTools
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeDevTools | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-MicrosoftEdgeEnlightenment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeEnlightenment | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Edge-MicrosoftEdgeSH
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeSH | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ParentalControls.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ParentalControls.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockApp.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockApp.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockAppBroker-WinRT
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppBroker-WinRT | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockAppHost-AboveLockAppHost
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-AboveLockAppHost | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockAppHost-LockHostingFramework
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-LockHostingFramework | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LockAppHost
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AppRep-ChxApp.appxmain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxmain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AppRep-ChxApp.appxsetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxsetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AppRep
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DeviceManagement-PolicyDefinition-SmartScreen
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceManagement-PolicyDefinition-SmartScreen | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SmartScreen-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SmartScreen
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-AM-Default-Definitions-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-AM-Default-Definitions-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-AppLayer-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-AppLayer-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-ApplicationGuard-Inbox-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-ApplicationGuard-Inbox-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Branding
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Branding | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Core-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Core-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Events
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Events | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Group-Policy-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Group-Policy-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-MDM-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-MDM-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-Powershell-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Management-Powershell
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Nis-Group-Deployment-LanguagePack
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Nis-Group-Deployment
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Service-MpClientEtw
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Service-MpClientEtw | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-Service
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-Service | ForEach-Object { $_.Name }"
+
+echo Windows-Defender-UI
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Defender-UI | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SecHealthUI.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SecHealthUI.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AllJoyn-Api
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Api | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AllJoyn-Capabilities
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Capabilities | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AllJoyn-Router
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Router | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-AllJoyn-Runtime
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Runtime | ForEach-Object { $_.Name }"
+
+echo Networking-MPSSVC-Rules-AllJoyn
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Networking-MPSSVC-Rules-AllJoyn | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager-Capabilities
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Capabilities | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager-Utilities
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Utilities | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain.FeatureManagement
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.FeatureManagement | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain.PreInstalledApps
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.PreInstalledApps | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain.Ratings
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.Ratings | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain.SoftLanding
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SoftLanding | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain.SubscribedContent
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SubscribedContent | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxMain
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-ContentDeliveryManager.AppxSetup
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxSetup | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SystemSettings-SettingsHandlers-ContentDeliveryManager
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-ContentDeliveryManager | ForEach-Object { $_.Name }"
+
+echo Microsoft-OneCore-DictationManager-Component
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-DictationManager-Component | ForEach-Object { $_.Name }"
+
+echo Microsoft-OneCore-SpeechService-Component
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SpeechService-Component | ForEach-Object { $_.Name }"
+
+echo Microsoft-OneCore-SystemSettings-SettingsHandlers-SpeechPrivacy
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SystemSettings-SettingsHandlers-SpeechPrivacy | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-IEKillBits
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-IEKillBits | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-Pal-Desktop
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Pal-Desktop | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-Shell
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Shell | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-UserExperience-Common
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience-Common | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-UserExperience
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Speech-Windows
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Windows | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SpeechCommon-OneCore
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommon-OneCore | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SpeechCommonNoIA64
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommonNoIA64 | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SpeechDiagnostic
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechDiagnostic | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SpeechEngine-OneCore
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine-OneCore | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SpeechEngine
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-VoiceActivation-HW
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-VoiceActivation-HW | ForEach-Object { $_.Name }"
+
+echo Windows-Media-Speech-WinRT
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-Media-Speech-WinRT | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Geolocation-Framework
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Framework | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Geolocation-Service-Modern
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service-Modern | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Geolocation-Service
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Geolocation-WinComponents
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinComponents | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Geolocation-WinRT
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinRT | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-LocationProvider-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LocationProvider-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SystemSettings-SettingsHandlers-Geolocation
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-Geolocation | ForEach-Object { $_.Name }"
+
+echo Microsoft-WindowsPhone-LocationServiceProvider-Events
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-WindowsPhone-LocationServiceProvider-Events | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Application-Experience-AIT-Static
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-AIT-Static | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Application-Experience-Inventory-Data-Sources
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Inventory-Data-Sources | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Application-Experience-Mitigations-C8
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Mitigations-C8 | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Application-Experience-Program-Data
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Program-Data | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-Appraiser-InboxDataFiles
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-InboxDataFiles | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-Appraiser-Logger
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-Logger | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-Appraiser
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-CompatTelRunner-DailyTask
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner-DailyTask | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-CompatTelRunner
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Compat-GeneralTel
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-GeneralTel | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-CoreSystem-Bluetooth-Telemetry
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-CoreSystem-Bluetooth-Telemetry | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DataCollection-Adm
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DataCollection-Adm | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-DeviceCensus-Schedule-ClientServer
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceCensus-Schedule-ClientServer | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-TelemetryClient
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryClient | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-TelemetryPermission
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryPermission | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client-Aggregators
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Aggregators | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client-AutoLogger-Default
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-AutoLogger-Default | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client-WoWOnly
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-WoWOnly | ForEach-Object { $_.Name }"
+
+echo Microsoft-Windows-Unified-Telemetry-Client
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client | ForEach-Object { $_.Name }"
+
+echo Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient
+PowerShell -Command "Get-AppxPackage -AllUsers -Name Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient | ForEach-Object { $_.Name }"
+
+echo disabling trackers and Logs
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackProgs" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /v "TailoredExperiencesWithDiagnosticDataEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v "DisableTailoredExperiencesWithDiagnosticData" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting" /v "DoReport" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /freg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "UploadUserActivities" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "PublishUserActivities" /t REG_DWORD /d "0" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /v "NoGenTicket" /t REG_DWORD /d "1" /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Circular Kernel Context Logger" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\CloudExperienceHostOobe" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Diagtrack-Listener" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Diaglog" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\LwtNetLog" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Microsoft-Windows-Rdp-Graphics-RdpIdd-Trace" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\NetCore" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\NtfsLog" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\RadioMgr" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\RdrLog" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\ReadyBoot" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\SpoolerLogger" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\UBPM" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WdiContextLog" /v Start /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WiFiSession" /v Start /t REG_DWORD /d 0 /f
+
+echo disable Content Delivery
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "ContentDeliveryAllowed" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "OemPreInstalledAppsEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEverEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SilentInstalledAppsEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-310093Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338393Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353694Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353696Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338387Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "RotatingLockScreenOverlayEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338388Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 0 /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SoftLandingEnabled" /t REG_DWORD /d 0 /f
+
+echo blocking telemetry IP addresses...
+netsh advfirewall firewall set rule group="Remote Assistance" new enable=no
  NETSH advfirewall firewalADD rule name="telemetry_service.xbox.com" dir=out action=block remoteip=157.55.129.21 enable=yes
  NETSH advfirewall firewalADD rule name="telemetry_microsoft22.com" dir=out action=block remoteip=52.178.178.16 enable=yes
  NETSH advfirewall firewalADD rule name="telemetry_microsoft21.com" dir=out action=block remoteip=65.55.64.54 enable=yes
@@ -487,96 +1253,145 @@ setx POWERSHELL_TELEMETRY_OPTOUT 1
  NETSH advfirewall firewalADD rule name="telemetry_microsoft01.com" dir=out action=block remoteip=11.221.29.253 enable=yes
  NETSH advfirewall firewalADD rule name="telemetry_microsoft.com" dir=out action=block remoteip=104.96.147.3 enable=yes
  NETSH advfirewall firewalADD rule name="telemetry_telemetry.microsoft.com" dir=out action=block remoteip=65.52.100.9 enable=yes
- echo disabling Windows to repair itself through updates...
- REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "UseWindowsUpdate" /t REG_DWORD /d 2 /f
- REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "LocalSourcePath" /t REG_EXPAND_SZ /d %NOURL% /f
- REG ADD "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /f
- REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "UseWindowsUpdate" /t REG_DWORD /d 2 /f
- REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "LocalSourcePath" /t REG_EXPAND_SZ /d %NOURL% /f
- REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /v "**del.RepairContentServerSource" /t REG_SZ /d " " /f
- REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy Objects\{7C0F6EBB-E44C-48D1-82A9-0561C4650831}Machine\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Servicing" /f
- echo deleting uneeded files
- cd C:\Program Files\WindowsApps\DeletedAllUserPackages
- DEL *.* /f
- DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2021.427.138.0_neutral_~_8wekyb3d8bbwe" /F
- DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2105.900.24.0_neutral_split.scale-100_8wekyb3d8bbwe" /F
- DEL "C:\Program Files\WindowsApps\Microsoft.GamingApp_2105.900.24.0_x64__8wekyb3d8bbwe" /f
- DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_neutral_~_8wekyb3d8bbwe" /f
- DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_neutral_split.scale-100_8wekyb3d8bbwe" /f
- DEL "C:\Program Files\WindowsApps\Microsoft.XboxGamingOverlay_5.822.6271.0_x64__8wekyb3d8bbwe" /F
+ echo delete tasks
+schtasks /Delete /TN "\Microsoft\Windows\AppID\EDP Policy Manager" /F
+schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierdaily" /F
+schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierinstall" /F
+schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\DsSvcCleanup" /F
+schtasks /Delete /TN "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /F
+schtasks /Delete /TN "\Microsoft\Windows\Application Experience\PcaPatchDbTask" /F
+schtasks /Delete /TN "\Microsoft\Windows\Application Experience\ProgramDataUpdater" /F
+schtasks /Delete /TN "\Microsoft\Windows\Application Experience\StartupAppTask" /F
+schtasks /Delete /TN "\Microsoft\Windows\Autochk\Proxy" /F
+schtasks /Delete /TN "\Microsoft\Windows\BrokerInfrastructure\BgTaskRegistrationMaintenanceTask" /F
+schtasks /Delete /TN "\Microsoft\Windows\CloudExperienceHost\CreateObjectTask" /F
+schtasks /Delete /TN "\Microsoft\Windows\Defrag\ScheduledDefrag" /F
+schtasks /Delete /TN "\Microsoft\Windows\Device Information\Device" /F
+schtasks /Delete /TN "\Microsoft\Windows\Device Setup\Metadata Refresh" /F
+schtasks /Delete /TN "\Microsoft\Windows\Diagnosis\Scheduled" /F
+schtasks /Delete /TN "\Microsoft\Windows\DiskFootprint\Diagnostics" /F
+schtasks /Delete /TN "\Microsoft\Windows\InstallService\ScanForUpdates" /F
+schtasks /Delete /TN "\Microsoft\Windows\InstallService\ScanForUpdatesAsUser" /F
+schtasks /Delete /TN "\Microsoft\Windows\InstallService\SmartRetry" /F
+schtasks /Delete /TN "\Microsoft\Windows\Maintenance\WinSAT" /F
+schtasks /Delete /TN "\Microsoft\Windows\Management\Provisioning\Cellular" /F
+schtasks /Delete /TN "\Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvents" /F
+schtasks /Delete /TN "\Microsoft\Windows\MemoryDiagnostic\RunFullMemoryDiagnostic" /F
+schtasks /Delete /TN "\Microsoft\Windows\Mobile Broadband Accounts\MNO Metadata Parser" /F
+schtasks /Delete /TN "\Microsoft\Windows\MUI\LPRemove" /F
+schtasks /Delete /TN "\Microsoft\Windows\PI\Sqm-Tasks" /F
+schtasks /Delete /TN "\Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem" /F
+schtasks /Delete /TN "\Microsoft\Windows\Printing\EduPrintProv" /F
+schtasks /Delete /TN "\Microsoft\Windows\PushToInstall\LoginCheck" /F
+schtasks /Delete /TN "\Microsoft\Windows\Ras\MobilityManager" /F
+schtasks /Delete /TN "\Microsoft\Windows\Registry\RegIdleBackup" /F
+schtasks /Delete /TN "\Microsoft\Windows\RetailDemo\CleanupOfflineContent" /F
+schtasks /Delete /TN "\Microsoft\Windows\Shell\FamilySafetyMonitor" /F
+schtasks /Delete /TN "\Microsoft\Windows\Shell\FamilySafetyRefresh" /F
+schtasks /Delete /TN "\Microsoft\Windows\Shell\IndexerAutomaticMaintenance" /F
+schtasks /Delete /TN "\Microsoft\Windows\SoftwareProtectionPlatform\SvcRestartTaskNetwork" /F
+schtasks /Delete /TN "\Microsoft\Windows\StateRepository\MaintenanceTasks" /F
+schtasks /Delete /TN "\Microsoft\Windows\Time Synchronization\ForceSynchronizeTime" /F
+schtasks /Delete /TN "\Microsoft\Windows\Time Synchronization\SynchronizeTime" /F
+schtasks /Delete /TN "\Microsoft\Windows\Time Zone\SynchronizeTimeZone" /F
+schtasks /Delete /TN "\Microsoft\Windows\UPnP\UPnPHostConfig" /F
+schtasks /Delete /TN "\Microsoft\Windows\WaaSMedic\PerformRemediation" /F
+schtasks /Delete /TN "\Microsoft\Windows\Windows Error Reporting\QueueReporting" /F
+schtasks /Delete /TN "\Microsoft\Windows\Windows Filtering Platform\BfeOnServiceStartTypeChange" /F
+schtasks /Delete /TN "\Microsoft\Windows\Windows Media Sharing\UpdateLibrary" /F
+schtasks /Delete /TN "\Microsoft\Windows\WindowsUpdate\Scheduled Start" /F
+schtasks /Delete /TN "\Microsoft\Windows\Wininet\CacheTask" /F
+:menu
 
- echo disabling PowerShell telemetry
- powershell.exe -ExecutionPolicy -Unrestricted -Command "$POWERSHELL_Telemetry_OPTOUT = $true"
+:defender
+echo killing tasks related to Defender
+taskkill /f /im NisSrv.exe
+taskkill /f /im SecurityHealthHost.exe
+taskkill /f /im SecurityHealthService.exe
+taskkill /f /im SecurityHealthSystray.exe
+taskkill /f /im SkypeBackgroundHost.exe
+taskkill /f /im MsMpEng.exe
+taskkill /f /im msiexec.exe
+echo deleting Defender
+del /f /q "C:\Windows\System32\smartscreen.exe"
+del /f /q "C:\Windows\System32\SecurityHealthSystray.exe"
+del /f /q "C:\Windows\System32\SecurityHealthService.exe"
+del /f /q "C:\Windows\System32\SecurityHealthAgent.dll"
+del /f /q "C:\Windows\System32\SecurityHealthHost.exe"
+del /f /q "C:\Windows\System32\SecurityHealthSSO.dll"
+del /f /q "C:\Windows\System32\SecurityHealthCore.dll"
+del /f /q "C:\Windows\System32\SecurityHealthProxyStub.dll"
+del /f /q "C:\Windows\System32\SecurityHealthUdk.dll"
+rd /s /q "C:\Program Files\Windows Defender"
+rd /s /q "C:\ProgramData\Microsoft\Windows Defender"
+rd /s /q "C:\Program Files (x86)\Windows Defender"
+del /f /q "C:\Windows\System32\drivers\WdNisDrv.sys"
+rd /s /q "C:\Program Files\Windows Defender Advanced Threat Protection"
+rd /s /q "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection"
 
- echo changing regkeys 
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' -Name 'Start_TrackProgs' -Value 0 -Type 'DWORD' -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\System' -Name 'EnableActivityFeed' -Value '0' -Type 'DWORD' -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\WMDRM' -Name 'DisableOnline' -Type 'DWORD' -Value 1 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\MRT' -Name 'DontReportInfectionInformation' -Type 'DWORD' -Value 1 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'SpynetReporting' -Type 'DWORD' -Value 0 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet' -Name 'SubmitSamplesConsent' -Type 'DWORD' -Value 2 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Policies\Microsoft\Windows\EdgeUI' -Name 'DisableRecentApps' -Type 'DWORD' -Value 1 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\MediaPlayer\Preferences' -Name 'UsageTracking' -Type 'DWORD' -Value 0 -Force"
-
- echo you may need to restart for all changes to take effect...
-if %debloat%==no goto :menu
+:Indexing 
+NET STOP "WSearch"
+sc config "WSearch" start=disabled
 pause
-goto :menu
+goto :menu2msg
+
+
+:DisableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+pause
+goto :menu2msg
+
+:EnableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+pause
+goto :menu2msg
+
+
+:HealthTools
+cls
+echo changing regkeys
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools" /f
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
+reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
+echo delete UPD files
+rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
+:menu2msg
 
 
 :others
-echo setting power plan to high performance...
-powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-taskkill /f /im explorer.exe
-echo changing registry keys...
-sc config W32Time start=demand >nul 2>nul
-sc start W32Time >nul 2>nul
-w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org"
-w32tm /config /update
-w32tm /resync
-net stop w32time
-sc config W32Time start=disabled
-%windir%\System32\SystemSettingsAdminFlows.exe SetInternetTime 1
-start "" "%windir%\System32\SystemSettingsAdminFlows.exe" SetAutoTimeZoneUpdate 1
-start "" "%windir%\System32\SystemSettingsAdminFlows.exe" ForceTimeSync 1
-REG ADD "HKLM\System\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d "25" /f
-REG ADD "HKLM\System\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d "25" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /d 1 /t REG_DWORD /f
-REG ADD "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f
-REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d "1" /f 1>NUL 2>NUL
-REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d 1 /f
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
-REG ADD "HKLM\Software\Policies\Microsoft\Windows\System" /v "EnableActivityFeed" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "0" /f 1>NUL 2>NUL
-REG ADD "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "506" /f
-REG ADD "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_SZ /d "122" /f
-taskkill /f /im explorer.exe
+echo optimizing time servers
+net start w32time > nul
+w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" > nul
+net stop w32time > nul
+net start w32time > nul
+w32tm /config /update > nul
+w32tm /resync > nul
 
-REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d 0 /f
-REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d 0 /f
-start explorer.exe
-REG ADD "HKCR\*\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
-REG ADD "HKCR\*\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
-REG ADD "HKCR\*\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
-REG ADD "HKCR\*\shell\runas\command" /v /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
-REG ADD "HKCR\*\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" && icacls \"%%1\" /grant administrators:F" /f
-REG ADD "HKCR\Directory\shell\runas" /ve /t REG_SZ /d "Take ownership" /f
-REG ADD "HKCR\Directory\shell\runas" /v "HasLUAShield" /t REG_SZ /d "" /f
-REG ADD "HKCR\Directory\shell\runas" /v "NoWorkingDirectory" /t REG_SZ /d "" /f
-REG ADD "HKCR\Directory\shell\runas\command" /ve /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
-REG ADD "HKCR\Directory\shell\runas\command" /v "IsolatedCommand" /t REG_SZ /d "cmd.exe /c takeown /f \"%%1\" /r /d y && icacls \"%%1\" /grant administrators:F /t" /f
-REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
-REG ADD "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments" /v "SaveZoneInformation" /t REG_DWORD /d "1" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "9" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
-REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
-REG ADD "HKLM\Software\Microsoft\FTH" /v "Enabled" /t reg_DWORD /d "0" /f >NUL 2>&1
+echo disable Game Mode
+reg add "HKCU\SOFTWARE\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d 0 /f > nul
+reg add "HKCU\SOFTWARE\Microsoft\GameBar" /v "AutoGameModeEnabled" /t REG_DWORD /d 0 /f > nul
+
+echo disable/delete optional features
+DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"App.Support.QuickAssist~~~~0.0.1.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"Browser.InternetExplorer~~~~0.0.11.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"Hello.Face.18967~~~~0.0.1.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"MathRecognizer~~~~0.0.1.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"OpenSSH.Client~~~~0.0.1.0" /NoRestart
+DISM /Online /Remove-Capability /CapabilityName:"Print.Fax.Scan~~~~0.0.1.0" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Internet-Explorer-Optional-amd64" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"MicrosoftWindowsPowerShellV2" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"MicrosoftWindowsPowerShellV2Root" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"WCF-TCP-PortSharing45" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-Features" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-InternetPrinting-Client" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Printing-XPSServices-Features" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"MSRDC-Infrastructure" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"SmbDirect" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Windows-Defender-Default-Definitions" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"WorkFolders-Client" /NoRestart
+
+echo memory Management
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePageCombining" /t REG_DWORD /d "1" /f
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d "1" /f
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t reg_DWORD /d "0" /f >NUL 2>&1
@@ -588,7 +1403,7 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t reg_DWORD /d "0" /f >NUL 2>&1
-echo storage optimizations (which is what the DuckOS script told me? loks like memory ones too)
+optimizations (which is what the DuckOS script told me? loks like memory ones too)
 fsutil behavior set memoryusage 2
 fsutil behavior set mftzone 2
 fsutil behavior set allowextchar 0
@@ -603,50 +1418,92 @@ fsutil behavior set quotanotify 86400
 fsutil behavior set symlinkevaluation L2L:1
 fsutil behavior set disablelastaccess 1
 fsutil behavior set disable8dot3 1
-echo disabling unused Windows features...
-PowerShell -ExecutionPolicy Unrestricted -Command Disable-WindowsOptionalFeature -Online -NoRestart -FeatureName "WorkFolders-Client"
-echo done
-pause
-goto :menu
+
+echo power/performance
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "9" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
+REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
+REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
+
+echo other crap
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsAADCloudSearchEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsDeviceSearchHistoryEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsMSACloudSearchEnabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "SafeSearchMode" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "ConnectedSearchUseWeb" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "DisableWebSearch" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "EnableDynamicContentInWSB" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSettingSync" /t REG_DWORD /d "2" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSettingSyncUserOverride" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSyncOnPaidNetwork" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Personalization" /v "Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\BrowserSettings" /v "Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Credentials" /v "Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility" /v "Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows" /v "Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" /v "SyncPolicy" /t REG_DWORD /d "5" /f
+reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /ve /t REG_SZ /d "All Tasks" /f
+reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /v "InfoTip" /t REG_SZ /d "View list of all Control Panel tasks" /f
+reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /v "System.ControlPanel.Category" /t REG_SZ /d "5" /f
+reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}\DefaultIcon" /ve /t REG_SZ /d "C:\Windows\System32\imageres.dll,-27" /f
+reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}\Shell\Open\Command" /ve /t REG_SZ /d "explorer.exe shell:::{ED7BA470-8E54-465E-825C-99712043E01C}" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /ve /t REG_SZ /d "All Tasks" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d "3" /f
+reg add "HKCU\Control Panel\Desktop" /v "UserPreferencesMask" /t REG_BINARY /d "9012038010000000" /f
+reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "MinAnimate" /t REG_SZ /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DWM" /v "DisallowAnimations" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\DWM" /v "EnableAeroPeek" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\DWM" /v "EnableWindowColorization" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAnimations" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableTransparency" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "DisableAcrylicBackgroundOnLogon" /t REG_DWORD /d "1" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
+reg add "HKCU\Control Panel\Accessibility\HighContrast" /v "Flags" /t REG_DWORD /d "0" /f
+reg add "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_DWORD /d "0" /f
+reg add "HKCU\Control Panel\Accessibility\MouseKeys" /v "Flags" /t REG_DWORD /d "0" /f
+reg add "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_DWORD /d "0" /f
+reg add "HKCU\Control Panel\Accessibility\ToggleKeys" /v "Flags" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" /v "EnthusiastMode" /t REG_DWORD /d "1" /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "AutoReboot" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "CrashDumpEnabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "LogEvent" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "DisplayParameters" /t REG_DWORD /d 1 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry" /v "DeviceDumpEnabled" /t REG_DWORD /d 0 /f
 
 
-:RestoreOptions
-cls
-Echo will be here soon
-goto :menu
-
-
-:security
-cls
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name 'FeatureSettingsOverride' -Type DWORD -Value 72 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name 'FeatureSettingsOverrideMask' -Type DWORD -Value 3 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Virtualization' -Name 'MinVmVersionForCpuBasedMitigations' -Type String -Value '1.0' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks' -Name 'Value' -Type String -Value 'Deny' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search' -Name 'AlwaysUseAutoLangDetection' -type DWORD -Value 0 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'Wpad' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\' -Name 'Wpad' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'WpadOverride' -Type 'DWORD' -Value 1 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad' -Name 'WpadOverride' -Type 'DWORD' -Value 1 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\SecurityProviders\Wdigest' -Name 'UseLogonCredential' -Type DWORD -Value 0 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550 -AttackSurfaceReductionRules_Actions Enabled"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids D3E037E1-3EB8-44C8-A917-57927947596D -AttackSurfaceReductionRules_Actions Enabled"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Add-MpPreference -AttackSurfaceReductionRules_Ids b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4 -AttackSurfaceReductionRules_Actions Enabled"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2Root' -NoRestart"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Disable-WindowsOptionalFeature -Online -FeatureName 'MicrosoftWindowsPowerShellV2' -NoRestart"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-MpPreference -DisableRemovableDriveScanning 0"
-powershell.exe -ExecutionPolicy Unrestricted -Command "New-Item -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name ServerMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -FOrce"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name ClientMinKeyBitLength -Type 'DWORD' -Value 0x00001000 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\KeyExchangeAlgorithms\Diffie-Hellman' -Name Enabled -Type 'DWORD' -Value 0x00000001 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name 'HttpAcceptLanguageOptOut' -Type 'DWORD' -Value 1 -Force"
-PowerShell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\MRT' -Name 'DontReportInfectionInformation' -Type 'DWORD' -Value 1 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\Software\Policies\Microsoft\FindMyDevice' -Name AllowFindMyDevice -Type 'DWORD' -Value 0 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\Control Panel\International\User Profile' -Name HttpAcceptLanguageOptOut -Type 'DWORD' -Value 1 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel\' -Name 'MitigationOptions' -Type 'QWORD' -Value '1000000000000' -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Input\TIPC' -Name 'Enabled' -Type 'DWORD' -Value 0 -Force"
-powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Input\TIPC' -Name 'Enabled' -Type 'DWORD' -Value 0 -Force"
- powershell.exe -ExecutionPolicy Unrestricted -Command "Set-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings' -Name 'CallLegacyWCMPolicies' -Type 'DWORD' -Value 0 -Force"
-schtasks /change /TN "Microsoft\Windows\Device Information\Device" /DISABLE
-REG ADD "HKLM\System\CurrentControlSet\Control\Session Manager\kernel" /v "DisableTsx" /t REG_DWORD /d 1 /f
-pause
-goto :menu 
+echo security
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\bluetoothSync" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\broadFileSystemAccess" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\chat" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\contacts" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\documentsLibrary" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\email" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCall" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCallHistory" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\picturesLibrary" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\radios" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotificationListener" /v "Value" /t REG_SZ /d "Deny" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /v "Value" /t REG_SZ /d "Deny" /f
+echo disable Find My Device
+reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "AllowFindMyDevice" /t REG_DWORD /d "0" /f
+echo disable location sync
+reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "LocationSyncEnabled" /t REG_DWORD /d "0" /f
+echo disable lock screen camera
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d "1" /f
+echo online speech stuff
+reg add "HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings" /v "OnlineSpeechPrivacy" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Speech" /v "AllowSpeechModelUpdate" /t REG_DWORD /d "0" /f
+:menu
