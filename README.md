@@ -1,9 +1,6 @@
-this is a Windows toolbox. that can clear out and optimize Windows.
-thats really it.
-yes i am making fun of the fact that this is a worse version of CTT Windows toolbox with less features.
+a Windows toolbox to help you with performance and getting you started with a Windows install. 
+it uses code from various other scripts combined into one script. 
 
-this takes stuff from other batch scripts and combines it into one huge script. at least what im hoping.
+recommended to run as admin.
 
-for all features make sure to run as administator
-
-could get updated again
+updates planned out but sperratic
