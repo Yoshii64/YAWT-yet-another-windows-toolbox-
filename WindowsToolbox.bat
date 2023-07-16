@@ -5,15 +5,14 @@ wmic process where name="cmd.exe" CALL setpriority 32768 >nul
 echo needed to do before debloat
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance" /v "Enabled" /t REG_DWORD /d 0 /f
 cls
-echo - type 1 to disable Windows Update
-echo - type 2 to optimize network options
-echo - type 3 to clear temp files
-echo - type 4 to check and fix errors in Windows
-echo - type 5 to install a program
-echo - type 6 for a menu that shows more optimizations
-echo - type 7 to debloat Windows
-echo - type 8 to enhance security
-echo - type 9 for other optimizations/performance tweaks
+echo - type 1 to disable Windows Update (recommended)
+echo - type 2 to optimize network options (recommended)
+echo - type 3 to clear temp files (recommended)
+echo - type 4 to check and fix errors in Windows (optional)
+echo - type 5 to install a program (optional)
+echo - type 6 for a menu that shows more optimizations (recommended)
+echo - type 7 to debloat Windows (very recommended)
+echo - type 8 for other optimizations/performance tweaks (very recommended)
 echo - type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
@@ -23,8 +22,7 @@ if %message1%==4 goto :fix
 if %message1%==5 goto :install
 if %message1%==6 goto :misc
 if %message1%==7 goto :debloat
-if %message1%==8 goto :security
-if %message1%==9 goto :others
+if %message1%==8 goto :others
 if %message1%==exit exit
 else echo - invalid input
 goto :menu
@@ -662,7 +660,7 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 
 echo Microsoft.Windows.ContentDeliveryManager
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ContentDeliveryManager*'} | ForEach-Object { $_.Name }"
-
+powershell
 echo Microsoft.Windows.OOBENetworkCaptivePortal
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkCaptivePortal*'} | ForEach-Object { $_.Name }"
 
@@ -677,6 +675,9 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 
 echo Microsoft.Advertising.Xaml
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Advertising.Xaml*'} | ForEach-Object { $_.Name }"
+
+echo GamingApp
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.GamingApp* | Remove-AppxPackage"
 
 echo Microsoft.BingWeather
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.BingWeather*'} | ForEach-Object { $_.Name }"
@@ -699,6 +700,12 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 echo Microsoft.MicrosoftEdgeDevToolsClient
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | ForEach-Object { $_.Name }"
 
+echo WindowsStore
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
+
+echo Clipchamp
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Clipchamp.Clipchamp* | Remove-AppxPackage"
+
 echo Microsoft.MicrosoftOfficeHub
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftOfficeHub*'} | ForEach-Object { $_.Name }"
 
@@ -707,6 +714,12 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 
 echo Microsoft.MicrosoftStickyNotes
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftStickyNotes*'} | ForEach-Object { $_.Name }"
+
+echo WindowsCalculator
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+
+echo MicrosoftStickyNotes
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
 
 echo Microsoft.MSPaint
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MSPaint*'} | ForEach-Object { $_.Name }"
@@ -761,6 +774,7 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 
 echo Microsoft.ZuneVideo
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneVideo*'} | ForEach-Object { $_.Name }"
+
 echo XboxGameOverlay
 powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
 
@@ -1359,6 +1373,9 @@ rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
 
 
 :others
+echo setting power plan to High Performance
+powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
 echo optimizing time servers
 net start w32time > nul
 w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" > nul
