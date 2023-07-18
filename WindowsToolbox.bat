@@ -55,7 +55,8 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "AllowBuildP
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableConfigFlighting" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableExperimentation" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "HideInsiderPage" /t REG_DWORD /d "1" /f
-:menu 
+pause
+goto :menu 
 
 :network
 cls
@@ -362,6 +363,61 @@ echo done
 pause
 goto :misc
 
+:defender
+echo killing tasks related to Defender
+taskkill /f /im NisSrv.exe
+taskkill /f /im SecurityHealthHost.exe
+taskkill /f /im SecurityHealthService.exe
+taskkill /f /im SecurityHealthSystray.exe
+taskkill /f /im SkypeBackgroundHost.exe
+taskkill /f /im MsMpEng.exe
+taskkill /f /im msiexec.exe
+echo deleting Defender
+del /f /q "C:\Windows\System32\smartscreen.exe"
+del /f /q "C:\Windows\System32\SecurityHealthSystray.exe"
+del /f /q "C:\Windows\System32\SecurityHealthService.exe"
+del /f /q "C:\Windows\System32\SecurityHealthAgent.dll"
+del /f /q "C:\Windows\System32\SecurityHealthHost.exe"
+del /f /q "C:\Windows\System32\SecurityHealthSSO.dll"
+del /f /q "C:\Windows\System32\SecurityHealthCore.dll"
+del /f /q "C:\Windows\System32\SecurityHealthProxyStub.dll"
+del /f /q "C:\Windows\System32\SecurityHealthUdk.dll"
+rd /s /q "C:\Program Files\Windows Defender"
+rd /s /q "C:\ProgramData\Microsoft\Windows Defender"
+rd /s /q "C:\Program Files (x86)\Windows Defender"
+del /f /q "C:\Windows\System32\drivers\WdNisDrv.sys"
+rd /s /q "C:\Program Files\Windows Defender Advanced Threat Protection"
+rd /s /q "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection"
+goto :misc
+
+:Indexing 
+NET STOP "WSearch"
+sc config "WSearch" start=disabled
+pause
+goto :misc
+
+
+:DisableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+pause
+goto :misc
+
+:EnableUAC
+C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+pause
+goto :misc
+
+
+:HealthTools
+cls
+echo changing regkeys
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools" /f
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
+reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
+echo delete UPD files
+rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
+goto :misc
+
 :debloat
 cls
 set /p debloat=do you want to remove all the programs that are not needed?
@@ -660,7 +716,7 @@ PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyN
 
 echo Microsoft.Windows.ContentDeliveryManager
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ContentDeliveryManager*'} | ForEach-Object { $_.Name }"
-powershell
+
 echo Microsoft.Windows.OOBENetworkCaptivePortal
 PowerShell -Command "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkCaptivePortal*'} | ForEach-Object { $_.Name }"
 
@@ -1315,61 +1371,9 @@ schtasks /Delete /TN "\Microsoft\Windows\Windows Filtering Platform\BfeOnService
 schtasks /Delete /TN "\Microsoft\Windows\Windows Media Sharing\UpdateLibrary" /F
 schtasks /Delete /TN "\Microsoft\Windows\WindowsUpdate\Scheduled Start" /F
 schtasks /Delete /TN "\Microsoft\Windows\Wininet\CacheTask" /F
-:menu
-
-:defender
-echo killing tasks related to Defender
-taskkill /f /im NisSrv.exe
-taskkill /f /im SecurityHealthHost.exe
-taskkill /f /im SecurityHealthService.exe
-taskkill /f /im SecurityHealthSystray.exe
-taskkill /f /im SkypeBackgroundHost.exe
-taskkill /f /im MsMpEng.exe
-taskkill /f /im msiexec.exe
-echo deleting Defender
-del /f /q "C:\Windows\System32\smartscreen.exe"
-del /f /q "C:\Windows\System32\SecurityHealthSystray.exe"
-del /f /q "C:\Windows\System32\SecurityHealthService.exe"
-del /f /q "C:\Windows\System32\SecurityHealthAgent.dll"
-del /f /q "C:\Windows\System32\SecurityHealthHost.exe"
-del /f /q "C:\Windows\System32\SecurityHealthSSO.dll"
-del /f /q "C:\Windows\System32\SecurityHealthCore.dll"
-del /f /q "C:\Windows\System32\SecurityHealthProxyStub.dll"
-del /f /q "C:\Windows\System32\SecurityHealthUdk.dll"
-rd /s /q "C:\Program Files\Windows Defender"
-rd /s /q "C:\ProgramData\Microsoft\Windows Defender"
-rd /s /q "C:\Program Files (x86)\Windows Defender"
-del /f /q "C:\Windows\System32\drivers\WdNisDrv.sys"
-rd /s /q "C:\Program Files\Windows Defender Advanced Threat Protection"
-rd /s /q "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection"
-
-:Indexing 
-NET STOP "WSearch"
-sc config "WSearch" start=disabled
-pause
-goto :menu2msg
+goto :menu
 
 
-:DisableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
-pause
-goto :menu2msg
-
-:EnableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
-pause
-goto :menu2msg
-
-
-:HealthTools
-cls
-echo changing regkeys
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools" /f
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
-reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
-echo delete UPD files
-rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
-:menu2msg
 
 
 :others
@@ -1523,4 +1527,4 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScr
 echo online speech stuff
 reg add "HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings" /v "OnlineSpeechPrivacy" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Speech" /v "AllowSpeechModelUpdate" /t REG_DWORD /d "0" /f
-:menu
+goto :menu
