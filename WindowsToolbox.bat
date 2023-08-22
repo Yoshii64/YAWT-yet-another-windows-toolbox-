@@ -1424,7 +1424,7 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t reg_DWORD /d "0" /f >NUL 2>&1
-optimizations (which is what the DuckOS script told me? loks like memory ones too)
+: : optimizations (which is what the DuckOS script told me? loks like memory ones too)
 fsutil behavior set memoryusage 2
 fsutil behavior set mftzone 2
 fsutil behavior set allowextchar 0
