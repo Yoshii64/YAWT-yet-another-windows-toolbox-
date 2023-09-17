@@ -3,4 +3,4 @@ it uses code from various other scripts combined into one script.
 
 recommended to run as admin.
 
-updates planned out but sperratic
+last update (probably)
