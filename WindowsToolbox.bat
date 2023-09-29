@@ -74,12 +74,6 @@ netsh int tcp set global autotuninglevel=normal
 netsh interface Teredo set state type=enterpriseclient
 netsh int tcp set global rsc=disabled
 netsh interface Teredo set state servername=default
-echo setting up DNS optimizations...
-netsh interface ip delete dnsservers "Local Area Connection" all
-netsh interface iADD dns name="Local Area Connection" addr=8.8.4.4 index=1
-netsh interface iADD dns name="Local Area Connection" addr=8.8.8.8 index=2
-ipconfig /all | findstr /c:"8.8.4.4"
-ipconfig /all | findstr /c:"8.8.8.8"
 int ipv4 set glob defaultcurhoplimit=65
 int ipv6 set glob defaultcurhoplimit=65
 powershell -NoProfile "$net=get-netconnectionprofile; Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private" >nul 2>&1
@@ -197,24 +191,22 @@ echo type in 2 to enable backround apps
 echo type in 3 to uninstall onedrive
 echo type in 4 to install onedrive 
 echo type in 5 to uninstall edge
-echo type in 6 to disable Defender
-echo type in 7 to disable Windows Search Indexing
-echo type in 8 to disable User Account Control
-echo type in 9 to enable User Account Control
-echo type in 10 to disable Update Health Tools
-echo type in 11 to go back to the main menu
+echo type in 6 to disable Windows Search Indexing
+echo type in 7 to disable User Account Control
+echo type in 8 to enable User Account Control
+echo type in 9 to disable Update Health Tools
+echo type in 10 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
 if %menu2msg%==3 goto :onedriveuninstall
 if %menu2msg%==4 goto :onedriveinstall
 if %menu2msg%==5 goto :edgeuninstall
-if %menu2msg%==6 goto :defender
-if %menu2msg%==7 goto :Indexing
-if %menu2msg%==8 goto :DisableUAC
-if %menu2msg%==9 goto :EnableUAC
-if %menu2msg%==10 goto :HealthTools
-if %menu2msg%==11 goto :menu
+if %menu2msg%==6 goto :Indexing
+if %menu2msg%==7 goto :DisableUAC
+if %menu2msg%==8 goto :EnableUAC
+if %menu2msg%==9 goto :HealthTools
+if %menu2msg%==10 goto :menu
 pause
 goto :menu
 
@@ -233,8 +225,6 @@ echo uninstalling onedrive...
 echo killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
-%SystemRoot%\System32\OneDriveSetup.exe /uninstall
-%SystemRoot%\System32\OneDrive.exe /uninstall
 cd %UserProfile%\AppData\Local\Microsoft\OneDrive
 taskkill /F /IM "explorer.exe"
 DEL "." /F
@@ -244,8 +234,6 @@ cd %UserProfile%\AppData\Local\OneDrive
 DEL "."
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 echo deleting regkeys associated with onedrive...
-reg delete "HKCR\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F
-reg delete "HKCR\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /F
 reg delete "HKCR\Environment\OneDrive" /F
 reg delete "HKCR\Software\Microsoft\OneDrive"
 reg delete "\HKEY_CURRENT_USER\Software\Microsoft\OneDrive"
@@ -266,128 +254,41 @@ taskkill /F /IM MicrosoftEdgeUpdate.exe >nul 2>&1
 taskkill /F /IM msedge.exe >nul 2>&1
 taskkill /F /IM MicrosoftEdge* >nul 2>&1
 taskkill /F /FI "MODULES eq edgehtml.dll" >nul 2>&1
-taskkill /F /FI "MODULES eq msedgewebview2.exe" >nul 2>&1
 
 sc delete edgeupdate >nul 2>&1
 sc delete edgeupdatem >nul 2>&1
 sc delete MicrosoftEdgeElevationService >nul 2>&1
 echo deleting edge files...
 del "C:\Users\Public\Desktop\Microsoft Edge.lnk" >nul 2>&1
-rmdir /s /q "C:\ProgramData\Microsoft\EdgeUpdate" >nul 2>&1
-del "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" >nul 2>&1
-cd "%UserProfile%\AppData\Local\Microsoft"
-DEL "Edge"
-DEL "Internet Explorer"
-cd "%UserProfile%\AppData\LocalLow\Microsoft"
-DEL "Internet Explorer"
-cd "%UserProfile%\AppData\Roaming\Microsoft"
-DEL "Internet Explorer"
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 reg delete "HKCR\Software\Microsoft\Edge" /F
 del /f /q "C:\Program Files (x86)\Microsoft\Edge" >nul 2>&1
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate" >nul 2>&1
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeCore" >nul 2>&1
-rmdir /s /q "C:\Program Files (x86)\Microsoft\EdgeWebView"
 
 echo deleting regkeys associated with edge...
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarMigratedBrowserPin /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate" /f >nul 2>&1
-reg delete "HKCR\CLSID\{1FCBE96C-1697-43AF-9140-2897C7C69767}" /f >nul 2>&1
-reg delete "HKCR\AppID\{1FCBE96C-1697-43AF-9140-2897C7C69767}" /f >nul 2>&1
-reg delete "HKCR\Interface\{C9C2B807-7731-4F34-81B7-44FF7779522B}" /f >nul 2>&1
-reg delete "HKCR\TypeLib\{C9C2B807-7731-4F34-81B7-44FF7779522B}" /f >nul 2>&1
-reg delete "HKCR\MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCR\MSEdgePDF" /f >nul 2>&1
-reg delete "HKCR\MSEdgeMHT" /f >nul 2>&1
-reg delete "HKCR\AppID\{628ACE20-B77A-456F-A88D-547DB6CEEDD5}" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Clients\StartMenuInternet\Microsoft Edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\RegisteredApplications" /v "Microsoft Edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\msedge.exe" /f >nul 2>&1
-reg delete "HKCR\.htm\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.html\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.shtml\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.svg\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.xht\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.xhtml\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.webp\OpenWithProgids" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKCR\.xml\OpenWithProgIds" /v MSEdgeHTM /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts" /v "MSEdgeHTM_microsoft-edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\EnterpriseMode" /v MSEdgePath /f >nul 2>&1
-reg delete "HKCR\AppID\ie_to_edge_bho.dll" /f >nul 2>&1
-reg delete "HKCR\AppID\{31575964-95F7-414B-85E4-0E9A93699E13}" /f >nul 2>&1
-reg delete "HKCR\CLSID\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
-reg delete "HKCR\WOW6432Node\CLSID\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
-reg delete "HKCR\ie_to_edge_bho.IEToEdgeBHO" /f >nul 2>&1
-reg delete "HKCR\ie_to_edge_bho.IEToEdgeBHO.1" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main\EnterpriseMode" /v MSEdgePath /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{c9abcf16-8dc2-4a95-bae3-24fd98f2ed29}" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\Low Rights\ElevationPolicy\{c9abcf16-8dc2-4a95-bae3-24fd98f2ed29}" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\ProtocolExecute\microsoft-edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Internet Explorer\ProtocolExecute\microsoft-edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Internet Explorer\EdgeIntegration\AdapterLocations\C:\Program Files (x86)\Microsoft\Edge" /v Application /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Ext\PreApproved\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Ext\CLSID" /v "{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Edge" /f >nul 2>&1
-reg delete "HKCR\CLSID\{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
-reg delete "HKCR\WOW6432Node\CLSID\{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\PreviewHandlers" /v "{3A84F9C2-6164-485C-A7D9-4B27F8AC009E}" /f >nul 2>&1
-reg delete "HKCR\.pdf\ShellEx\{8895b1c6-b41f-4c1c-a562-0d564250836f}" /v "(Default)" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
-reg delete "HKU\S-1-5-21-3476428458-2503407758-626446112-1002\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
-reg delete "HKLM\SYSTEM\CurrentControlSet\Services\EventLog\Application\Edge" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\Microsoft\MediaPlayer\ShimInclusionList\msedge.exe" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge Update" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\RegisteredApplications" /v "Microsoft Edge" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.htm\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.html\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.shtml\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.svg\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.xht\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.xhtml\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Classes\.webp\OpenWithProgids" /v "MSEdgeHTM" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts" /v "MSEdgeHTM_microsoft-edge" /f >nul 2>&1
-reg delete "HKCU\SOFTWARE\Microsoft\Active Setup\Installed Components\{9459C573-B17A-45AE-9F64-1857B5D58CEE}" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Edge" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView" /f
-reg delete "HKCU\SOFTWARE\Microsoft\EdgeWebView" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "DoNotUpdateToEdgeWithChromium" /t REG_DWORD /d 1 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "Install{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062}" /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "Install{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "InstallDefault" /t REG_DWORD /d 0 /f
 echo done
 pause
-goto :misc
-
-:defender
-echo killing tasks related to Defender
-taskkill /f /im NisSrv.exe
-taskkill /f /im SecurityHealthHost.exe
-taskkill /f /im SecurityHealthService.exe
-taskkill /f /im SecurityHealthSystray.exe
-taskkill /f /im SkypeBackgroundHost.exe
-taskkill /f /im MsMpEng.exe
-taskkill /f /im msiexec.exe
-echo deleting Defender
-del /f /q "C:\Windows\System32\smartscreen.exe"
-del /f /q "C:\Windows\System32\SecurityHealthSystray.exe"
-del /f /q "C:\Windows\System32\SecurityHealthService.exe"
-del /f /q "C:\Windows\System32\SecurityHealthAgent.dll"
-del /f /q "C:\Windows\System32\SecurityHealthHost.exe"
-del /f /q "C:\Windows\System32\SecurityHealthSSO.dll"
-del /f /q "C:\Windows\System32\SecurityHealthCore.dll"
-del /f /q "C:\Windows\System32\SecurityHealthProxyStub.dll"
-del /f /q "C:\Windows\System32\SecurityHealthUdk.dll"
-rd /s /q "C:\Program Files\Windows Defender"
-rd /s /q "C:\ProgramData\Microsoft\Windows Defender"
-rd /s /q "C:\Program Files (x86)\Windows Defender"
-del /f /q "C:\Windows\System32\drivers\WdNisDrv.sys"
-rd /s /q "C:\Program Files\Windows Defender Advanced Threat Protection"
-rd /s /q "C:\ProgramData\Microsoft\Windows Defender Advanced Threat Protection"
 goto :misc
 
 :Indexing 
@@ -1353,7 +1254,6 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting" /v "DoReport"
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /freg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "UploadUserActivities" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "PublishUserActivities" /t REG_DWORD /d "0" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /v "NoGenTicket" /t REG_DWORD /d "1" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Circular Kernel Context Logger" /v Start /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\CloudExperienceHostOobe" /v Start /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v Start /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger" /v Start /t REG_DWORD /d 0 /f
@@ -1470,18 +1370,6 @@ goto :menu
 echo setting power plan to High Performance
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 
-echo optimizing time servers
-net start w32time > nul
-w32tm /config /syncfromflags:manual /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org" > nul
-net stop w32time > nul
-net start w32time > nul
-w32tm /config /update > nul
-w32tm /resync > nul
-
-echo disable Game Mode
-reg add "HKCU\SOFTWARE\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d 0 /f > nul
-reg add "HKCU\SOFTWARE\Microsoft\GameBar" /v "AutoGameModeEnabled" /t REG_DWORD /d 0 /f > nul
-
 echo disable/delete optional features
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
 DISM /Online /Remove-Capability /CapabilityName:"App.Support.QuickAssist~~~~0.0.1.0" /NoRestart
@@ -1550,7 +1438,6 @@ powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b49
 powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1 >nul
 powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1 >nul
 powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUSWINDOW 20000 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFCHECK 100000 >nul
 powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0 >nul
 powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1 >nul
 powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100 >nul
@@ -1584,20 +1471,11 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Crede
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" /v "SyncPolicy" /t REG_DWORD /d "5" /f
-reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /ve /t REG_SZ /d "All Tasks" /f
-reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /v "InfoTip" /t REG_SZ /d "View list of all Control Panel tasks" /f
-reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /v "System.ControlPanel.Category" /t REG_SZ /d "5" /f
-reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}\DefaultIcon" /ve /t REG_SZ /d "C:\Windows\System32\imageres.dll,-27" /f
-reg add "HKLM\SOFTWARE\Classes\CLSID\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}\Shell\Open\Command" /ve /t REG_SZ /d "explorer.exe shell:::{ED7BA470-8E54-465E-825C-99712043E01C}" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{D15ED2E1-C75B-443c-BD7C-FC03B2F08C17}" /ve /t REG_SZ /d "All Tasks" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v "VisualFXSetting" /t REG_DWORD /d "3" /f
 reg add "HKCU\Control Panel\Desktop" /v "UserPreferencesMask" /t REG_BINARY /d "9012038010000000" /f
 reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v "MinAnimate" /t REG_SZ /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DWM" /v "DisallowAnimations" /t REG_DWORD /d "1" /f
-reg add "HKCU\SOFTWARE\Microsoft\Windows\DWM" /v "EnableAeroPeek" /t REG_DWORD /d "0" /f
-reg add "HKCU\SOFTWARE\Microsoft\Windows\DWM" /v "EnableWindowColorization" /t REG_DWORD /d "1" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAnimations" /t REG_DWORD /d "0" /f
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "EnableTransparency" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "DisableAcrylicBackgroundOnLogon" /t REG_DWORD /d "1" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
