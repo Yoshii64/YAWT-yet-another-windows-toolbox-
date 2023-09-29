@@ -3,4 +3,8 @@ it uses code from various other scripts combined into one script.
 
 recommended to run as admin.
 
-last update (probably)
+things to be added
+more programs
+disabling Sleep Study and new services thanks to Atlas
+disable Copilot and Chat
+ability to disable mitigations (not recommended)
