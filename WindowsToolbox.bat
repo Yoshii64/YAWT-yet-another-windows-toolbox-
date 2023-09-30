@@ -1,11 +1,10 @@
 @echo off
-wmic process where name="cmd.exe" CALL setpriority 32768 >nul
 
 :menu
 echo needed to do before debloat
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance" /v "Enabled" /t REG_DWORD /d 0 /f
 cls
-echo - type 1 to disable Windows Update (recommended)
+echo - type 1 to disable Windows Update (optional)
 echo - type 2 to optimize network options (recommended)
 echo - type 3 to clear temp files (recommended)
 echo - type 4 to check and fix errors in Windows (optional)
@@ -46,8 +45,6 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOption
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAUAsDefaultShutdownOption" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 1 /f
-reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "RestartNotificationsAllowed2" /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings" /v "HideMCTLink" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" /v "SearchOrderConfig" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata" /v "PreventDeviceMetadataFromNetwork" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate" /v "SusClientId" /t REG_SZ /d "00000000-0000-0000-0000-000000000000" /f
@@ -99,7 +96,6 @@ REG ADD "HKLM\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "M
 REG ADD "HKLM\System\CurrentControlSet\Control\Nsi\{eb004a03-9b1a-11d4-9123-0050047759bc}\0" /v "0200" /t reg_BINARY /d "0000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000ff000000000000000000000000000000000000000000ff000000000000000000000000000000" /f >NUL 2>&1
 REG ADD "HKLM\System\CurrentControlSet\Control\Nsi\{eb004a03-9b1a-11d4-9123-0050047759bc}\0" /v "1700" /t reg_BINARY /d "0000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000ff000000000000000000000000000000000000000000ff000000000000000000000000000000" /f >NUL 2>&1
 )
-REG ADD "HKLM\Software\Policies\Microsoft\Windows\Psched" /v "TimerResolution" /t reg_DWORD /d "1" /f >NUL 2>&1
 REG ADD "HKLM\Software\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t reg_DWORD /d "00000000" /f >NUL 2>&1
 REG ADD "HKLM\Software\WOW6432Node\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\Software\Policies\Microsoft\Windows NT\DNSClient" /v "EnableMulticast" /t reg_DWORD /d "0" /f >NUL 2>&1
@@ -280,7 +276,6 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Browser Help
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\Browser Helper Objects\{1FD49718-1D00-4B19-AF5F-070AF6D5D54C}" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Edge" /f >nul 2>&1
 reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge Update" /f >nul 2>&1
-reg delete "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft EdgeWebView" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "Microsoft Edge Update" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\RegisteredApplications" /v "Microsoft Edge" /f >nul 2>&1
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts" /v "MSEdgeHTM_microsoft-edge" /f >nul 2>&1
@@ -299,12 +294,12 @@ goto :misc
 
 
 :DisableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
 pause
 goto :misc
 
 :EnableUAC
-C:\Windows\System32\cmd.exe /k %windir%\System32\reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
 pause
 goto :misc
 
@@ -442,6 +437,8 @@ set /p BTH=BluetoothUserService, BTAGService, BthAvctpSvc and bthserv (y/n)
 if %BTH%==y goto :Bluetooth
 if %BTH%==n goto :afterBluetooth
 :Bluetooth
+echo Microsoft-Windows-CoreSystem-Bluetooth-Telemetry
+powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-CoreSystem-Bluetooth-Telemetry | ForEach-Object { $_.Name }"
 echo BluetoothUserService
 sc config BluetoothUserService start= disabled
 NET STOP BluetoothUserService
@@ -941,7 +938,7 @@ echo Windows-Defender-Events
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Events | ForEach-Object { $_.Name }"
 
 echo Windows Backup
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -Name *WindowsBackup* | Remove-AppxPackage"
+powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -Name *WindowsBackup* | Remove-AppxPackage"
 
 echo Windows-Defender-Group-Policy-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
@@ -1138,9 +1135,6 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Mi
 echo Microsoft-Windows-Compat-GeneralTel
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-GeneralTel | ForEach-Object { $_.Name }"
 
-echo Microsoft-Windows-CoreSystem-Bluetooth-Telemetry
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-CoreSystem-Bluetooth-Telemetry | ForEach-Object { $_.Name }"
-
 echo Microsoft-Windows-DataCollection-Adm
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DataCollection-Adm | ForEach-Object { $_.Name }"
 
@@ -1289,31 +1283,15 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" 
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SoftLandingEnabled" /t REG_DWORD /d 0 /f
 
 echo blocking telemetry IP addresses...
-netsh advfirewall firewall set rule group="Remote Assistance" new enable=no
- NETSH advfirewall firewalADD rule name="telemetry_service.xbox.com" dir=out action=block remoteip=157.55.129.21 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft22.com" dir=out action=block remoteip=52.178.178.16 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft21.com" dir=out action=block remoteip=65.55.64.54 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft20.com" dir=out action=block remoteip=40.80.145.27 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft17.com" dir=out action=block remoteip=40.80.145.78 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft16.com" dir=out action=block remoteip=23.99.116.116 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft15.com" dir=out action=block remoteip=77.67.29.176 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft14.com" dir=out action=block remoteip=65.55.223.0-65.55.223.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft13.com" dir=out action=block remoteip=65.39.117.230 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft12.com" dir=out action=block remoteip=64.4.23.0-64.4.23.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft11.com" dir=out action=block remoteip=23.223.20.82 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft10.com" dir=out action=block remoteip=213.199.179.0-213.199.179.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft09.com" dir=out action=block remoteip=2.22.61.66 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft08.com" dir=out action=block remoteip=195.138.255.0-195.138.255.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft07.com" dir=out action=block remoteip=157.55.56.0-157.55.56.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft06.com" dir=out action=block remoteip=157.55.52.0-157.55.52.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft05.com" dir=out action=block remoteip=157.55.236.0-157.55.236.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft04.com" dir=out action=block remoteip=157.55.235.0-157.55.235.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft03.com" dir=out action=block remoteip=157.55.130.0-157.55.130.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft02.com" dir=out action=block remoteip=111.221.64.0-111.221.127.255 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft01.com" dir=out action=block remoteip=11.221.29.253 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_microsoft.com" dir=out action=block remoteip=104.96.147.3 enable=yes
- NETSH advfirewall firewalADD rule name="telemetry_telemetry.microsoft.com" dir=out action=block remoteip=65.52.100.9 enable=yes
- echo delete tasks
+curl -l -s https://winhelp2002.mvps.org/hosts.txt -o %SystemRoot%\System32\drivers\etc\hosts.temp
+if exist %SystemRoot%\System32\drivers\etc\hosts.temp (
+    cd %SystemRoot%\System32\drivers\etc
+    del /f /q hosts
+    ren hosts.temp hosts 
+    echo %c_green%Done!
+)
+
+echo delete tasks
 schtasks /Delete /TN "\Microsoft\Windows\AppID\EDP Policy Manager" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierdaily" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierinstall" /F
@@ -1402,7 +1380,7 @@ REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableBoottrace" /t reg_DWORD /d "0" /f >NUL 2>&1
-: : optimizations (which is what the DuckOS script told me? loks like memory ones too)
+echo fsutil (thanks DuckOS)
 fsutil behavior set memoryusage 2
 fsutil behavior set mftzone 2
 fsutil behavior set allowextchar 0
@@ -1410,9 +1388,6 @@ fsutil behavior set Bugcheckoncorrupt 0
 fsutil behavior set disablecompression 1
 fsutil behavior set disabledeletenotify 0
 fsutil behavior set disabledeletenotify refs 0
-fsutil behavior set disableencryption
-fsutil behavior set disablelastaccess
-fsutil behavior set encryptpagingfile
 fsutil behavior set quotanotify 86400
 fsutil behavior set symlinkevaluation L2L:1
 fsutil behavior set disablelastaccess 1
