@@ -349,6 +349,10 @@ REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\Pack
 REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.Windows.PeopleExperienceHost_10.0.22000.1_neutral_neutral_cw5n1h2txyewy"
 REG DELETE "HKEY_CLASSES_ROOT\Extensions\ContractId\Windows.BackgroundTasks\PackageId\Microsoft.XboxGameCallableUI_1000.22000.1.0_neutral_neutral_cw5n1h2txyewy"
 echo disabling/deleting Services...
+ :: big thanks Nyne lol
+ wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
+ wevtutil set-log "Microsoft-Windows-Kernel-Processor-Power/Diagnostic" /e:false
+ wevtutil set-log "Microsoft-Windows-UserModePowerService/Diagnostic" /e:false
  echo DiagTrack
  sc config "DiagTrack" start= disabled
  NET STOP DiagTrack
