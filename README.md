@@ -7,6 +7,6 @@ uses code from Atlas, DuckOS, and CoutX
 
 things to be added
 more programs
-disabling Sleep Study and new services thanks to Atlas
+add better Defender disabling
 disable Copilot and Chat
 ability to disable mitigations (not recommended)
