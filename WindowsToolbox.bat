@@ -7,7 +7,7 @@ cls
 echo - type 1 to disable Windows Update (optional)
 echo - type 2 to optimize network options (recommended)
 echo - type 3 to clear temp files (recommended)
-echo - type 4 to check and fix errors in Windows (optional)
+echo - type 4 to check and fix errors in Windows (recommended)
 echo - type 5 to install a program (optional)
 echo - type 6 for a menu that shows more optimizations (recommended)
 echo - type 7 to debloat Windows (very recommended)
@@ -73,6 +73,7 @@ netsh int tcp set global rsc=disabled
 netsh interface Teredo set state servername=default
 int ipv4 set glob defaultcurhoplimit=65
 int ipv6 set glob defaultcurhoplimit=65
+powershell.exe -ExecutionPolicy Unrestricted "Disable-NetAdapterBinding -Name "*" -ComponentID ms_tcpip6, ms_msclient, ms_server, ms_lldp, ms_lltdio, ms_rspndr"
 powershell -NoProfile "$net=get-netconnectionprofile; Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private" >nul 2>&1
 REG ADD "HKLM\Software\Microsoft\MSMQ\Parameters" /v "TCPNoDelay" /t reg_DWORD /d "00000001" /f >NUL 2>&1  
 for /f %%s in ('reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\NetworkCards" /f "ServiceName" /s') do set "str=%%i" & if "!str:ServiceName_=!" neq "!str!" (
@@ -432,9 +433,6 @@ echo disabling/deleting Services...
  echo RemoteAccess
  sc config RemoteAccess start= disabled
  NET STOP RemoteAccess
- echo RemoteRegistry
- sc config RemoteRegistry start= disabled
- NET STOP RemoteRegistry
  echo AppIDSvc
  sc config AppIDSvc start= disabled
 NET STOP AppIDSvc
