@@ -68,12 +68,7 @@ IPCONFIG /flushdns
 IPCONFIG /registerdns
 netsh winsock reset
 echo setting optimizations for network...
-netsh int tcp set supplemental
-netsh int tcp set heuristics disabled
-netsh int tcp set global timestamps=disabled
-netsh int tcp set global autotuninglevel=normal
 netsh interface Teredo set state type=enterpriseclient
-netsh int tcp set global rsc=disabled
 netsh interface Teredo set state servername=default
 int ipv4 set glob defaultcurhoplimit=65
 int ipv6 set glob defaultcurhoplimit=65
@@ -1485,6 +1480,12 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotificationListener" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /v "Value" /t REG_SZ /d "Deny" /f
 bcdedit /set nx AlwaysOff >nul
+echo disable .rdp files
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v AllowUnsignedFiles /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v AllowSignedFiles /t REG_DWORD /d "0" /f
+echo mitigate some vunerabilities
+reg delete HKEY_CLASSES_ROOT\ms-msdt /f
+icacls %WinDir%\system32\config\*.* /inheritance:e >nul 2>&1
 
 set /p Hibernation= Do you want to disable hibernation? (y/n)
 if %Hibernation%==y powercfg /h off >nul
