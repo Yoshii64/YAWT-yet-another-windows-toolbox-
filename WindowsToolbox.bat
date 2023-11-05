@@ -455,6 +455,9 @@ NET STOP BthAvctpSvc
 echo bthserv
 sc config bthserv start= disabled
 NET STOP bthserv
+echo NetBT
+sc config NetBT start=disabled
+NET STOP NETBt
 goto :afterBluetooth
 :afterBluetooth
 echo CryptSvc
@@ -613,9 +616,6 @@ NET STOP fhsvc
 echo wlpasvc
 sc config wlpasvc start= disabled
 NET STOP wlpasvc
-echo NetBT
-sc config NetBT start=disabled
-NET STOP NETBt
 echo Windows Insider Service
 sc config wisvc start= disabled
 NET STOP wisvc
