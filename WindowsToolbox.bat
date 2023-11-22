@@ -260,11 +260,8 @@ sc delete edgeupdate >nul 2>&1
 sc delete edgeupdatem >nul 2>&1
 sc delete MicrosoftEdgeElevationService >nul 2>&1
 echo deleting edge files...
-del "C:\Users\Public\Desktop\Microsoft Edge.lnk" >nul 2>&1
-reg delete "HKCR\Software\Microsoft\Edge" /F
-del /f /q "C:\Program Files (x86)\Microsoft\Edge" >nul 2>&1
+for /f "delims=" %a in ('where /r C:\ *edge.lnk*') do (del /f /q "%a")
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate" >nul 2>&1
-del /f /q "C:\Program Files (x86)\Microsoft\EdgeCore" >nul 2>&1
 
 
 echo Edge regkeys
