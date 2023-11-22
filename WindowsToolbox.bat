@@ -1338,6 +1338,33 @@ goto :menu
 :others
 echo setting power plan to High Performance
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+echo power settings
+REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
+REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
+powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0 >nul
+powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0 >nul
+powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0 >nul
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
+powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0 >nul
+powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0 >nul
+powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1 >nul
+powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1 >nul
+powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1 >nul
+powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUSWINDOW 20000 >nul
+powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0 >nul
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1 >nul
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100 >nul
+powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0 >nul
+powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0 >nul
+powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0 >nul
+powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100 >nul
+powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100 >nul
+powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100 >nul
+powercfg -setacvalueindex scheme_current sub_processor IDLECHECK 100000 >nul
+powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0 >nul
+powercfg -setactive scheme_current >nul
 
 echo disable/delete optional features
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
@@ -1400,33 +1427,7 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
-powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0 >nul
-powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0 >nul
-powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0 >nul
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
-powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUSWINDOW 20000 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0 >nul
-powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLECHECK 100000 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0 >nul
-powercfg -setactive scheme_current >nul
 
 echo other crap
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d "0" /f
@@ -1470,6 +1471,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "DisplayParamete
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry" /v "DeviceDumpEnabled" /t REG_DWORD /d 0 /f
 
 echo security
+echo permissions
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\bluetoothSync" /v "Value" /t REG_SZ /d "Deny" /f
@@ -1487,7 +1489,9 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotificationListener" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /v "Value" /t REG_SZ /d "Deny" /f
-bcdedit /set nx AlwaysOff >nul
+echo .NET cryptogrophy
+reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v4.0.30319" /v "SchUseStrongCrypto" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Microsoft\.NetFramework\v4.0.30319" /v "SchUseStrongCrypto" /t REG_DWORD /d "1" /f
 
 set /p Hibernation= Do you want to disable hibernation? (y/n)
 if %Hibernation%==y powercfg /h off >nul
