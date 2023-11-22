@@ -122,7 +122,6 @@ del /s /f /q %temp%\*.*
 cd C:\Windows\SoftwareDistribution\Download
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-del /s /f /q %windir%\Prefetch\*.*
 rd /s /q %WINDIR%\Logs
 del /q %WINDIR%\Downloaded Program Files\*.*
 cd C:\ProgramData\Microsoft\Windows\WER\Temp
