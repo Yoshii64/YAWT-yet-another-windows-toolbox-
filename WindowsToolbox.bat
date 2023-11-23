@@ -130,7 +130,7 @@ del /q %WINDIR%\Downloaded Program Files\*.*
 cd C:\ProgramData\Microsoft\Windows\WER\Temp
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-Cmd.exe /c Cleanmgr /sagerun:65535
+Cleanmgr /sagerun:65535 /autoclean
 echo files now cleared.
 pause
 goto :menu
