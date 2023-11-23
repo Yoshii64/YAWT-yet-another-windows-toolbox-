@@ -1403,6 +1403,9 @@ DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-InternetPrinting
 DISM /Online /Disable-Feature /FeatureName:"Printing-XPSServices-Features" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"MSRDC-Infrastructure" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"SmbDirect" /NoRestart
+dism /online /Disable-Feature /FeatureName:"SMB1Protocol" /NoRestart
+dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Client" /NoRestart
+dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Server" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Windows-Defender-Default-Definitions" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"WorkFolders-Client" /NoRestart
 
@@ -1441,6 +1444,10 @@ echo Disable last access (as the command implies)
 fsutil behavior set disablelastaccess 1
 echo disable 8.3 (short filename) types
 fsutil behavior set disable8dot3 1
+:: disabling dynamic tick is questionable and is being researched upon by Amit as of late. 
+:: bcdedit /set disabledynamictick yes >nul 2>&1
+:: bcdedit /set useplatformtick yes >nul 2>&1
+:: bcdedit /set tscsyncpolicy enhanced >nul 2>&1
 
 echo power/performance
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "9" /f
@@ -1512,7 +1519,12 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 echo .NET cryptogrophy
 reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v4.0.30319" /v "SchUseStrongCrypto" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Microsoft\.NetFramework\v4.0.30319" /v "SchUseStrongCrypto" /t REG_DWORD /d "1" /f
-
+echo Enable DEP (Data Execution Prevention)
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "NoDataExecutionPrevention" /t REG_DWORD /d 0 /f
+echo disable enumeration of SAM accounts and shares
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "RestrictAnonymousSAM" /t REG_DWORD /d 1 /f
+echo disable the lock screen camera
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d 1 /f
 set /p Hibernation= Do you want to disable hibernation? (y/n)
 if %Hibernation%==y powercfg /h off >nul
 if %Hibernation%==n goto :QuestionLol
@@ -1527,8 +1539,6 @@ echo disable location sync
 reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "LocationSyncEnabled" /t REG_DWORD /d "0" /f
 goto :AfterLocation
 :AfterLocation
-echo disable lock screen camera
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d "1" /f
 echo online speech stuff
 reg add "HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings" /v "OnlineSpeechPrivacy" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Speech" /v "AllowSpeechModelUpdate" /t REG_DWORD /d "0" /f
