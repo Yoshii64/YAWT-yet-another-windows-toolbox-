@@ -209,7 +209,8 @@ echo type in 6 to disable Windows Search Indexing
 echo type in 7 to disable User Account Control
 echo type in 8 to enable User Account Control
 echo type in 9 to disable Update Health Tools
-echo type in 10 to go back to the main menu
+echo type in 10 to disable Readyboost
+echo type in 11 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -220,7 +221,8 @@ if %menu2msg%==6 goto :Indexing
 if %menu2msg%==7 goto :DisableUAC
 if %menu2msg%==8 goto :EnableUAC
 if %menu2msg%==9 goto :HealthTools
-if %menu2msg%==10 goto :menu
+if %menu2msg%==10 goto :ReadyboostDeletion
+if %menu2msg%==11 goto :menu
 pause
 goto :menu
 
@@ -313,6 +315,11 @@ reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
 echo delete UPD files
 rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
 goto :misc
+
+:ReadyboostDeletion
+Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "GroupPolicyDisallowCaches" /t REG_DWORD /d "1" /f >nul 2>&1
+Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "AllowNewCachesByDefault" /t REG_DWORD /d "0" /f >nul 2>&1
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{71a27cdd-812a-11d0-bec7-08002be2092f}" /v "LowerFilters" /t Reg_MULTI_SZ /d "fvevol\0iorate" /f >nul 2>&1
 
 :debloat
 cls
