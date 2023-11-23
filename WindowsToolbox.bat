@@ -126,11 +126,23 @@ cd C:\Windows\SoftwareDistribution\Download
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 rd /s /q %WINDIR%\Logs
-del /q %WINDIR%\Downloaded Program Files\*.*
 cd C:\ProgramData\Microsoft\Windows\WER\Temp
 del *.* /F
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
 Cleanmgr /sagerun:65535 /autoclean
+if exist C:/Windows.old (
+	echo old Windows installation found. deleting it now
+	del C:/Windows.old
+)
+:: another thanks to Privacy.Sexy lol
+cd C:\Windows\Logs\CBS
+del /s *.log
+del /s *.cab
+cd C:\Windows\Logs\DISM
+del /s *.log
+del /s *.cab
+del %PROGRAMDATA%\Microsoft\Diagnosis\ETLLogs\AutoLogger\AutoLogger-Diagtrack-Listener.etl
+del %ProgramData%\Microsoft\Windows Defender\Scans\History
 echo files now cleared.
 pause
 goto :menu
