@@ -3,10 +3,9 @@ it uses code from various other scripts combined into one script.
 
 recommended to run as admin.
 
-uses code from Atlas, DuckOS, and CoutX
+some parts of code (or the ideas) are from Atlas, DuckOS, CoutX and Privacy.Sexy.
 
 things to be added
 more programs
-add better Defender disabling
 disable Copilot and Chat
 ability to disable mitigations (not recommended)
