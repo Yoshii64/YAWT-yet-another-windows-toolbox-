@@ -1462,11 +1462,13 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatus
 echo Disable Network Navigation
 reg add "HKEY_CLASSES_ROOT\CLSID\{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}\ShellFolder" /v "Attributes" /t REG_DWORD /d 2962489444 /f
 echo Enable file extentions
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 echo Enable checkboxes in File Explorer
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "AutoCheckSelect" /t REG_DWORD /d 1
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "AutoCheckSelect" /t REG_DWORD /d 1 /f
 echo Enable showing hidden files in File Explorer
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Hidden" /t REG_DWORD /d 1 /f
+echo Open to "This PC"
+Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d "1" /f
 echo Visual stuff
 :: Why did i put these in?
 :: Only for very low end devices. Might make a section just for that
@@ -1478,12 +1480,16 @@ echo Visual stuff
 echo Disable changing of Desktop icons and mouse pointers by programs
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
-echo Minimize search bar into search box
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "1" /f
 echo Dont show unconnected audio devices
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowHiddenDevices" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowDisconnectedDevices" /t REG_DWORD /d "0" /f >nul 2>&1
-
+echo Clean up start menu and Taskbar
+echo Hide search
+Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "0" /f
+echo Hide 'Meet Now'
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "HideSCAMeetNow" /t REG_DWORD /d "1"
+echo Remove 'People'
+reg add "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v "HidePeopleBar" /t REG_DWORD /d "1"
 echo Security
 echo Permissions
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics" /v "Value" /t REG_SZ /d "Deny" /f
@@ -1597,43 +1603,30 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\AppHVSI" /v "AuditApplicationGuard" /t
 echo Remove Defender packages
 echo Windows-Defender-Group-Policy-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Group-Policy-Deployment
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-Group-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-Group-Deployment
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-MDM-Group-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-MDM-Group-Deployment
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-Powershell-Group-Deployment
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Management-Powershell
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Nis-Group-Deployment-LanguagePack
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Nis-Group-Deployment
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Service-MpClientEtw
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service-MpClientEtw | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-Service
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service | ForEach-Object { $_.Name }"
-
 echo Windows-Defender-UI
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-UI | ForEach-Object { $_.Name }"
 echo Disable UI of Windows Defender
