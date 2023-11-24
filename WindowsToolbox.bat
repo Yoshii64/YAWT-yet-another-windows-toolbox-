@@ -1,19 +1,19 @@
 @echo off
 
 :menu
-echo needed to do before debloat
+echo Needed to do before debloat
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance" /v "Enabled" /t REG_DWORD /d 0 /f
 cls
-echo - type 1 to disable Windows Update (optional)
-echo - type 2 to optimize network options (recommended)
-echo - type 3 to clear temp files (recommended)
-echo - type 4 to check and fix errors in Windows (recommended)
-echo - type 5 to install a program (optional)
-echo - type 6 for a menu that shows more optimizations (recommended)
-echo - type 7 to debloat Windows (very recommended)
-echo - type 8 for other optimizations/performance tweaks (very recommended)
-echo - type 9 to disable Windows Defender (not recommended)
-echo - type exit to exit
+echo - Type 1 to disable Windows Update (optional)
+echo - Type 2 to optimize network options (recommended)
+echo - Type 3 to clear temp files (recommended)
+echo - Type 4 to check and fix errors in Windows (recommended)
+echo - Type 5 to install a program (optional)
+echo - Type 6 for a menu that shows more optimizations (recommended)
+echo - Type 7 to debloat Windows (very recommended)
+echo - Type 8 for other optimizations/performance tweaks (very recommended)
+echo - Type 9 to disable Windows Defender (not recommended)
+echo - Type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
 if %message1%==2 goto :network
@@ -25,7 +25,7 @@ if %message1%==7 goto :debloat
 if %message1%==8 goto :others
 if %message1%==9 goto :DefenderDisable
 if %message1%==exit exit
-else echo - invalid input
+else echo - Invalid input
 goto :menu
 
 
@@ -64,13 +64,13 @@ goto :menu
 
 :network
 cls
-echo clearing network cache...
+echo Clearing network cache...
 IPCONFIG /release
 IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
 netsh winsock reset
-echo setting optimizations for network...
+echo Setting optimizations for network...
 netsh int tcp set supplemental
 netsh int tcp set heuristics disabled
 netsh int tcp set global timestamps=disabled
@@ -119,7 +119,7 @@ goto :menu
 
 :cleartemp
 cls
-echo clearing uneeded files...
+echo Clearing uneeded files...
 del /s /f /q %windir%\temp\*.*
 del /s /f /q %temp%\*.*
 cd C:\Windows\SoftwareDistribution\Download
@@ -143,40 +143,39 @@ del /s *.log
 del /s *.cab
 del %PROGRAMDATA%\Microsoft\Diagnosis\ETLLogs\AutoLogger\AutoLogger-Diagtrack-Listener.etl
 del %ProgramData%\Microsoft\Windows Defender\Scans\History
-echo files now cleared.
+echo Files now cleared.
 pause
 goto :menu
 
 :fix
 cls
-echo fixing errors in Windows...
+echo Fixing errors in Windows...
 sfc /scannow
 DISM /online /cleanup-image /RestoreHealth
 sfc /scannow
 cls
 color F6
- set /p check=do you want to check the disk for errors? warning: it may ask you to reboot. checking disk may take a while. 
-if %check%==yes CHKDSK /F
-pause
-goto :menu
+ set /p check=Do you want to check the disk for errors? Warning: it may ask you to reboot. checking disk may take a while. (y/n) 
+if %check%==y CHKDSK /F
+if %check%==n goto :menu
 
 :install
 cls
-echo supported programs:
-echo type 1 to install 7zip
-echo type 2 to install brave
-echo type 3 to install VScode
-echo type 4 to install Discord
-echo type 5 to install Github Desktop
-echo type 6 to install powertoys
-echo type 7 to install Windows Command Terminal
-echo type 8 to install git
-echo type 9 to install VLC
-echo type 10 to install Firefox
-echo type 11 to install Python 3.10
-echo type 12 to install EarTrumpet
-echo type 13 to upgrade all installs from winget
-echo type 14 to go back to the main menu
+echo Supported programs:
+echo Type 1 to install 7zip
+echo Type 2 to install brave
+echo Type 3 to install VScode
+echo Type 4 to install Discord
+echo Type 5 to install Github Desktop
+echo Type 6 to install powertoys
+echo Type 7 to install Windows Command Terminal
+echo Type 8 to install git
+echo Type 9 to install VLC
+echo Type 10 to install Firefox
+echo Type 11 to install Python 3.10
+echo Type 12 to install EarTrumpet
+echo Type 13 to upgrade all installs from winget
+echo Type 14 to go back to the main menu
 set /p program=
 if %program%==1 winget install 7zip.7zip
 if %program%==2 winget install brave
@@ -192,25 +191,24 @@ if %program%==11 winget install Python
 if %program%==12 winget install File-New-Project.EarTrumpet
 if %program%==13 winget upgrade --all
 if %program%==14 goto :menu
-set /p back= do you want to install another program?
-if %back%==yes goto :install
-if %back%==no goto :menu
+set /p back= Do you want to install another program? (y/n)
+if %back%==y goto :install
+if %back%==n goto :menu
 
 
 :misc
 cls
-color F
-echo type 1 to disable backround apps
-echo type in 2 to enable backround apps
-echo type in 3 to uninstall onedrive
-echo type in 4 to install onedrive 
-echo type in 5 to uninstall edge
-echo type in 6 to disable Windows Search Indexing
-echo type in 7 to disable User Account Control
-echo type in 8 to enable User Account Control
-echo type in 9 to disable Update Health Tools
-echo type in 10 to disable Readyboost
-echo type in 11 to go back to the main menu
+echo Type 1 to disable backround apps
+echo Type in 2 to enable backround apps
+echo Type in 3 to uninstall onedrive
+echo Type in 4 to install onedrive 
+echo Type in 5 to uninstall edge
+echo Type in 6 to disable Windows Search Indexing
+echo Type in 7 to disable User Account Control
+echo Type in 8 to enable User Account Control
+echo Type in 9 to disable Update Health Tools
+echo Type in 10 to disable Readyboost
+echo Type in 11 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -227,18 +225,18 @@ pause
 goto :menu
 
 :backroundstop
-echo disabling backround apps...
+echo Disabling backround apps...
 REG ADD HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 1 /f
 goto :misc
 
 :backroundstart
-echo enabling backround apps...
+echo Enabling backround apps...
 REG ADD HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 0 /f
 goto :misc
 
 :OneDriveuninstall
-echo uninstalling onedrive...
-echo killing OneDrive processes...
+echo Uninstalling onedrive...
+echo Killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
 cd %UserProfile%\AppData\Local\Microsoft\OneDrive
@@ -249,7 +247,7 @@ start Explorer.exe
 cd %UserProfile%\AppData\Local\OneDrive
 DEL "."
 for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-echo deleting regkeys associated with onedrive...
+echo Deleting regkeys associated with onedrive...
 reg delete "HKCR\Environment\OneDrive" /F
 reg delete "HKCR\Software\Microsoft\OneDrive"
 reg delete "\HKEY_CURRENT_USER\Software\Microsoft\OneDrive"
@@ -264,8 +262,8 @@ echo done
 goto :misc
 
 :edgeuninstall
-echo uninstalling edge...
-echo killing edge processes...
+echo Uninstalling edge...
+echo Killing edge processes...
 taskkill /F /IM MicrosoftEdgeUpdate.exe >nul 2>&1
 taskkill /F /IM msedge.exe >nul 2>&1
 taskkill /F /IM MicrosoftEdge* >nul 2>&1
@@ -284,7 +282,7 @@ reg add "HKLM\Software\Policies\Microsoft\Windows\EdgeUI" /v "DisableMFUTracking
 reg add "HKLM\Software\Policies\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "DoNotUpdateToEdgeWithChromium" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "InstallDefault" /t REG_DWORD /d 0 /f
-echo done
+echo Done!
 pause
 goto :misc
 
@@ -308,7 +306,7 @@ goto :misc
 
 :HealthTools
 cls
-echo changing regkeys
+echo Changing regkeys
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools" /f
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
 reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
@@ -317,17 +315,18 @@ rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
 goto :misc
 
 :ReadyboostDeletion
+echo Changing regkeys
 Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "GroupPolicyDisallowCaches" /t REG_DWORD /d "1" /f >nul 2>&1
 Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "AllowNewCachesByDefault" /t REG_DWORD /d "0" /f >nul 2>&1
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{71a27cdd-812a-11d0-bec7-08002be2092f}" /v "LowerFilters" /t Reg_MULTI_SZ /d "fvevol\0iorate" /f >nul 2>&1
 
 :debloat
 cls
-set /p debloat=do you want to remove all the programs that are not needed?
+set /p debloat=Do you want to remove all the programs that are not needed?
 if %debloat%==yes echo debloating Windows...
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
 setx POWERSHELL_TELEMETRY_OPTOUT 1
-echo changing registry keys...
+echo Changing registry keys...
 Reg add "HKLM\Software\Policies\Microsoft\Windows\AppCompat" /v "DisableInventory" /t REG_DWORD /d "1" /f >nul
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance" /v fAllowFullControl /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Remote Assistance" /v fAllowToGetHelp /t REG_DWORD /d 0 /f
@@ -443,7 +442,7 @@ echo disabling/deleting Services...
  sc config AppIDSvc start= disabled
 NET STOP AppIDSvc
 cls
-echo this breaks Bluetooth. are you sure you wanna disable the following
+echo This breaks Bluetooth. are you sure you wanna disable the following
 set /p BTH=BluetoothUserService, BTAGService, BthAvctpSvc and bthserv (y/n)
 if %BTH%==y goto :Bluetooth
 if %BTH%==n goto :afterBluetooth
@@ -632,7 +631,7 @@ echo AppVClient
 sc config AppVClient start= disabled
 NET STOP AppVClient
 
-echo removing unused apps/bloat
+echo Removing unused apps/bloat
 echo 1527c705-839a-4832-9118-54d4Bd6a0c89
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '1527c705-839a-4832-9118-54d4Bd6a0c89*'} | ForEach-Object { $_.Name }"
 
@@ -1250,7 +1249,7 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -Packag
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip.Resources*' | Remove-WindowsPackage -Online"
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment*' | Remove-WindowsPackage -Online"
 
-echo disabling trackers and Logs
+echo Disabling trackers and Logs
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackProgs" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /v "TailoredExperiencesWithDiagnosticDataEnabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v "DisableTailoredExperiencesWithDiagnosticData" /t REG_DWORD /d "1" /f
@@ -1276,7 +1275,7 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\UBPM" /v Start /t 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WdiContextLog" /v Start /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WiFiSession" /v Start /t REG_DWORD /d 0 /f
 
-echo disable Content Delivery
+echo Disable Content Delivery
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "ContentDeliveryAllowed" /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "OemPreInstalledAppsEnabled" /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEnabled" /t REG_DWORD /d 0 /f
@@ -1293,7 +1292,7 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" 
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SoftLandingEnabled" /t REG_DWORD /d 0 /f
 
-echo blocking telemetry IP addresses...
+echo Blocking telemetry IP addresses...
 curl -l -s https://winhelp2002.mvps.org/hosts.txt -o %SystemRoot%\System32\drivers\etc\hosts.temp
 if exist %SystemRoot%\System32\drivers\etc\hosts.temp (
     cd %SystemRoot%\System32\drivers\etc
@@ -1301,7 +1300,7 @@ if exist %SystemRoot%\System32\drivers\etc\hosts.temp (
     ren hosts.temp hosts
 )
 
-echo delete tasks
+echo Delete tasks
 schtasks /Delete /TN "\Microsoft\Windows\AppID\EDP Policy Manager" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierdaily" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierinstall" /F
@@ -1356,9 +1355,9 @@ goto :menu
 
 
 :others
-echo setting power plan to High Performance
+echo Setting power plan to High Performance
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-echo power settings
+echo Power settings
 REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
 REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
 REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
@@ -1386,7 +1385,7 @@ powercfg -setacvalueindex scheme_current sub_processor IDLECHECK 100000 >nul
 powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0 >nul
 powercfg -setactive scheme_current >nul
 
-echo disable/delete optional features
+echo Disable/delete optional features
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
 DISM /Online /Remove-Capability /CapabilityName:"App.Support.QuickAssist~~~~0.0.1.0" /NoRestart
 DISM /Online /Remove-Capability /CapabilityName:"Browser.InternetExplorer~~~~0.0.11.0" /NoRestart
@@ -1409,7 +1408,7 @@ dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Server" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Windows-Defender-Default-Definitions" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"WorkFolders-Client" /NoRestart
 
-echo memory Management
+echo Memory Management
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnablePrefetcher" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableSuperfetch" /t reg_DWORD /d "0" /f >NUL 2>&1
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v "EnableSuperfetch" /t reg_DWORD /d "0" /f >NUL 2>&1
@@ -1426,7 +1425,7 @@ set /p PagingQuestion= Do you want to disable paging file encryption (n/a)? (inc
 if %PagingQuestion%==y goto :Paging
 if %PagingQuestion%==n goto :AfterPaging
 :Paging
-echo disable encryption on paging file
+echo Disable encryption on paging file
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePageCombining" /t REG_DWORD /d "1" /f
 REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "DisablePagingExecutive" /t REG_DWORD /d "1" /f
 fsutil behavior set encryptpagingfile 0
@@ -1457,7 +1456,7 @@ fsutil behavior set disable8dot3 1
 :: REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
 :: REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
 
-echo other crap
+echo Other crap
 :: going to move all of these to their own locations soon. BSOD and QoL  were once "Other crap"
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsAADCloudSearchEnabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SearchSettings" /v "IsDeviceSearchHistoryEnabled" /t REG_DWORD /d "0" /f
@@ -1472,23 +1471,23 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "LogEvent" /t RE
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "DisplayParameters" /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl\StorageTelemetry" /v "DeviceDumpEnabled" /t REG_DWORD /d 0 /f
 echo QoL
-echo remove annoying keyboard features
+echo Remove annoying keyboard features
 reg add "HKCU\Control Panel\Accessibility\Keyboard Response" /v "Flags" /t REG_DWORD /d "0" /f
 reg add "HKCU\Control Panel\Accessibility\HighContrast" /v "Flags" /t REG_DWORD /d "0" /f
 reg add "HKCU\Control Panel\Accessibility\MouseKeys" /v "Flags" /t REG_DWORD /d "0" /f
 reg add "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_DWORD /d "0" /f
 reg add "HKCU\Control Panel\Accessibility\ToggleKeys" /v "Flags" /t REG_DWORD /d "0" /f
-echo disable autorun
+echo Disable autorun
 Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoAutorun" /t REG_DWORD /d "1" /f >nul 2>&1
-echo disable online features in Search
+echo Disable online features in Search
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "BingSearchEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "ConnectedSearchUseWeb" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "DisableWebSearch" /t REG_DWORD /d "1" /f
-echo show Command Prompt instead of PowerShell on Winkey+X menu
+echo Show Command Prompt instead of PowerShell on Winkey+X menu
 Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "DontUsePowerShellOnWinX" /t REG_DWORD /d "1" /f >nul 2>&1
 echo Verbose status! (more detail on boot and shutdown screens)
 Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f >nul 2>&1
-echo disable settings sync
+echo Disable settings sync
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSettingSync" /t REG_DWORD /d "2" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSettingSyncUserOverride" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync" /v "DisableSyncOnPaidNetwork" /t REG_DWORD /d "1" /f
@@ -1498,9 +1497,9 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Crede
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Accessibility" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" /v "SyncPolicy" /t REG_DWORD /d "5" /f
-echo always show more detail on file transfers
+echo Always show more detail on file transfers
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" /v "EnthusiastMode" /t REG_DWORD /d "1" /f
-echo visual stuff
+echo Visual stuff
 :: Why did i put these in?
 :: Only for very low end devices. Might make a section just for that
 :: reg add "HKCU\Control Panel\Desktop" /v "UserPreferencesMask" /t REG_BINARY /d "9012038010000000" /f
@@ -1508,7 +1507,7 @@ echo visual stuff
 :: reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DWM" /v "DisallowAnimations" /t REG_DWORD /d "1" /f
 :: reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAnimations" /t REG_DWORD /d "0" /f
 :: reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "DisableAcrylicBackgroundOnLogon" /t REG_DWORD /d "1" /f
-echo disable changing of Desktop icons and mouse pointers by programs
+echo Disable changing of Desktop icons and mouse pointers by programs
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
 echo minimize search bar into search box
@@ -1517,8 +1516,8 @@ echo Dont show unconnected audio devices
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowHiddenDevices" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowDisconnectedDevices" /t REG_DWORD /d "0" /f >nul 2>&1
 
-echo security
-echo permissions
+echo Security
+echo Permissions
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\bluetoothSync" /v "Value" /t REG_SZ /d "Deny" /f
@@ -1541,25 +1540,25 @@ reg add "HKLM\SOFTWARE\WOW6432Node\Microsoft\.NETFramework\v4.0.30319" /v "SchUs
 reg add "HKLM\SOFTWARE\Microsoft\.NetFramework\v4.0.30319" /v "SchUseStrongCrypto" /t REG_DWORD /d "1" /f
 echo Enable DEP (Data Execution Prevention)
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "NoDataExecutionPrevention" /t REG_DWORD /d 0 /f
-echo disable enumeration of SAM accounts and shares
+echo Disable enumeration of SAM accounts and shares
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "RestrictAnonymousSAM" /t REG_DWORD /d 1 /f
-echo disable the lock screen camera
+echo Disable the lock screen camera
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v "NoLockScreenCamera" /t REG_DWORD /d 1 /f
 set /p Hibernation= Do you want to disable hibernation? (y/n)
 if %Hibernation%==y powercfg /h off >nul
 if %Hibernation%==n goto :QuestionLol
 
 :QuestionLol
-set /p Location= would you like to disable location/Find my Device? (y/n)
+set /p Location= Would you like to disable location/Find my Device? (y/n)
 if %Location%==y goto :Location
 if %Location%==n goto :AfterLocation
 :Location
 reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "AllowFindMyDevice" /t REG_DWORD /d "0" /f
-echo disable location sync
+echo Disable location sync
 reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "LocationSyncEnabled" /t REG_DWORD /d "0" /f
 goto :AfterLocation
 :AfterLocation
-echo online speech stuff
+echo Online speech stuff
 reg add "HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings" /v "OnlineSpeechPrivacy" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Speech" /v "AllowSpeechModelUpdate" /t REG_DWORD /d "0" /f
 goto :menu
@@ -1580,7 +1579,7 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" /v "E
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
-echo remove the Firewall settings in Windows Defender app
+echo Remove the Firewall settings in Windows Defender app
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Firewall and network protection" /v "UILockdown" /t REG_DWORD /d "1" /f
 echo Disable scanning
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIOAVProtection" /t REG_DWORD /d "1" /f
@@ -1603,11 +1602,11 @@ reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "RandomizeSchedul
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Scan" /v "QuickScanInterval" /t REG_DWORD /d "24" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v "DisableScanOnUpdate" /t REG_DWORD /d "1" /f
 
-echo disable real-time protection
+echo Disable real-time protection
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealtimeMonitoring" /t REG_DWORD /d "1" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableIntrusionPreventionSystem" /t REG_DWORD /d "1" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableScanOnRealtimeEnable" /t REG_DWORD /d "1" /f
-echo disable Defender updates
+echo Disable Defender updates
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v "DisableScanOnUpdate" /t REG_DWORD /d "1" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v "CheckAlternateHttpLocation" /t REG_DWORD /d "0" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v "CheckAlternateDownloadLocation" /t REG_DWORD /d "0" /f
@@ -1627,15 +1626,15 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsof
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" /v "DisableGenericRePorts" /t REG_DWORD /d 1 /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "WppTracingLevel" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\AppHVSI" /v "AuditApplicationGuard" /t REG_DWORD /d 0 /f
-echo disable UI of Windows Defender
+echo Disable UI of Windows Defender
 :: there is supposed to be a command to allow it to uninstall. but i cannot figure out how to get the SID of the user and use it for the regkey
 PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Windows.SecHealthUI' | Remove-AppxPackage"
-echo don't reinstall Windows Defender
+echo Don't reinstall Windows Defender
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.SecHealthUI_cw5n1h2txyewy" /f
-echo disable SmartScreen
+echo Disable SmartScreen
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /t REG_SZ /d "Warn" /f
-echo other Defender stuff
+echo Other Defender stuff
 echo disable WD services
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
 NET STOP WdNisDrv
@@ -1652,4 +1651,5 @@ NET STOP Sense
 sc config Sense start= disabled
 NET STOP SecurityHealthService
 sc config SecurityHealthService start= disabled
+echo Done!
 goto :menu
