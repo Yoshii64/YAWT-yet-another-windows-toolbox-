@@ -30,7 +30,7 @@ goto :menu
 
 
 :UpdateRemoval
-sc config "Windows Update" start= disable 
+sc config "Windows Update" start= disabled
 NET STOP "Windows Update"
 sc config "UsoSvc" start= disabled
 NET STOP "UsoSvc"
