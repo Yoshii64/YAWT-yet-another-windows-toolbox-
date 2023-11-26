@@ -1485,12 +1485,21 @@ echo Enable showing hidden files in File Explorer
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Hidden" /t REG_DWORD /d 1 /f
 echo Open to 'This PC'
 Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d "1" /f
+echo Hide 'Quick Access' menu
+Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" /v "HubMode" /t REG_DWORD /d "1" /f
 echo Show full filepath
 Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState" /v "FullPath" /t REG_DWORD /d "1" /f >nul 2>&1
 echo Make sure encrypted drives are shown as monocrome
 Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowEncryptCompressedColor" /t REG_DWORD /d "0" /f >nul 2>&1
 echo Show drive letters in full filepath
 Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "ShowDriveLettersFirst" /t REG_DWORD /d "4" /f >nul 2>&1
+echo Desktop stuff
+echo Dont reduce quality on wallpaper image
+Reg add "HKCU\Control Panel\Desktop" /v "JPEGImportQuality" /t REG_DWORD /d "100" /f >nul 2>&1
+echo Reduce selection window visual effects
+Reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ListviewAlphaSelect" /t REG_DWORD /d "0" /f >nul 2>&1
+echo Dont create Desktop.ini cache
+Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "UseDesktopIniCache" /t REG_DWORD /d "0" /f >nul 2>&1
 echo Visual stuff
 :: Why did i put these in?
 :: Only for very low end devices. Might make a section just for that
@@ -1521,6 +1530,8 @@ echo Disable 'Share'
 reg delete "HKEY_CLASSES_ROOT\*\shellex\ContextMenuHandlers\ModernSharing" /f >nul 2>nul
 echo Remove 'Rich Text Format' text file in 'create'
 Reg delete "HKCR\.rtf\ShellNew" /f >nul 2>&1
+echo Hide 'add to favorites'
+Reg delete "HKCR\*\shell\pintohomefile" /f >nul 2>&1
 
 echo Security
 echo Permissions
