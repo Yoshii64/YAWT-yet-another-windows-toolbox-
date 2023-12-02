@@ -342,6 +342,7 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\TabletPC" /v "PreventHandwriti
 echo Disable CEIP
 reg add "HKLM\SOFTWARE\Policies\Microsoft\AppV\CEIP" /v "CEIPEnable" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient" /v "CorporateSQMURL" /t REG_SZ /d "0.0.0.0" /f
 echo Disallow data collection
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t "REG_DWORD" /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Personalization\Settings" /v "AcceptedPrivacyPolicy" /t REG_DWORD /d "0" /f
@@ -350,6 +351,9 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "S
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy" /v "TailoredExperiencesWithDiagnosticDataEnabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v "DisableTailoredExperiencesWithDiagnosticData" /t REG_DWORD /d "1" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoInstrumentation" /t REG_DWORD /d "1" /f
+echo Disable advertising ID
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /v "DisabledByGroupPolicy" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v "Enabled" /t REG_DWORD /d "0" /f
 echo Restrict Windows' communication
 reg add "HKLM\Software\Policies\Microsoft\InternetManagement" /v "RestrictCommunication" /t REG_DWORD /d "1" /f
 echo Disable Scheduled Diagnosis/Maintenance
@@ -372,6 +376,10 @@ echo configure user activity telemetry
 Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "UploadUserActivities" /t Reg_DWORD /d "0" /f >nul 2>&1
 Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "PublishUserActivities" /t Reg_DWORD /d "0" /f >nul 2>&1
 echo Disable Error Reporting
+NET STOP WerSvc
+sc config WerSvc start= disabled
+NET STOP wercplsupport
+sc config wercplsupport start= disabled
 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting" /v "DoReport" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting\DW" /v "DWNoSecondLevelCollection" /t REG_DWORD /d "1" /f >nul 2>&1
@@ -379,6 +387,12 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting\DW" /v "DWNoFi
 reg add "HKLM\SOFTWARE\Policies\Microsoft\PCHealth\ErrorReporting\DW" /v "DWNoExternalURL" /t REG_DWORD /d "1" /f >nul 2>&1
 echo Disable Windows Liscense telemetry
 reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /v "NoGenTicket" /t REG_DWORD /d "1" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform" /v "AllowWindowsEntitlementReactivation" /t REG_DWORD /d "1" /f
+echo Disable keylogger service
+NET STOP dmwappushservice
+sc config dmwappushservice start= disabled
+echo Allow Cortana
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
 echo disabling/deleting Services
  :: big thanks Nyne lol
  wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
@@ -438,7 +452,7 @@ echo disabling/deleting Services
  echo BcastDVRUserService_48486de
  sc config "BcastDVRUserService_48486de" start= disabled
  NET STOP BcastDVRUserService_48486de
- echo WpnService
+ echoe WpnServic
  sc config "WpnService" start= disabled
  NET STOP WpnService
  echo AssignedAccessManagerSvc
@@ -454,7 +468,7 @@ echo disabling/deleting Services
  echo StorSvc
  sc config "StorSvc" start= disabled
  NET STOP StorSvc
- echo BITS
+ echo TSBI
  sc config "bits" start= disabled
  NET STOP bits
  echo LicenseManager
@@ -581,9 +595,6 @@ NET STOP Wecsvc
 echo wercplsupport
 sc config wercplsupport start= disabled
 NET STOP wercplsupport
-echo WerSvc
-sc config WerSvc start= disabled
-NET STOP WerSvc
 echo WEPHOSTSVC
 sc config WEPHOSTSVC start= disabled
 NET STOP WEPHOSTSVC
@@ -1323,7 +1334,7 @@ schtasks /Delete /TN "\Microsoft\Windows\Wininet\CacheTask" /F
 schtasks /delete /TN "\Microsoft\Windows\Feedback\Siuf\DmClient" /F
 
 echo Disable Windows WPBT execution (pretty much a built in rootkit for computer manufactuers)
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "DisableWpbtExecution" /t REG_DWORD /d "1" /f >nul 2>&1
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "DisableWpbtExecution" /t REG_DWORD /d "1" /f
 goto :menu
 
 
@@ -1333,9 +1344,10 @@ goto :menu
 echo Setting power plan to High Performance
 powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 echo Power settings
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
-REG ADD "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
+reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
+reg add "HKLM\SYSTEM\ControlSet001\Control\GraphicsDrivers\Scheduler" /v "EnablePreemption" /t REG_DWORD /d "0" /f
 powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0 >nul
 powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0 >nul
 powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0 >nul
@@ -1423,18 +1435,6 @@ echo Disable last access (as the command implies)
 fsutil behavior set disablelastaccess 1
 echo disable 8.3 (short filename) types
 fsutil behavior set disable8dot3 1
-:: disabling dynamic tick is questionable and is being researched upon by Amit as of late. 
-:: bcdedit /set disabledynamictick yes >nul 2>&1
-:: bcdedit /set useplatformtick yes >nul 2>&1
-:: bcdedit /set tscsyncpolicy enhanced >nul 2>&1
-
-:: Needs to be looked over. Probably placebo
-:: echo power/performance
-:: REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "9" /f
-:: REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Priority" /t REG_DWORD /d "6" /f
-:: REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
-:: REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "SFIO Priority" /t REG_SZ /d "High" /f
-:: REG ADD "HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl" /v "Win32PrioritySeparation" /t REG_DWORD /d "42" /f
 
 :: Gonna keep this commented until i figure this out. Fault Tolerant Heap (FTH) stops a repeatedly crashing process.
 :: However that program takes a performance hit when FTH is on it
@@ -1637,6 +1637,8 @@ echo Harden SMB
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /v RequireSecuritySignature /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LimitBlankPasswordUse /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v EnableSecuritySignature /t REG_DWORD /d 1 /f
+echo Block unsigned fonts
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" /v "MitigationOptions_FontBocking" /t REG_QWORD /d "1000000000000" /f
 echo mitigate msdt
 reg delete HKEY_CLASSES_ROOT\ms-msdt /f
 set /p Hibernation= Do you want to disable hibernation? (y/n)
@@ -1676,6 +1678,8 @@ if %DefenderQuestion%==n goto :menu
 echo Disable Windows Firewall
 :: message for me. DO NOT disable MpsSvc *before* any netsh settings
 netsh advfirewall set allprofiles state off
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BFE" /v "Start" /t REG_DWORD /d "4" /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\mpssvc" /v "Start" /t REG_DWORD /d "4" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile" /v "EnableFirewall" /t REG_DWORD /d 0 /f
@@ -1757,12 +1761,14 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Wi
 echo Disable UI of Windows Defender
 :: there is supposed to be a command to allow it to uninstall. but i cannot figure out how to get the SID of the user and use it for the regkey
 PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Windows.SecHealthUI' | Remove-AppxPackage"
+echo Hide Defender
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "SecurityHealth" /f
 echo Don't reinstall Windows Defender
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.SecHealthUI_cw5n1h2txyewy" /f
 echo Disable SmartScreen
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /t REG_SZ /d "Warn" /f
-reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /f >nul 2>&1
+reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /f
 echo Other Defender stuff
 echo disable WD services
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
@@ -1798,6 +1804,8 @@ echo Enable Firewall
 NET START MpsSvc
 sc config MpsSvc= auto
 Netsh Advfirewall set allprofiles state on
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\BFE" /v "Start" /t REG_DWORD /d "2" /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\mpssvc" /v "Start" /t REG_DWORD /d "2" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\StandardProfile" /v "EnableFirewall" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile" /v "EnableFirewall" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile" /v "EnableFirewall" /t REG_DWORD /d 1 /f
