@@ -1551,6 +1551,7 @@ echo Disable boot circle (boot loading icon)
 bcdedit /set quietboot yes
 echo Legacy boot menu
 bcdedit /set bootmenupolicy Legacy
+echo shutdown
 echo shut down apps and services quicker
 reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f
 reg add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "2000" /f
@@ -1577,7 +1578,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /v "Value" /t REG_SZ /d "Deny" /f
 echo delete DefaultUser0
 net user defaultuser0 /delete
-echo Disable voice voice activation
+echo Disable voice activation
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /v LetAppsActivateWithVoiceAboveLock /t REG_DWORD /d 2 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /v LetAppsActivateWithVoice /t REG_DWORD /d 2 /f
 echo .NET cryptogrophy
