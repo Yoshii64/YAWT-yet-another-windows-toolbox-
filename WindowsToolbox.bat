@@ -326,8 +326,7 @@ goto :menu
 
 :debloat
 cls
-set /p debloat=Do you want to remove all the programs that are not needed?
-if %debloat%==yes echo debloating Windows
+echo debloating Windows
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
 setx POWERSHELL_TELEMETRY_OPTOUT 1
 echo Changing registry keys
@@ -1556,6 +1555,14 @@ echo shut down apps and services quicker
 reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f
 reg add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "2000" /f
 reg add "HKLM\System\CurrentControlSet\Control" /v "WaitToKillServiceTimeout" /t REG_SZ /d "2000" /f
+echo Disable GameDVR and enable fullscreen optimizations
+echo Disable GameDVR/Game Bar
+reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" /v "AppCaptureEnabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d "0" /f
+echo Enable fullscreen optimizations
+reg add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehavior" /t REG_DWORD /d "2" /f
+reg add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t REG_DWORD /d "1" /f
 
 echo Security
 echo Permissions
