@@ -71,33 +71,24 @@ IPCONFIG /release
 IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
-netsh winsock reset
-echo Setting optimizations for network...
-netsh int tcp set supplemental
-netsh int tcp set heuristics disabled
-netsh interface Teredo set state type=enterpriseclient
-netsh int tcp set global rsc=disabled
-int ipv4 set glob defaultcurhoplimit=65
-int ipv6 set glob defaultcurhoplimit=65
-powershell.exe -ExecutionPolicy Unrestricted "Disable-NetAdapterBinding -Name "*" -ComponentID ms_tcpip6, ms_msclient, ms_server, ms_lldp, ms_lltdio, ms_rspndr"
+echo Optimizing netsh settings
+echo Disable TCP heuristics
+netsh int tcp set global heuristics=disabled
+echo Enable Direct Cache Access (DCA)
+netsh int tcp set global dca=enabled
+echo Disable TCP timestamps
+netsh int tcp set global timestamps=disabled
+echo Increase icw
+netsh int tcp set supplemental template=custom icw=10
+echo Set initial RTO
+:: It is 3000 by default. However I do wanna make sure it's set to that (like if someone used another bad optimizer)
+netsh int tcp set global initialRto=3000
+echo Enable Packet Coalescing
+powershell -ExecutionPolicy Unrestricted Set-NetOffloadGlobalSetting -PacketCoalescingFilter enabled
+echo Disable unused/bloat network devices
+powershell -ExecutionPolicy Unrestricted "Disable-NetAdapterBinding -Name "*" -ComponentID ms_tcpip6, ms_msclient, ms_server, ms_lldp, ms_lltdio, ms_rspndr"
+echo Set all networks to Private
 powershell -NoProfile "$net=get-netconnectionprofile; Set-NetConnectionProfile -Name $net.Name -NetworkCategory Private"
-reg add "HKLM\Software\Microsoft\MSMQ\Parameters" /v "TCPNoDelay" /t reg_DWORD /d "00000001" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v "NegativeCacheTime" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v "NegativeSOACacheTime" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v "NetFailureCacheTime" /t REG_DWORD /d "0" /f
-reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v "MaxUserPort" /t reg_DWORD /d "00065534" /f
-reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v "TcpTimedWaitDelay" /t reg_DWORD /d "00000030" /f
-reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v "EnableWsd" /t reg_DWORD /d "0" /f
-reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v "Tcp1323Opts" /t reg_DWORD /d "1" /f
-reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v "TCPCongestionControl" /t reg_DWORD /d "1" /f
-reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPerServer" /t reg_DWORD /d "00000016" /f
-reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v "MaxConnectionsPer1_0Server" /t reg_DWORD /d "00000016" /f
-reg add "HKLM\System\CurrentControlSet\Control\Nsi\{eb004a03-9b1a-11d4-9123-0050047759bc}\0" /v "0200" /t reg_BINARY /d "0000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000ff000000000000000000000000000000000000000000ff000000000000000000000000000000" /f
-reg add "HKLM\System\CurrentControlSet\Control\Nsi\{eb004a03-9b1a-11d4-9123-0050047759bc}\0" /v "1700" /t reg_BINARY /d "0000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000ff000000000000000000000000000000000000000000ff000000000000000000000000000000" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t reg_DWORD /d "00000000" /f
-reg add "HKLM\Software\WOW6432Node\Policies\Microsoft\Windows\Psched" /v "NonBestEffortLimit" /t reg_DWORD /d "0" /f
-reg add "HKLM\Software\Policies\Microsoft\Windows NT\DNSClient" /v "EnableMulticast" /t reg_DWORD /d "0" /f 
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" /v "DisableTaskOffload" /t reg_DWORD /d "0" /f
 echo done
 pause
 goto :menu
@@ -291,6 +282,7 @@ goto :misc
 
 
 :HealthTools
+IF EXIST "C:\Program Files\Microsoft Update Health Tools" (
 cls
 echo Changing regkeys
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\UpdateHealthTools" /f
@@ -298,6 +290,7 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
 reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
 echo delete UPD files
 rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
+goto :misc)
 goto :misc
 
 :ReadyboostDeletion
@@ -1326,7 +1319,7 @@ goto :menu
 
 :others
 echo Setting power plan to High Performance
-powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 echo Power settings
 reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
@@ -1470,8 +1463,6 @@ echo Enable checkboxes in File Explorer
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "AutoCheckSelect" /t REG_DWORD /d 1 /f
 echo Enable showing hidden files in File Explorer
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Hidden" /t REG_DWORD /d 1 /f
-echo Show extra information during file transfers
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" /v "EnthusiastMode" /t REG_DWORD /d "1" /f
 echo Open to 'This PC'
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "LaunchTo" /t REG_DWORD /d "1" /f
 echo Hide 'Quick Access' menu
@@ -1526,8 +1517,8 @@ echo Disable boot circle (boot loading icon)
 bcdedit /set quietboot yes
 echo Legacy boot menu
 bcdedit /set bootmenupolicy Legacy
-echo shutdown
-echo shut down apps and services quicker
+echo Shutdown
+echo Shut down apps and services quicker
 reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f
 reg add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "2000" /f
 reg add "HKLM\System\CurrentControlSet\Control" /v "WaitToKillServiceTimeout" /t REG_SZ /d "2000" /f
@@ -1610,7 +1601,7 @@ reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\I
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3" /v "1001" /t REG_DWORD /d 00000003 /f
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3" /v "1004" /t REG_DWORD /d 00000003 /f
 echo Disable the Message Cloud Sync service
-:: according to Nyne, this harms privacy. Otherwise this would go in debloat
+:: According to Nyne, this harms privacy. Otherwise this would go in debloat
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Messaging" /v "AllowMessageSync" /t REG_DWORD /d "0" /f
 echo Harden SMB
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters" /v RequireSecuritySignature /t REG_DWORD /d 1 /f
@@ -1632,7 +1623,7 @@ if %Location%==n goto :AfterLocation
 echo Disable location
 reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableWindowsLocationProvider" /t REG_DWORD /d "1" /f
 reg add "HKLM\Software\Policies\Microsoft\Windows\LocationAndSensors" /v "DisableLocationScripting" /t REG_DWORD /d "1" /f
-echo disable Find my Device
+echo Disable Find my Device
 reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "AllowFindMyDevice" /t REG_DWORD /d "0" /f
 echo Disable location sync
 reg add "HKLM\SOFTWARE\Policies\Microsoft\FindMyDevice" /v "LocationSyncEnabled" /t REG_DWORD /d "0" /f
@@ -1749,7 +1740,7 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen"
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /t REG_SZ /d "Warn" /f
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /f
 echo Other Defender stuff
-echo disable WD services
+echo Disable WD services
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
 NET STOP WdNisDrv
 sc config WdNisDrv start= disabled
