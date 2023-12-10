@@ -1740,6 +1740,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen"
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /t REG_SZ /d "Warn" /f
 reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "ShellSmartScreenLevel" /f
 echo Other Defender stuff
+echo Disable file hash computation
+:: Thanks Nyne :D
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine" /v "EnableFileHashComputation" /t REG_DWORD /d 0 /f
 echo Disable WD services
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Disable
 NET STOP WdNisDrv
@@ -1769,6 +1772,9 @@ sc config WdNisSvc start= auto
 sc config Sense start= auto
 sc config SecurityHealthService start= auto
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Enable
+echo Enable file hash computation
+:: Again. Thanks Nyne :D
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\MpEngine" /v "EnableFileHashComputation" /t REG_DWORD /d 1 /f
 echo Enable Firewall
 :: MpsSvc is needed for Netsh advfirewall
 NET START MpsSvc
