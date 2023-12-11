@@ -74,6 +74,8 @@ IPCONFIG /registerdns
 echo Optimizing netsh settings
 echo Disable TCP heuristics
 netsh int tcp set global heuristics=disabled
+echo Enable Memory Pressure Protection
+netsh int tcp set security mpp=disabled
 echo Enable Direct Cache Access (DCA)
 netsh int tcp set global dca=enabled
 echo Disable TCP timestamps
