@@ -14,7 +14,7 @@ echo - Type 7 to debloat Windows (very recommended)
 echo - Type 8 for other optimizations/performance tweaks (very recommended)
 echo - Type 9 to disable Windows Defender (not recommended)
 echo - Type 10 to enable Windows Defender
-cho - Type exit to exit
+echo - Type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
 if %message1%==2 goto :network
@@ -341,7 +341,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance"
 echo Disable experimentation/insights
 reg add "HKCU\SOFTWARE\Microsoft\Input\Settings" /v "InsightsEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\Software\Microsoft\PolicyManager\current\device\System" /v "AllowExperimentation" /t REG_DWORD /d "0" /f
-echo Disable Bluetooth telemetry 
+echo Disable Bluetooth telemetry
 reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Bluetooth" /v "AllowAdvertising" /t REG_DWORD /d "0" /f
 echo disable telemetry services by debug taskkill
 :: sorry Nyne.............
@@ -431,7 +431,7 @@ echo disabling/deleting Services
  echo BcastDVRUserService_48486de
  sc config "BcastDVRUserService_48486de" start= disabled
  NET STOP BcastDVRUserService_48486de
- echoe WpnServic
+ echo WpnService
  sc config "WpnService" start= disabled
  NET STOP WpnService
  echo AssignedAccessManagerSvc
@@ -447,7 +447,7 @@ echo disabling/deleting Services
  echo StorSvc
  sc config "StorSvc" start= disabled
  NET STOP StorSvc
- echo TSBI
+ echo BITS
  sc config "bits" start= disabled
  NET STOP bits
  echo LicenseManager
@@ -1327,29 +1327,27 @@ reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnable
 reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
 reg add "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
 reg add "HKLM\SYSTEM\ControlSet001\Control\GraphicsDrivers\Scheduler" /v "EnablePreemption" /t REG_DWORD /d "0" /f
-powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0 >nul
-powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0 >nul
-powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0 >nul
+powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0
+powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0
+powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0
 powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
 powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
-powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1 >nul
-powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUSWINDOW 20000 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1 >nul
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0 >nul
-powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0 >nul
-powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLECHECK 100000 >nul
-powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0 >nul
-powercfg -setactive scheme_current >nul
+powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
+powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0
+powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1
+powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1
+powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1
+powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100
+powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0
+powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0
+powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0
+powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100
+powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100
+powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100
+powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0
+powercfg -setactive scheme_current
 
 echo Disable/delete optional features
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
