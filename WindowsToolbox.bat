@@ -1479,8 +1479,8 @@ echo Dont reduce quality on wallpaper image
 reg add "HKCU\Control Panel\Desktop" /v "JPEGImportQuality" /t REG_DWORD /d "100" /f
 echo Reduce selection window visual effects
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ListviewAlphaSelect" /t REG_DWORD /d "0" /f
-echo Dont create Desktop.ini cache
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "UseDesktopIniCache" /t REG_DWORD /d "0" /f
+echo Create Desktop.ini cache
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "UseDesktopIniCache" /t REG_DWORD /d 1 /f
 echo Visual stuff
 :: Why did i put these in?
 :: Only for very low end devices. Might make a section just for that
