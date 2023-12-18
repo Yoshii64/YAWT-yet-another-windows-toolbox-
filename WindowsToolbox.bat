@@ -218,20 +218,15 @@ echo Uninstalling onedrive...
 echo Killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
-cd %UserProfile%\AppData\Local\Microsoft\OneDrive
-taskkill /F /IM "explorer.exe"
-DEL "." /F
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-start Explorer.exe
-cd %UserProfile%\AppData\Local\OneDrive
-DEL "."
-for /F "delims="  %%i in ('dir /b') do (rmdir "%%i" /s /q  || del "%%i"  /S /Q)
-echo Deleting regkeys associated with onedrive...
-reg delete "HKCR\Environment\OneDrive" /F
-reg delete "HKCR\Software\Microsoft\OneDrive"
-reg delete "\HKEY_CURRENT_USER\Software\Microsoft\OneDrive"
-echo done
-pause
+IF EXIST %SystemRoot%\System32\OneDriveSetup.exe (
+%SystemRoot%\System32\OneDriveSetup.exe /uninstall
+rmdir /q /s "%ProgramData%\Microsoft OneDrive"
+rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
+echo done)
+else (
+    echo OneDrive not installed.
+    timeout 5
+)
 goto :misc
 
 :onedriveinstall
