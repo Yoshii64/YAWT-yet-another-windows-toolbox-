@@ -219,10 +219,11 @@ echo Killing OneDrive processes...
 taskkill /f /im OneDrive.exe
 echo deleting onedrive files...
 IF EXIST %SystemRoot%\System32\OneDriveSetup.exe (
-%SystemRoot%\System32\OneDriveSetup.exe /uninstall
-rmdir /q /s "%ProgramData%\Microsoft OneDrive"
-rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
-echo done)
+    %SystemRoot%\System32\OneDriveSetup.exe /uninstall
+    rmdir /q /s "%ProgramData%\Microsoft OneDrive"
+    rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
+    echo done
+)
 else (
     echo OneDrive not installed.
     timeout 5
@@ -1344,6 +1345,7 @@ powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0
 powercfg -setactive scheme_current
 
 echo Disable/delete optional features
+:: Steps Recorder is being planned to be removed in the latest Windows 11 dev builds along with the Tips app
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
 DISM /Online /Remove-Capability /CapabilityName:"App.Support.QuickAssist~~~~0.0.1.0" /NoRestart
 DISM /Online /Remove-Capability /CapabilityName:"Browser.InternetExplorer~~~~0.0.11.0" /NoRestart
@@ -1554,7 +1556,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userDataTasks" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userNotificationListener" /v "Value" /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\videosLibrary" /v "Value" /t REG_SZ /d "Deny" /f
-echo delete DefaultUser0
+echo Delete DefaultUser0
 net user defaultuser0 /delete
 echo Disable voice activation
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /v LetAppsActivateWithVoiceAboveLock /t REG_DWORD /d 2 /f
