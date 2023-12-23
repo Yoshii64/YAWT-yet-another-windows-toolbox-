@@ -75,7 +75,7 @@ echo Optimizing netsh settings
 echo Disable TCP heuristics
 netsh int tcp set global heuristics=disabled
 echo Enable Memory Pressure Protection
-netsh int tcp set security mpp=disabled
+netsh int tcp set security mpp=enabled
 echo Enable Direct Cache Access (DCA)
 netsh int tcp set global dca=enabled
 echo Disable TCP timestamps
@@ -216,9 +216,9 @@ goto :misc
 :OneDriveuninstall
 echo Uninstalling onedrive...
 echo Killing OneDrive processes...
-taskkill /f /im OneDrive.exe
-echo deleting onedrive files...
 IF EXIST %SystemRoot%\System32\OneDriveSetup.exe (
+    echo Uninstalling OneDrive
+    taskkill /f /im OneDrive.exe
     %SystemRoot%\System32\OneDriveSetup.exe /uninstall
     rmdir /q /s "%ProgramData%\Microsoft OneDrive"
     rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
@@ -1493,11 +1493,11 @@ echo Clean up start menu and Taskbar
 echo Hide search
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "0" /f
 echo Hide 'Meet Now'
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "HideSCAMeetNow" /t REG_DWORD /d "1"
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "HideSCAMeetNow" /t REG_DWORD /d "1" /f
 echo Remove 'People'
 reg add "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v "HidePeopleBar" /t REG_DWORD /d "1" /f
 echo Hide the 'task view' button
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"/v "ShowTaskViewButton" /t REG_DWORD /d "0"
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"/v "ShowTaskViewButton" /t REG_DWORD /d "0" /f
 echo disable 'News and Intrests'
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v "EnableFeeds" /t REG_DWORD /d "0" /f
 echo Configure the right click menu 
