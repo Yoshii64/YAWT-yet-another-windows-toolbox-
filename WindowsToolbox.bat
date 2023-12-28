@@ -189,7 +189,9 @@ echo Type in 9 to disable Update Health Tools
 echo Type in 10 to disable Readyboost
 echo Type in 11 to uninstall Windows Store
 echo Type in 12 to uninstall Calculator
-echo Type in 13 to go back to the main menu
+echo Type in 13 to disable Storage Sense
+echo Type in 14 to enable Storage Sense
+echo Type in 15 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -203,7 +205,9 @@ if %menu2msg%==9 goto :HealthTools
 if %menu2msg%==10 goto :ReadyboostDeletion
 if %menu2msg%==11 goto :StoreRemoval
 if %menu2msg%==12 goto :CalcRemoval
-if %menu2msg%==13 goto :menu
+if %menu2msg%==13 goto :disablestorage
+if %menu2msg%==13 goto :enablestorage
+if %menu2msg%==15 goto :menu
 pause
 goto :menu
 
@@ -320,6 +324,14 @@ goto :misc
 :: a lot of people like calculator so...
 echo Remove the Calculator
 powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+goto :misc
+
+:disablestorage
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "01" /t REG_DWORD /d 0 /f
+goto :misc
+
+:enablestorage
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /v "01" /t REG_DWORD /d 1 /f
 goto :misc
 
 :debloat
