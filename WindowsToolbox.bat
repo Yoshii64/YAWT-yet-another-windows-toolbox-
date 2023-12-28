@@ -188,7 +188,8 @@ echo Type in 8 to enable User Account Control
 echo Type in 9 to disable Update Health Tools
 echo Type in 10 to disable Readyboost
 echo Type in 11 to uninstall Windows Store
-echo Type in 12 to go back to the main menu
+echo Type in 12 to uninstall Calculator
+echo Type in 13 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -201,7 +202,8 @@ if %menu2msg%==8 goto :EnableUAC
 if %menu2msg%==9 goto :HealthTools
 if %menu2msg%==10 goto :ReadyboostDeletion
 if %menu2msg%==11 goto :StoreRemoval
-if %menu2msg%==12 goto :menu
+if %menu2msg%==12 goto :CalcRemoval
+if %menu2msg%==13 goto :menu
 pause
 goto :menu
 
@@ -310,6 +312,11 @@ echo Removing Windows Store
 powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
 goto :misc
 
+:CalcRemoval
+:: a lot of people like calculator so...
+echo Remove the Calculator
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+goto :misc
 
 :debloat
 cls
@@ -714,9 +721,6 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-
 
 echo Microsoft.MicrosoftStickyNotes
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftStickyNotes*'} | ForEach-Object { $_.Name }"
-
-echo WindowsCalculator
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
 
 echo MicrosoftStickyNotes
 powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
