@@ -74,8 +74,6 @@ IPCONFIG /renew
 IPCONFIG /flushdns
 IPCONFIG /registerdns
 echo Optimizing netsh settings
-echo Disable TCP heuristics
-netsh int tcp set global heuristics=disabled
 echo Enable Memory Pressure Protection
 netsh int tcp set security mpp=enabled
 echo Enable Direct Cache Access (DCA)
@@ -212,6 +210,8 @@ goto :menu
 :backroundstop
 echo Disabling backround apps...
 reg add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 1 /f
+:: 2 is force deny go look at https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.AppPrivacy::LetAppsRunInBackground
+reg add HKLM\Software\Policies\Microsoft\Windows\AppPrivacy /v LetAppsRunInBackground /t REG_DWORD /d 2 /f
 goto :misc
 
 :backroundstart
@@ -1369,10 +1369,6 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "Misc
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "PassedPolicy" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\ReserveManager" /v "ShippedWithReserves" /t REG_DWORD /d "0" /f
 echo fsutil (thanks DuckOS)
-:: for under review 
-:: fsutil behavior set memoryusage 2
-:: fsutil behavior set mftzone 2
-:: fsutil behavior set allowextchar 0
 set /p PagingQuestion= Do you want to disable paging file encryption (n/a)? (increases performance but decreases security slightly)
 if %PagingQuestion%==y goto :Paging
 if %PagingQuestion%==n goto :AfterPaging
@@ -1840,8 +1836,8 @@ reg add "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerT
 powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0
 powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0
 powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0
 powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
 powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0
 powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1
