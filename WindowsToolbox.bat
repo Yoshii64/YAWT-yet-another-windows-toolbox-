@@ -217,6 +217,8 @@ goto :misc
 :backroundstart
 echo Enabling backround apps...
 reg add HKCU\Software\Microsoft\WindowsNT\CurrentVersion\BackgroundAccessApplications /v GlobalUserDisabled /t REG_DWORD /d 0 /f
+:: 0 is user decision. 1 is force allow if you want to set it to that
+reg add HKLM\Software\Policies\Microsoft\Windows\AppPrivacy /v LetAppsRunInBackground /t REG_DWORD /d 0 /f
 goto :misc
 
 :OneDriveuninstall
