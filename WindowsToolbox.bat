@@ -187,7 +187,8 @@ echo Type in 7 to disable User Account Control
 echo Type in 8 to enable User Account Control
 echo Type in 9 to disable Update Health Tools
 echo Type in 10 to disable Readyboost
-echo Type in 11 to go back to the main menu
+echo Type in 11 to uninstall Windows Store
+echo Type in 12 to go back to the main menu
 set /p menu2msg=
 if %menu2msg%==1 goto :backroundstop
 if %menu2msg%==2 goto :backroundstart
@@ -199,7 +200,8 @@ if %menu2msg%==7 goto :DisableUAC
 if %menu2msg%==8 goto :EnableUAC
 if %menu2msg%==9 goto :HealthTools
 if %menu2msg%==10 goto :ReadyboostDeletion
-if %menu2msg%==11 goto :menu
+if %menu2msg%==11 goto :StoreRemoval
+if %menu2msg%==12 goto :menu
 pause
 goto :menu
 
@@ -243,6 +245,8 @@ taskkill /F /IM MicrosoftEdgeUpdate.exe
 taskkill /F /IM msedge.exe
 taskkill /F /IM MicrosoftEdge*
 taskkill /F /FI "MODULES eq edgehtml.dll"
+:: Not removing WebView2. However I have a feeling keeping the task active could cause problems
+taskkill /F /FI "MODULES eq msedgewebview2.exe"
 echo deleting Edge processes
 sc delete edgeupdate
 sc delete edgeupdatem
@@ -250,6 +254,8 @@ sc delete MicrosoftEdgeElevationService
 echo deleting edge files...
 for /f "delims=" %a in ('where /r C:\ *edge.lnk*') do (del /f /q "%a")
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate"
+del /f /q "C:\Users\%USERNAME%\AppData\Local\Microsoft\EdgeUpdate"
+start 
 
 
 echo Edge regkeys
@@ -288,7 +294,7 @@ reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\rempl" /f
 reg delete "HKLM\SOFTWARE\Microsoft\CloudManagedUpdate" /f
 echo delete UPD files
 rmdir /s /q "C:\Program Files\Microsoft Update Health Tools"
-goto :misc)
+)
 goto :misc
 
 :ReadyboostDeletion
@@ -297,7 +303,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "GroupPol
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\EMDMgmt" /v "AllowNewCachesByDefault" /t REG_DWORD /d "0" /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Class\{71a27cdd-812a-11d0-bec7-08002be2092f}" /v "LowerFilters" /t Reg_MULTI_SZ /d "fvevol\0iorate" /f
 reg delete "HKEY_CLASSES_ROOT\Drive\shellex\PropertySheetHandlers\{55B3A0BD-4D28-42fe-8CFB-FA3EDFF969B8}" /f
-goto :menu
+goto :misc
+
+:StoreRemoval
+echo Removing Windows Store
+powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
+goto :misc
+
 
 :debloat
 cls
@@ -690,9 +702,6 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-
 
 echo Microsoft.MicrosoftEdgeDevToolsClient
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | ForEach-Object { $_.Name }"
-
-echo WindowsStore
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
 
 echo Clipchamp
 powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Clipchamp.Clipchamp* | Remove-AppxPackage"
