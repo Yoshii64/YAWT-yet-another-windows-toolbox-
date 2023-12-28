@@ -1261,6 +1261,14 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WdiContextLog" /v 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WiFiSession" /v Start /t REG_DWORD /d 0 /f
 
 echo Disable ShellBags
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\BagMRU"
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Bags"
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\ShellNoRoam\BagMRU"
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\ShellNoRoam\Bags"
+reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU"
+reg delete "HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags"
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\BagMRU"
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Bags"
 reg add "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU" /v "BagMRU Size" /t REG_DWORD /d 1 /f
 reg add "HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags" /v "BagMRU Size" /t REG_DWORD /d 1 /f
 
