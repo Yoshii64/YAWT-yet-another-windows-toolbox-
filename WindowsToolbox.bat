@@ -14,6 +14,7 @@ echo - Type 7 to debloat Windows (very recommended)
 echo - Type 8 for other optimizations/performance tweaks (very recommended)
 echo - Type 9 to disable Windows Defender (not recommended)
 echo - Type 10 to enable Windows Defender
+echo - Type 11 to disable power savings (recommended only for desktops)
 echo - Type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
@@ -26,6 +27,7 @@ if %message1%==7 goto :debloat
 if %message1%==8 goto :others
 if %message1%==9 goto :DefenderDisable
 if %message1%==10 goto :DefenderEnable
+if %message1%==11 goto :power
 if %message1%==exit exit
 else echo - Invalid input
 goto :menu
@@ -1337,34 +1339,6 @@ goto :menu
 
 
 :others
-echo Setting power plan to High Performance
-powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-echo Power settings
-reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
-reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
-reg add "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
-powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0
-powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0
-powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
-powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
-powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
-powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0
-powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1
-powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1
-powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1
-powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1
-powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100
-powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0
-powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0
-powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0
-powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100
-powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100
-powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100
-powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0
-powercfg -setactive scheme_current
-
 echo Disable/delete optional features
 :: Steps Recorder is being planned to be removed in the latest Windows 11 dev builds along with the Tips app
 DISM /Online /Remove-Capability /CapabilityName:"App.StepsRecorder~~~~0.0.1.0" /NoRestart
@@ -1855,3 +1829,32 @@ echo Enable the reinstallation of Defender
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.SecHealthUI_cw5n1h2txyewy" /f
 echo Done!
 goto :menu
+
+:power
+echo Setting power plan to High Performance
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+echo Power settings
+reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EnergyEstimationEnabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\System\CurrentControlSet\Control\Power" /v "EventProcessorEnabled" /t REG_DWORD /d "0" /f
+reg add "HKLM\System\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d "1" /f
+powercfg -setacvalueindex scheme_current sub_processor THROTTLING 0
+powercfg -setacvalueindex scheme_current sub_none DEVICEIDLE 0
+powercfg -setacvalueindex scheme_current sub_none CONSOLELOCK 0
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 d4e98f31-5ffe-4ce1-be31-1b38b384c009 0 >nul
+powercfg -setacvalueindex scheme_current 2a737441-1930-4402-8d77-b2bebba308a3 48e6b7a6-50f5-4782-a5d4-53bb8f07e226 0 >nul
+powercfg -setacvalueindex scheme_current SUB_PCIEXPRESS ASPM 0
+powercfg -setacvalueindex scheme_current SUB_DISK 0b2d69d7-a2a1-449c-9680-f91c70521c60 0
+powercfg -setacvalueindex scheme_current SUB_DISK dbc9e238-6de9-49e3-92cd-8c2b4946b472 1
+powercfg -setacvalueindex scheme_current SUB_DISK fc95af4d-40e7-4b6d-835a-56d131dbc80e 1
+powercfg -setacvalueindex scheme_current sub_processor PERFAUTONOMOUS 1
+powercfg -setacvalueindex scheme_current sub_processor PERFEPP 0
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTMODE 1
+powercfg -setacvalueindex scheme_current sub_processor PERFBOOSTPOL 100
+powercfg -setacvalueindex scheme_current SUB_SLEEP AWAYMODE 0
+powercfg -setacvalueindex scheme_current SUB_SLEEP ALLOWSTANDBY 0
+powercfg -setacvalueindex scheme_current SUB_SLEEP HYBRIDSLEEP 0
+powercfg -setacvalueindex scheme_current sub_processor PROCTHROTTLEMIN 100
+powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100
+powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100
+powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0
+powercfg -setactive scheme_current
