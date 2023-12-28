@@ -1520,8 +1520,11 @@ echo Remove 'Rich Text Format' text file in 'create'
 reg delete "HKCR\.rtf\ShellNew" /f
 echo Hide 'add to favorites'
 reg delete "HKCR\*\shell\pintohomefile" /f
+echo Clipboard stuff!
 echo Enable Clipboard History
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "	AllowClipboardHistory" /t REG_DWORD /d 1 /f
+echo Disable Clipboard Sync
+reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowCrossDeviceClipboard" /t REG_DWORD /d 0 /f
 echo Faster startup and shutdown
 echo Disable boot circle (boot loading icon)
 bcdedit /set quietboot yes
