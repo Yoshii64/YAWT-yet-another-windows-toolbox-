@@ -416,6 +416,8 @@ echo disabling/deleting Services
  wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
  wevtutil set-log "Microsoft-Windows-Kernel-Processor-Power/Diagnostic" /e:false
  wevtutil set-log "Microsoft-Windows-UserModePowerService/Diagnostic" /e:false
+ echo Disabling the Intel Telemetry Service
+ reg add "HKLM\SYSTEM\CurrentControlSet\Services\Telemetry" /v "Start" /t REG_DWORD /d 4 /f
  echo DiagTrack
  sc config "DiagTrack" start= disabled
  NET STOP DiagTrack
@@ -601,6 +603,9 @@ NET STOP W32Time
 echo WarpJITSvc
 sc config WarpJITSvc start= disabled
 NET STOP WarpJITSvc
+echo NetBios Interface System
+sc config NetBIOS start= disabled
+NET STOP NetBIOS
 echo WdiServiceHost
 sc config WdiServiceHost start= disabled
 NET STOP WdiServiceHost
@@ -1363,9 +1368,6 @@ echo Disable Windows WPBT execution (pretty much a built in rootkit for computer
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "DisableWpbtExecution" /t REG_DWORD /d "1" /f
 goto :menu
 
-
-
-
 :others
 echo Disable/delete optional features
 :: Steps Recorder is being planned to be removed in the latest Windows 11 dev builds along with the Tips app
@@ -1390,6 +1392,9 @@ dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Client" /NoRestart
 dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Server" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Windows-Defender-Default-Definitions" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"WorkFolders-Client" /NoRestart
+
+
+
 
 echo Disable reserved storage
 DISM /Online /Set-ReservedStorageState /State:Disabled
@@ -1528,6 +1533,9 @@ echo Remove 'Rich Text Format' text file in 'create'
 reg delete "HKCR\.rtf\ShellNew" /f
 echo Hide 'add to favorites'
 reg delete "HKCR\*\shell\pintohomefile" /f
+echo Hide Restore previous versions
+Reg delete "HKCR\AllFilesystemObjects\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /f
+Reg delete "HKCR\AllFilesystemObjects\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /f
 echo Clipboard stuff!
 echo Enable Clipboard History
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "	AllowClipboardHistory" /t REG_DWORD /d 1 /f
