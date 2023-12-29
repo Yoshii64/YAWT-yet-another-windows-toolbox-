@@ -1277,6 +1277,15 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\UBPM" /v Start /t 
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WdiContextLog" /v Start /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\WiFiSession" /v Start /t REG_DWORD /d 0 /f
 
+echo Disable WMI Autologgers
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{A0C1853B-5C40-4B15-8766-3CF1C58F985A}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{A9C11050-9E93-4FA4-8FE0-7C4750A345B2}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{4CB314DF-C11F-47D7-9C04-65FB0051561B}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{34B02AA4-BE24-55E0-4EB1-D29469A2D79C}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{BC1BDB57-71A2-581A-147B-E0B49474A2D4}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{DBE9B383-7CF3-4331-91CC-A3CB16A3B538}" /v "Enabled" /t REG_DWORD /d 0 /f
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\EventLog-Application\{B447B4DF-7780-11E0-ADA3-18A90531A85A}" /v "Enabled" /t REG_DWORD /d 0 /f
+
 echo Disable ShellBags
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\BagMRU"
 reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\Shell\Bags"
@@ -1801,6 +1810,8 @@ NET STOP Sense
 sc config Sense start= disabled
 NET STOP SecurityHealthService
 sc config SecurityHealthService start= disabled
+echo Security Center
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc" /v "Start" /t REG_DWORD /d 4 /f
 echo Done!
 goto :menu
 
@@ -1813,6 +1824,7 @@ sc config WinDefend start= auto
 sc config WdNisSvc start= auto
 sc config Sense start= auto
 sc config SecurityHealthService start= auto
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc" /v "Start" /t REG_DWORD /d 2 /f
 schtasks /Change /TN "Microsoft\Windows\Windows Defender\Windows Defender Verification" /Enable
 echo Enable file hash computation
 :: Again. Thanks Nyne :D
