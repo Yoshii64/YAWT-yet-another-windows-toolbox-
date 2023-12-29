@@ -418,6 +418,8 @@ echo disabling/deleting Services
  wevtutil set-log "Microsoft-Windows-UserModePowerService/Diagnostic" /e:false
  echo Disabling the Intel Telemetry Service
  reg add "HKLM\SYSTEM\CurrentControlSet\Services\Telemetry" /v "Start" /t REG_DWORD /d 4 /f
+ echo SMB 1.x MiniRedirector
+ reg add "HKLM\SYSTEM\CurrentControlSet\Services\mrxsmb10" /v "Start" /t REG_DWORD /d 4 /f
  echo DiagTrack
  sc config "DiagTrack" start= disabled
  NET STOP DiagTrack
