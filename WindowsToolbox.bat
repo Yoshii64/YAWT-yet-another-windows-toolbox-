@@ -240,6 +240,8 @@ else (
     echo OneDrive not installed.
     timeout 5
 )
+echo Prevent auto reinstallation (or updating) of OneDrive
+reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\OneDriveSetup" /f
 goto :misc
 
 :onedriveinstall
@@ -1535,7 +1537,7 @@ echo Remove 'People'
 reg add "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v "HidePeopleBar" /t REG_DWORD /d "1" /f
 echo Hide the 'task view' button
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"/v "ShowTaskViewButton" /t REG_DWORD /d "0" /f
-echo disable 'News and Intrests'
+echo Disable 'News and Intrests'
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v "EnableFeeds" /t REG_DWORD /d "0" /f
 echo Configure the right click menu 
 echo Disable 'Share'
