@@ -319,13 +319,13 @@ goto :misc
 
 :StoreRemoval
 echo Removing Windows Store
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
 goto :misc
 
 :CalcRemoval
 :: a lot of people like calculator so...
 echo Remove the Calculator
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
 goto :misc
 
 :disablestorage
@@ -511,7 +511,7 @@ if %BTH%==y goto :Bluetooth
 if %BTH%==n goto :afterBluetooth
 :Bluetooth
 echo Microsoft-Windows-CoreSystem-Bluetooth-Telemetry
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-CoreSystem-Bluetooth-Telemetry | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-CoreSystem-Bluetooth-Telemetry | ForEach-Object { $_.Name }"
 echo BluetoothUserService
 sc config BluetoothUserService start= disabled
 NET STOP BluetoothUserService
@@ -691,147 +691,147 @@ echo AppVClient
 sc config AppVClient start= disabled
 NET STOP AppVClient
 
-echo Removing unused apps/bloat
+echo Removing unused apps/bloat 
 echo 1527c705-839a-4832-9118-54d4Bd6a0c89
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '1527c705-839a-4832-9118-54d4Bd6a0c89*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  1527c705-839a-4832-9118-54d4Bd6a0c89*' | Remove-AppxPackage"
 
 echo Microsoft.549981C3F5F10
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.549981C3F5F10*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.549981C3F5F10*' | Remove-AppxPackage"
 
 echo Microsoft.MixedReality.Portal
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MixedReality.Portal*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MixedReality.Portal*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.ContentDeliveryManager
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ContentDeliveryManager*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.ContentDeliveryManager*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.OOBENetworkCaptivePortal
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkCaptivePortal*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.OOBENetworkCaptivePortal*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.OOBENetworkConnectionFlow
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.OOBENetworkConnectionFlow*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.OOBENetworkConnectionFlow*' | Remove-AppxPackage"
 
 echo microsoft.windowscommunicationsapps
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*microsoft.windowscommunicationsapps*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*microsoft.windowscommunicationsapps*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.SecureAssessmentBrowser
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.SecureAssessmentBrowser*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.SecureAssessmentBrowser*' | Remove-AppxPackage"
 
 echo Microsoft.Advertising.Xaml
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Advertising.Xaml*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Advertising.Xaml*' | Remove-AppxPackage"
 
 echo GamingApp
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.GamingApp* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Microsoft.GamingApp*' | Remove-AppxPackage"
 
 echo Microsoft.BingWeather
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.BingWeather*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.BingWeather*' | Remove-AppxPackage"
 
 echo Microsoft.GetHelp
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.GetHelp*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.GetHelp*' | Remove-AppxPackage"
 
 echo Microsoft.Getstarted
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Getstarted*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Getstarted*' | Remove-AppxPackage"
 
 echo Microsoft.Microsoft3DViewer
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Microsoft3DViewer*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Microsoft3DViewer*' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftEdge
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdge*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftEdge*' | Remove-AppxPackage"
 
 echo microsoft.microsoftedge.stable
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*microsoft.microsoftedge.stable*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*microsoft.microsoftedge.stable*' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftEdgeDevToolsClient
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftEdgeDevToolsClient*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftEdgeDevToolsClient*' | Remove-AppxPackage"
 
 echo Clipchamp
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Clipchamp.Clipchamp* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Clipchamp.Clipchamp*' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftOfficeHub
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftOfficeHub*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftOfficeHub*' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftSolitaireCollection
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftSolitaireCollection*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftSolitaireCollection*' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftStickyNotes
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MicrosoftStickyNotes*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftStickyNotes*' | Remove-AppxPackage"
 
 echo MicrosoftStickyNotes
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
 
 echo Microsoft.MSPaint
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.MSPaint*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MSPaint*' | Remove-AppxPackage"
 
 echo Microsoft.Office.OneNote
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Office.OneNote*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Office.OneNote*' | Remove-AppxPackage"
 
 echo Microsoft.Office.Sway
 PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Office.Sway' | Remove-AppxPackage"
 
 echo Microsoft.People
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.People*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.People*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.PeopleExperienceHost
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.PeopleExperienceHost*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.PeopleExperienceHost*' | Remove-AppxPackage"
 
 echo Microsoft.ScreenSketch
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ScreenSketch*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.ScreenSketch*' | Remove-AppxPackage"
 
 echo Microsoft.SkypeApp
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.SkypeApp*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.SkypeApp*' | Remove-AppxPackage"
 
 echo Microsoft.Wallet
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Wallet*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Wallet*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.AssignedAccessLockApp
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.AssignedAccessLockApp*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.AssignedAccessLockApp*' | Remove-AppxPackage"
 
 echo Microsoft.Windows.ParentalControls
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.ParentalControls*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.ParentalControls*' | Remove-AppxPackage"
 
 echoMicrosoft.Windows.Photos
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Windows.Photos*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.Photos*' | Remove-AppxPackage"
 
 echo Microsoft.WindowsAlarms
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsAlarms*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsAlarms*' | Remove-AppxPackage"
 
 echo Microsoft.WindowsCamera
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsCamera*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsCamera*' | Remove-AppxPackage"
 
 echo Microsoft.WindowsFeedbackHub
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsFeedbackHub*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsFeedbackHub*' | Remove-AppxPackage"
 
 echo  Microsoft.WindowsMaps
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsMaps*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsMaps*' | Remove-AppxPackage"
 
 echo Microsoft.WindowsSoundRecorder
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsSoundRecorder*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsSoundRecorder*' | Remove-AppxPackage"
 
 echo Phone Link (already deprovisioned)
-PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
 
 echo Your Phone
-PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.WindowsPhone' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.WindowsPhone' | Remove-AppxPackage"
 
 echo Microsoft Phone
-PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Windows.Phone' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Windows.Phone' | Remove-AppxPackage"
 
 echo Microsoft.ZuneMusic
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneMusic*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage *Microsoft.ZuneMusic*' | Remove-AppxPackage"
 
 echo Microsoft.ZuneVideo
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneVideo*'} | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage *Microsoft.ZuneVideo* | Remove-AppxPackage"
 
 echo Game Bar
-PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxGamingOverlay' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxGamingOverlay' | Remove-AppxPackage"
 
 echo Game Bar Plugins
-powershell.exe -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
 
 echo Xbox Game UI
-powershell.exe -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
 
 echo Xbox App
-PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxApp' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxApp' | Remove-AppxPackage"
 
 echo Xbox Identity Provider
 PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxIdentityProvider' | Remove-AppxPackage"
@@ -840,447 +840,447 @@ echo Xbox Text to Speech
 PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxSpeechToTextOverlay' | Remove-AppxPackage"
 
 echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DesktopFileExplorer-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DesktopFileExplorer-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DesktopFileExplorer-Deployment | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Internal-ShellCommon-FilePickerExperienceMEM
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Internal-ShellCommon-FilePickerExperienceMEM | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Internal-ShellCommon-FilePickerExperienceMEM | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-OOBENetworkConnectionFlow.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-OOBENetworkConnectionFlow.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkConnectionFlow.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-PeopleExperienceHost.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-PeopleExperienceHost.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-PeopleExperienceHost.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Disk-Failure-Diagnostic-Module
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-Module | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-Module | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Disk-Failure-Diagnostic-User-Resolver
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-User-Resolver | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Disk-Failure-Diagnostic-User-Resolver | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskDiagnosis-Events
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnosis-Events | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnosis-Events | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskDiagnostic-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnostic-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskDiagnostic-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskManagement-Snapin
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-Snapin | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-Snapin | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskManagement-VDSInterface
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-VDSInterface | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement-VDSInterface | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskManagement
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskManagement | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-dskquota
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquota | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquota | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-dskquoui
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquoui | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-dskquoui | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Diskraid
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Diskraid | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Diskraid | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DiskQuota-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskQuota-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DiskQuota-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-EnhancedStorage-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-EnhancedStorage-API
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-API | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-API | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-EnhancedStorage-ClassDriver
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-ClassDriver | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-ClassDriver | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-EnhancedStorage-EhStorTcgDrv
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-EhStorTcgDrv | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-EnhancedStorage-EhStorTcgDrv | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-Angle
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-Angle | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-Angle | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-AXHost
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-AXHost | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-AXHost | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-EdgeContent
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeContent | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeContent | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-EdgeManager
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeManager | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-EdgeManager | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-MicrosoftEdgeBCHost
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeBCHost | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeBCHost | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-MicrosoftEdgeCP
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeCP | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeCP | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-MicrosoftEdgeDevTools
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeDevTools | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeDevTools | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-MicrosoftEdgeEnlightenment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeEnlightenment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeEnlightenment | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Edge-MicrosoftEdgeSH
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeSH | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Edge-MicrosoftEdgeSH | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-MicrosoftEdgeDevToolsClient.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ParentalControls.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ParentalControls.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ParentalControls.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockApp.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockApp.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockApp.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockAppBroker-WinRT
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppBroker-WinRT | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppBroker-WinRT | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockAppHost-AboveLockAppHost
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-AboveLockAppHost | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-AboveLockAppHost | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockAppHost-LockHostingFramework
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-LockHostingFramework | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost-LockHostingFramework | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LockAppHost
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LockAppHost | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AppRep-ChxApp.appxmain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxmain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxmain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AppRep-ChxApp.appxsetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxsetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep-ChxApp.appxsetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AppRep
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AppRep | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DeviceManagement-PolicyDefinition-SmartScreen
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceManagement-PolicyDefinition-SmartScreen | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceManagement-PolicyDefinition-SmartScreen | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SmartScreen-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SmartScreen
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SmartScreen | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-AM-Default-Definitions-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-AM-Default-Definitions-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AM-Default-Definitions-Deployment | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-AppLayer-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-AppLayer-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-AppLayer-Group-Deployment | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-ApplicationGuard-Inbox-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-ApplicationGuard-Inbox-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-Deployment | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-ApplicationGuard-Inbox-WOW64-Deployment | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-Branding
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Branding | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Branding | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-Core-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-Core-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Core-Group-Deployment | ForEach-Object { $_.Name }"
 
 echo Windows-Defender-Events
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Events | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Events | ForEach-Object { $_.Name }"
 
 echo Windows Backup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -Name *WindowsBackup* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -Name *WindowsBackup* | Remove-AppxPackage"
 
 echo Microsoft-Windows-SecHealthUI.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SecHealthUI.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SecHealthUI.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AllJoyn-Api
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Api | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Api | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AllJoyn-Capabilities
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Capabilities | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Capabilities | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AllJoyn-Router
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Router | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Router | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-AllJoyn-Runtime
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Runtime | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-AllJoyn-Runtime | ForEach-Object { $_.Name }"
 
 echo Networking-MPSSVC-Rules-AllJoyn
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Networking-MPSSVC-Rules-AllJoyn | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Networking-MPSSVC-Rules-AllJoyn | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager-Capabilities
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Capabilities | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Capabilities | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager-Utilities
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Utilities | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager-Utilities | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain.FeatureManagement
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.FeatureManagement | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.FeatureManagement | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain.PreInstalledApps
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.PreInstalledApps | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.PreInstalledApps | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain.Ratings
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.Ratings | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.Ratings | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain.SoftLanding
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SoftLanding | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SoftLanding | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain.SubscribedContent
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SubscribedContent | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain.SubscribedContent | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxMain
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxMain | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-ContentDeliveryManager.AppxSetup
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxSetup | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-ContentDeliveryManager.AppxSetup | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SystemSettings-SettingsHandlers-ContentDeliveryManager
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-ContentDeliveryManager | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-ContentDeliveryManager | ForEach-Object { $_.Name }"
 
 echo Microsoft-OneCore-DictationManager-Component
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-DictationManager-Component | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-DictationManager-Component | ForEach-Object { $_.Name }"
 
 echo Microsoft-OneCore-SpeechService-Component
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SpeechService-Component | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SpeechService-Component | ForEach-Object { $_.Name }"
 
 echo Microsoft-OneCore-SystemSettings-SettingsHandlers-SpeechPrivacy
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SystemSettings-SettingsHandlers-SpeechPrivacy | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-OneCore-SystemSettings-SettingsHandlers-SpeechPrivacy | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-IEKillBits
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-IEKillBits | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-IEKillBits | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-Pal-Desktop
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Pal-Desktop | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Pal-Desktop | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-Shell
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Shell | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Shell | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-UserExperience-Common
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience-Common | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience-Common | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-UserExperience
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-UserExperience | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Speech-Windows
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Windows | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Speech-Windows | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SpeechCommon-OneCore
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommon-OneCore | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommon-OneCore | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SpeechCommonNoIA64
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommonNoIA64 | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechCommonNoIA64 | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SpeechDiagnostic
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechDiagnostic | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechDiagnostic | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SpeechEngine-OneCore
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine-OneCore | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine-OneCore | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SpeechEngine
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SpeechEngine | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-VoiceActivation-HW
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-VoiceActivation-HW | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-VoiceActivation-HW | ForEach-Object { $_.Name }"
 
 echo Windows-Media-Speech-WinRT
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Media-Speech-WinRT | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Media-Speech-WinRT | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Geolocation-Framework
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Framework | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Framework | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Geolocation-Service-Modern
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service-Modern | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service-Modern | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Geolocation-Service
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-Service | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Geolocation-WinComponents
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinComponents | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinComponents | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Geolocation-WinRT
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinRT | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Geolocation-WinRT | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-LocationProvider-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LocationProvider-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-LocationProvider-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SystemSettings-SettingsHandlers-Geolocation
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-Geolocation | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SystemSettings-SettingsHandlers-Geolocation | ForEach-Object { $_.Name }"
 
 echo Microsoft-WindowsPhone-LocationServiceProvider-Events
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-WindowsPhone-LocationServiceProvider-Events | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-WindowsPhone-LocationServiceProvider-Events | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Application-Experience-AIT-Static
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-AIT-Static | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-AIT-Static | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Application-Experience-Inventory-Data-Sources
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Inventory-Data-Sources | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Inventory-Data-Sources | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Application-Experience-Mitigations-C8
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Mitigations-C8 | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Mitigations-C8 | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Application-Experience-Program-Data
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Program-Data | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Application-Experience-Program-Data | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-Appraiser-InboxDataFiles
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-InboxDataFiles | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-InboxDataFiles | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-Appraiser-Logger
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-Logger | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser-Logger | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-Appraiser
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-Appraiser | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-CompatTelRunner-DailyTask
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner-DailyTask | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner-DailyTask | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-CompatTelRunner
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-CompatTelRunner | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Compat-GeneralTel
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-GeneralTel | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Compat-GeneralTel | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DataCollection-Adm
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DataCollection-Adm | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DataCollection-Adm | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-DeviceCensus-Schedule-ClientServer
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceCensus-Schedule-ClientServer | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-DeviceCensus-Schedule-ClientServer | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-TelemetryClient
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryClient | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryClient | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-TelemetryPermission
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryPermission | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-TelemetryPermission | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client-Aggregators
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Aggregators | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Aggregators | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client-AutoLogger-Default
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-AutoLogger-Default | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-AutoLogger-Default | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client-WoWOnly
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-WoWOnly | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client-WoWOnly | ForEach-Object { $_.Name }"
 
 echo Microsoft-Windows-Unified-Telemetry-Client
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-Unified-Telemetry-Client | ForEach-Object { $_.Name }"
 
 echo Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient | ForEach-Object { $_.Name }"
 
 echo Disable telemetry packages
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-OneCoreUAP-Feedback-StringFeedbackEngine*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment-LanguagePack*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingConsole*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingConsole.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingCore*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl-Deployment*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingPowershell*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingUI*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-CourtesyEngine*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient-Desktop-TaskSch*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-FeedbackNotifications-Adm*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-FeedbackNotifications-Adm.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-Service*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-Service.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-OneCore-SystemSettings-InputCloudStore*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-AIT-Static*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-AppInv*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Core-Inventory-Service*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Core-Inventory-Service.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Infrastructure*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Inventory-Data-Sources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Program-Data*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Program-Data.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CodeIntegrity-Aggregator*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser-InboxDataFiles*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser-Logger*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner-DailyTask*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-GeneralTel*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compatibility-Aggregator*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DataCollection-Adm*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DataCollection-Adm.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DeviceCensus-Schedule-ClientServer*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-KeyboardDiagnostic*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-KeyboardDiagnostic.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-MediaFoundation-MediaFoundationAggregator*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Power-EnergyEstimationEngine-Client-Overrides*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Security-PwdlessPlat-Aggregator*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SystemSettings-SettingsHandlers-SIUF*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SystemSettings-SettingsHandlers-SIUF.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-TelemetryClient*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client.resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Aggregators*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-WoWOnly*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Update-Aggregators*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-AcProxy*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-AcProxy.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CEIPEnable-Adm*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CEIPEnable-Adm.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Client-SQM-Consolidator*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQMApi*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQM-Consolidator-Base*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQM-Consolidator-Base.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip.Resources*' | Remove-WindowsPackage -Online"
-powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-OneCoreUAP-Feedback-StringFeedbackEngine*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment-LanguagePack*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingConsole*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingConsole.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingCore*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl-Deployment*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingPowershell*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingUI*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-CourtesyEngine*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient-Desktop-TaskSch*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-FeedbackNotifications-Adm*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-FeedbackNotifications-Adm.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-Service*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-Service.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-OneCore-SystemSettings-InputCloudStore*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-AIT-Static*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-AppInv*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Core-Inventory-Service*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Core-Inventory-Service.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Infrastructure*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Inventory-Data-Sources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Program-Data*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Application-Experience-Program-Data.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CodeIntegrity-Aggregator*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser-InboxDataFiles*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-Appraiser-Logger*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-CompatTelRunner-DailyTask*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compat-GeneralTel*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Compatibility-Aggregator*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DataCollection-Adm*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DataCollection-Adm.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-DeviceCensus-Schedule-ClientServer*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-KeyboardDiagnostic*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-KeyboardDiagnostic.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-MediaFoundation-MediaFoundationAggregator*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Power-EnergyEstimationEngine-Client-Overrides*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Security-PwdlessPlat-Aggregator*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SetupPlatform-Telemetry-AutoLogger*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SystemSettings-SettingsHandlers-SIUF*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SystemSettings-SettingsHandlers-SIUF.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-TelemetryClient*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client.resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Aggregators*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Decoder-Host*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-Settings-WindowsClient*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Unified-Telemetry-Client-WoWOnly*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Update-Aggregators*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-AcProxy*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-AcProxy.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CEIPEnable-Adm*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-CEIPEnable-Adm.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Client-SQM-Consolidator*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQMApi*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQM-Consolidator-Base*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-SQM-Consolidator-Base.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip.Resources*' | Remove-WindowsPackage -Online"
+powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment*' | Remove-WindowsPackage -Online"
 
 echo Disallow Windows Update to reinstall bloat
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.3DBuilder_8wekyb3d8bbwe" /f
@@ -1811,33 +1811,33 @@ reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "WppTra
 reg add "HKLM\SOFTWARE\Policies\Microsoft\AppHVSI" /v "AuditApplicationGuard" /t REG_DWORD /d 0 /f
 echo Remove Defender packages
 echo Windows-Defender-Group-Policy-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 echo Windows-Defender-Group-Policy-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Group-Deployment | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-MDM-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-MDM-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-MDM-Group-Deployment | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-Powershell-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell-Group-Deployment | ForEach-Object { $_.Name }"
 echo Windows-Defender-Management-Powershell
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Management-Powershell | ForEach-Object { $_.Name }"
 echo Windows-Defender-Nis-Group-Deployment-LanguagePack
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment-LanguagePack | ForEach-Object { $_.Name }"
 echo Windows-Defender-Nis-Group-Deployment
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Nis-Group-Deployment | ForEach-Object { $_.Name }"
 echo Windows-Defender-Service-MpClientEtw
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service-MpClientEtw | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service-MpClientEtw | ForEach-Object { $_.Name }"
 echo Windows-Defender-Service
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Service | ForEach-Object { $_.Name }"
 echo Windows-Defender-UI
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-UI | ForEach-Object { $_.Name }"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-UI | ForEach-Object { $_.Name }"
 echo Disable UI of Windows Defender
 :: there is supposed to be a command to allow it to uninstall. but i cannot figure out how to get the SID of the user and use it for the regkey
 PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Windows.SecHealthUI' | Remove-AppxPackage"
