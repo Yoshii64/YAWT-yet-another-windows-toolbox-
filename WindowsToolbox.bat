@@ -764,6 +764,9 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-
 echo Microsoft.Office.OneNote
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.Office.OneNote*'} | ForEach-Object { $_.Name }"
 
+echo Microsoft.Office.Sway
+PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Office.Sway' | Remove-AppxPackage"
+
 echo Microsoft.People
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.People*'} | ForEach-Object { $_.Name }"
 
@@ -803,8 +806,14 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-
 echo Microsoft.WindowsSoundRecorder
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.WindowsSoundRecorder*'} | ForEach-Object { $_.Name }"
 
-echo Microsoft.YourPhone
-powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.YourPhone*'} | ForEach-Object { $_.Name }"
+echo Phone Link (already deprovisioned)
+PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
+
+echo Your Phone
+PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.WindowsPhone' | Remove-AppxPackage"
+
+echo Microsoft Phone
+PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Windows.Phone' | Remove-AppxPackage"
 
 echo Microsoft.ZuneMusic
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneMusic*'} | ForEach-Object { $_.Name }"
@@ -812,11 +821,23 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-
 echo Microsoft.ZuneVideo
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers | Where-Object {$_.PackageFamilyName -like '*Microsoft.ZuneVideo*'} | ForEach-Object { $_.Name }"
 
-echo XboxGameOverlay
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+echo Game Bar
+PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxGamingOverlay' | Remove-AppxPackage"
 
-echo XboxGameUI
-powershell.exe -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
+echo Game Bar Plugins
+powershell.exe -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameOverlay* | Remove-AppxPackage" 
+
+echo Xbox Game UI
+powershell.exe -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.XboxGameUI* | Remove-AppxPackage"
+
+echo Xbox App
+PowerShell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxApp' | Remove-AppxPackage"
+
+echo Xbox Identity Provider
+PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxIdentityProvider' | Remove-AppxPackage"
+
+echo Xbox Text to Speech
+PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxSpeechToTextOverlay' | Remove-AppxPackage"
 
 echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain | ForEach-Object { $_.Name }"
@@ -1193,7 +1214,7 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Mi
 echo Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient
 powershell.exe -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-System-Diagnostics-Telemetry-PlatformTelemetryClient | ForEach-Object { $_.Name }"
 
-echo disable telemetry packages
+echo Disable telemetry packages
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-OneCoreUAP-Feedback-StringFeedbackEngine*' | Remove-WindowsPackage -Online"
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment-LanguagePack*' | Remove-WindowsPackage -Online"
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingConsole*' | Remove-WindowsPackage -Online"
@@ -1260,6 +1281,36 @@ powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -Packag
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip*' | Remove-WindowsPackage -Online"
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-UsbCeip.Resources*' | Remove-WindowsPackage -Online"
 powershell.exe -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReporting-Adm-Deployment*' | Remove-WindowsPackage -Online"
+
+echo Disallow Windows Update to reinstall bloat
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.3DBuilder_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Microsoft3DViewer_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.BingWeather_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.BingSports_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.BingNews_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.BingFinance_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftOfficeHub_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Office.OneNote_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Office.Sway_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.WindowsStore_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.StorePurchaseApp_8wekyb3d8bbwe" /f
+:: Xbox Console Companion is technically already deprovisioned as it was replaced by the main Xbox app and Game Bar
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.XboxApp_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Xbox.TCUI_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.XboxGamingOverlay_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.XboxGameOverlay_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.XboxIdentityProvider_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.XboxSpeechToTextOverlay_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.WindowsPhone_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.Phone_8wekyb3d8bbwe" /f
+:: In case Edge is removed (like through [misc < uninstall Edge] or another program)
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdge_8wekyb3d8bbwe" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdgeDevToolsClient_8wekyb3d8bbwe" /f
+:: File Picker is not removed here, however in case someone removes it through other means
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\1527c705-839a-4832-9118-54d4Bd6a0c89_cw5n1h2txyewy" /f
+:: same for Cloud Experience Host
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.CloudExperienceHost_cw5n1h2txyewy" /f
+
 
 echo Disallow tracking services to start
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\WMI\Autologger\Circular Kernel Context Logger" /v Start /t REG_DWORD /d 0 /f
@@ -1398,6 +1449,10 @@ DISM /Online /Disable-Feature /FeatureName:"WCF-TCP-PortSharing45" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-Features" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-InternetPrinting-Client" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Printing-XPSServices-Features" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Xps-Foundation-Xps-Viewer" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"LPDPrintService" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Printing-Foundation-LPRPortMonitor" /NoRestart
+DISM /Online /Disable-Feature /FeatureName:"Printing-PrintToPDFServices-Features" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"MSRDC-Infrastructure" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"SmbDirect" /NoRestart
 dism /online /Disable-Feature /FeatureName:"SMB1Protocol" /NoRestart
