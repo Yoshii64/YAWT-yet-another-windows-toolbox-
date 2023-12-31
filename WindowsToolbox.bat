@@ -319,13 +319,14 @@ goto :misc
 
 :StoreRemoval
 echo Removing Windows Store
-powershell -ExecutionPolicy Unrestricted -Command "Get-Appxpackage -AllUsers *Microsoft.WindowsStore* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage '*Microsoft.WindowsStore*' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-Appxpackage '*Microsoft.StorePurchaseApp*' | Remove-AppxPackage"
 goto :misc
 
 :CalcRemoval
 :: a lot of people like calculator so...
 echo Remove the Calculator
-powershell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage -AllUsers *Microsoft.WindowsCalculator* | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.WindowsCalculator*' | Remove-AppxPackage"
 goto :misc
 
 :disablestorage
@@ -722,8 +723,11 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Advertisi
 echo GamingApp
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Microsoft.GamingApp*' | Remove-AppxPackage"
 
-echo Microsoft.BingWeather
+echo Bing Weather
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.BingWeather*' | Remove-AppxPackage"
+
+echo Bing News
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.BingNews*' | Remove-AppxPackage"
 
 echo Microsoft.GetHelp
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.GetHelp*' | Remove-AppxPackage"
@@ -734,17 +738,11 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Getstarte
 echo Microsoft.Microsoft3DViewer
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Microsoft3DViewer*' | Remove-AppxPackage"
 
-echo Microsoft.MicrosoftEdge
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftEdge*' | Remove-AppxPackage"
-
-echo microsoft.microsoftedge.stable
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*microsoft.microsoftedge.stable*' | Remove-AppxPackage"
-
-echo Microsoft.MicrosoftEdgeDevToolsClient
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftEdgeDevToolsClient*' | Remove-AppxPackage"
-
 echo Clipchamp
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Clipchamp.Clipchamp*' | Remove-AppxPackage"
+
+echo Microsoft Todos
+PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Todos' | Remove-AppxPackage"
 
 echo Microsoft.MicrosoftOfficeHub
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftOfficeHub*' | Remove-AppxPackage"
@@ -757,6 +755,9 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Microsoft
 
 echo MicrosoftStickyNotes
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
+
+echo Power Automate
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.PowerAutomateDesktop*' | Remove-AppxPackage"
 
 echo Microsoft.MSPaint
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MSPaint*' | Remove-AppxPackage"
@@ -806,17 +807,23 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsMa
 echo Microsoft.WindowsSoundRecorder
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsSoundRecorder*' | Remove-AppxPackage"
 
-echo Phone Link (already deprovisioned)
+echo Windows Terminal
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.WindowsTerminal*' | Remove-AppxPackage"
+
+echo Quick Assist
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*MicrosoftCorporationII.QuickAssist*' | Remove-AppxPackage"
+
+echo Phone Link
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.YourPhone' | Remove-AppxPackage"
 
-echo Your Phone
+echo Your Phone (already deprovisioned)
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.WindowsPhone' | Remove-AppxPackage"
 
 echo Microsoft Phone
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Windows.Phone' | Remove-AppxPackage"
 
 echo Microsoft.ZuneMusic
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage *Microsoft.ZuneMusic*' | Remove-AppxPackage"
+powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.ZuneMusic*' | Remove-AppxPackage"
 
 echo Microsoft.ZuneVideo
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage *Microsoft.ZuneVideo* | Remove-AppxPackage"
@@ -838,6 +845,9 @@ PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxIdentit
 
 echo Xbox Text to Speech
 PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.XboxSpeechToTextOverlay' | Remove-AppxPackage"
+
+echo Xbox TCUI 
+PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Xbox.TCUI' | Remove-AppxPackage"
 
 echo Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Microsoft-Windows-OOBENetworkCaptivePortal.AppxMain | ForEach-Object { $_.Name }"
@@ -1961,3 +1971,4 @@ powercfg -setacvalueindex scheme_current sub_processor IDLEPROMOTE 100
 powercfg -setacvalueindex scheme_current sub_processor IDLEDEMOTE 100
 powercfg -setacvalueindex scheme_current sub_processor IDLESCALING 0
 powercfg -setactive scheme_current
+goto :menu
