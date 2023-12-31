@@ -1397,11 +1397,16 @@ schtasks /Delete /TN "\Microsoft\Windows\Application Experience\Microsoft Compat
 schtasks /Delete /TN "\Microsoft\Windows\Application Experience\PcaPatchDbTask" /F
 schtasks /Delete /TN "\Microsoft\Windows\Application Experience\ProgramDataUpdater" /F
 schtasks /Delete /TN "\Microsoft\Windows\Application Experience\StartupAppTask" /F
+schtasks /delete /TN "\Microsoft\Windows\Application Experience\AitAgent" /F
+:: DbTask and MareBackup are only seen on Windows 11. Exactly why I say if you want privacy, stick with 10
+schtasks /delete /TN "\Microsoft\Windows\Application Experience\SdbinstMergeDbTask" /F
+schtasks /delete /TN "\Microsoft\Windows\Application Experience\MareBackup" /F
 schtasks /Delete /TN "\Microsoft\Windows\Autochk\Proxy" /F
 schtasks /Delete /TN "\Microsoft\Windows\BrokerInfrastructure\BgTaskRegistrationMaintenanceTask" /F
 schtasks /Delete /TN "\Microsoft\Windows\CloudExperienceHost\CreateObjectTask" /F
 schtasks /Delete /TN "\Microsoft\Windows\Defrag\ScheduledDefrag" /F
 schtasks /Delete /TN "\Microsoft\Windows\Device Information\Device" /F
+schtasks /delete /TN "\Microsoft\Windows\Device Information\Device User" /F
 schtasks /Delete /TN "\Microsoft\Windows\Device Setup\Metadata Refresh" /F
 schtasks /Delete /TN "\Microsoft\Windows\Diagnosis\Scheduled" /F
 schtasks /Delete /TN "\Microsoft\Windows\DiskFootprint\Diagnostics" /F
