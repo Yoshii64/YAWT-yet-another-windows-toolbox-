@@ -1389,6 +1389,9 @@ if exist %SystemRoot%\System32\drivers\etc\hosts.temp (
 )
 
 echo Delete tasks
+:: killing DeviceCensus is needed so all of this works
+:: the tasks in AppID, Application Experience, Device Information, Feedback and Windows Error Reporting are telemetry that always run
+taskkill /f /im DeviceCensus.exe
 schtasks /Delete /TN "\Microsoft\Windows\AppID\EDP Policy Manager" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierdaily" /F
 schtasks /Delete /TN "\Microsoft\Windows\ApplicationData\appuriverifierinstall" /F
