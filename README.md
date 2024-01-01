@@ -5,4 +5,4 @@ Recommended to run as admin or using NSudo.
 
 Some parts of code (or the ideas) are from [Atlas](https://atlasos.net/), DuckOS (cannot find link. very sorry), [Nyne (Neptune OS)](https://github.com/NyneDZN/NeptuneOS), [CoutX](https://github.com/UnLovedCookie/CoutX) and [Privacy.Sexy](https://privacy.sexy/).
 
-Discord server coming soon!
+Discord server for help and input: https://discord.gg/ScucWqPtY2
