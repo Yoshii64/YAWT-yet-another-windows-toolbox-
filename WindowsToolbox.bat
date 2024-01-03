@@ -10,7 +10,7 @@ echo - Type 3 to clear temp files (recommended)
 echo - Type 4 to check and fix errors in Windows (recommended)
 echo - Type 5 to install a program (optional)
 echo - Type 6 for a menu that shows more optimizations (recommended)
-echo - Type 7 to debloat Windows (very recommended)
+echo - Type 7 to Remove bloat and loggers (very recommended)
 echo - Type 8 for other optimizations/performance tweaks (very recommended)
 echo - Type 9 to disable Windows Defender (not recommended)
 echo - Type 10 to enable Windows Defender
@@ -34,15 +34,17 @@ goto :menu
 
 
 :UpdateRemoval
+echo Stop and disable services concerning Windows Update
 sc config "Windows Update" start= disabled
 NET STOP "Windows Update"
 sc config "UsoSvc" start= disabled
 NET STOP "UsoSvc"
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\WaaSMedicAgent.exe" /v "Debugger" /t REG_SZ /d "%WINDIR%\System32\taskkill.exe" /f
+echo Disable updates through registry
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ExcludeWUDriversInQualityUpdate" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\MRT" /v "DontOfferThroughWUAU" /t REG_DWORD /d "1" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DisableWindowsUpdateAccess" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DisableDualScan" /t REG_DWORD /d 1 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "AUPowerManagement" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "SetAutoRestartNotificationDisable" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ManagePreviewBuilds" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "ManagePreviewBuildsPolicyValue" /t REG_DWORD /d 1 /f
@@ -52,7 +54,6 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferFeatur
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferQualityUpdates" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "DeferQualityUpdatesPeriodInDays" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /v "SetDisableUXWUAccess" /t REG_DWORD /d 1 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "AUOptions" /t REG_DWORD /d 2 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAUAsDefaultShutdownOption" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoRebootWithLoggedOnUsers" /t REG_DWORD /d 1 /f
@@ -63,6 +64,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "AllowBuildP
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableConfigFlighting" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /v "EnableExperimentation" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Microsoft\WindowsSelfHost\UI\Visibility" /v "HideInsiderPage" /t REG_DWORD /d "1" /f
+echo Disable re-enabling updates
+taskkill /f /im upfc.exe
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\upfc.exe" /v "Debugger" /t REG_SZ /d "%WINDIR%\System32\taskkill.exe" /f
 pause
 goto :menu 
 
@@ -85,6 +89,8 @@ netsh int tcp set supplemental template=custom icw=10
 echo Set initial RTO
 :: It is 3000 by default. However I do wanna make sure it's set to that (like if someone used another bad optimizer)
 netsh int tcp set global initialRto=3000
+echo Disable Media Sense
+reg add "HKLM\System\CurrentControlSet\Services\Tcpip\Parameters" /v " DisableDHCPMediaSense" /t REG_DWORD /d 1 /f
 echo Enable Packet Coalescing
 powershell -ExecutionPolicy Unrestricted Set-NetOffloadGlobalSetting -PacketCoalescingFilter enabled
 echo Disable unused/bloat network devices
@@ -260,6 +266,7 @@ taskkill /F /FI "MODULES eq edgehtml.dll"
 :: Not removing WebView2. However I have a feeling keeping the task active could cause problems
 taskkill /F /FI "MODULES eq msedgewebview2.exe"
 echo deleting Edge processes
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\msedge.exe" /v "Debugger" /t REG_SZ /d "%WINDIR%\System32\taskkill.exe" /f
 sc delete edgeupdate
 sc delete edgeupdatem
 sc delete MicrosoftEdgeElevationService
@@ -364,6 +371,7 @@ echo Disable CEIP
 reg add "HKLM\SOFTWARE\Policies\Microsoft\AppV\CEIP" /v "CEIPEnable" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v "CEIPEnable" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient" /v "CorporateSQMURL" /t REG_SZ /d "0.0.0.0" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\aitstatic.exe" /v "Debugger" /t REG_SZ /d "%WINDIR%\System32\taskkill.exe" /f
 echo Disallow data collection
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t "REG_DWORD" /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Personalization\Settings" /v "AcceptedPrivacyPolicy" /t REG_DWORD /d "0" /f
@@ -414,7 +422,7 @@ NET STOP dmwappushservice
 sc config dmwappushservice start= disabled
 echo Allow Cortana
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
-echo disabling/deleting Services
+echo Disabling/deleting Services
  :: big thanks Nyne lol
  wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
  wevtutil set-log "Microsoft-Windows-Kernel-Processor-Power/Diagnostic" /e:false
@@ -1445,6 +1453,38 @@ schtasks /Delete /TN "\Microsoft\Windows\Windows Media Sharing\UpdateLibrary" /F
 schtasks /Delete /TN "\Microsoft\Windows\WindowsUpdate\Scheduled Start" /F
 schtasks /Delete /TN "\Microsoft\Windows\Wininet\CacheTask" /F
 schtasks /delete /TN "\Microsoft\Windows\Feedback\Siuf\DmClient" /F
+
+echo Disable WINEVT loggers
+:: Intel loggers
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-GFX-Info/Application" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Intel-GFX-Info/System" /v "Enabled" /t "REG_DWORD" /d 0 /f
+:: Windows loggers
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Client-Licensing-Platform/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-AllJoyn/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-All-User-Install-Agent/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-AppHost/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-AppID/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Audio/CaptureMonitor" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Audio/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Biometrics/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Bluetooth-BthLEPrepairing/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Bluetooth-MTPEnum/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Help/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-PowerShell/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Program-Compatibility-Assistant/CompatAfterUpgrade" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Provisioning-Diagnostics-Provider/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-UniversalTelemetryClient/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Application-Experience/Program-Compatibility-Assistant" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Application-Experience/Program-Compatibility-Troubleshooter" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Application-Experience/Program-Telemetry" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Application-Experience/Steps-Recorder" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Compat-Appraiser/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-DeviceManagement-Enterprise-Diagnostics-Provider/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-DeviceSync/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Hyper-V-Guest-Drivers/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Kernel-Boot/Operational" /v "Enabled" /t "REG_DWORD" /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-PowerShell/Admin" /v "Enabled" /t "REG_DWORD" /d 0 /f
+
 
 echo Disable Windows WPBT execution (pretty much a built in rootkit for computer manufactuers)
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "DisableWpbtExecution" /t REG_DWORD /d "1" /f
