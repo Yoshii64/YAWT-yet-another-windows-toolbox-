@@ -15,7 +15,7 @@ echo - Type 8 for other optimizations/performance tweaks (very recommended)
 echo - Type 9 to disable Windows Defender (not recommended)
 echo - Type 10 to enable Windows Defender
 echo - Type 11 to disable power savings (recommended only for desktops)
-echo - Type 12 to clean up and improve UI (recommended)
+echo - Type 12 for UI improvements (recommended)
 echo - Type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
@@ -362,6 +362,8 @@ echo Disable Program Compatibility Assistant (PCA)
 reg add "HKLM\Software\Policies\Microsoft\Windows\AppCompat" /v "DisablePCA" /t REG_DWORD /d "1" /f
 echo Disable Device Health monitering
 reg add "HKLM\Software\Policies\Microsoft\DeviceHealthAttestationService" /v "EnableDeviceHealthAttestationService" /t REG_DWORD /d 0 /f
+echo Disable the Diagnostic Data Viewer
+reg add "HKLM\Software\Policies\Microsoft\Windows\DataCollection" /v "DisableDiagnosticDataViewer" /t REG_DWORD /d 1 /f
 echo Disable TIPC/Input telemetry
 reg add "HKCU\SOFTWARE\Microsoft\Input\TIPC" /v "Enabled" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\InputPersonalization" /v "RestrictImplicitInkCollection" /t REG_DWORD /d "1" /f
@@ -1542,7 +1544,7 @@ reg add "HKLM\SYSTEM\ControlSet001\Control\GraphicsDrivers\Scheduler" /v "Enable
 :: Gonna keep this commented until i figure this out. Fault Tolerant Heap (FTH) stops a repeatedly crashing process.
 :: However that program takes a performance hit when FTH is on it
 :: echo Disable Fault Tolerant Heap
-:: reg add "HKLM\SOFTWARE\Microsoft\FTH" /v "Enabled" /t REG_DWORD /d 0
+:: reg add "HKLM\SOFTWARE\Microsoft\FTH" /v "Enabled" /t REG_DWORD /d 0 /f
 
 echo BSOD settings
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v "AutoReboot" /t REG_DWORD /d 0 /f
@@ -1561,6 +1563,11 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Acces
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows" /v "Enabled" /t REG_DWORD /d "0" /f
 echo Disable Clipboard Sync
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowCrossDeviceClipboard" /t REG_DWORD /d 0 /f
+echo Disable changing of Desktop icons and mouse pointers by programs
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
+reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
+echo Disable File History
+reg add "HKLM\Software\Policies\Microsoft\Windows\FileHistory" /v "Disabled" /t REG_DWORD /d 1 /f
 echo Faster startup and shutdown
 echo Disable boot circle (boot loading icon)
 bcdedit /set quietboot yes
@@ -1590,6 +1597,11 @@ Reg add "HKLM\SYSTEM\CurrentControlSet\Services\AudioEndpointBuilder" /v "ImageP
 echo Dont show unconnected audio devices
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowHiddenDevices" /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio\DeviceCpl" /v "ShowDisconnectedDevices" /t REG_DWORD /d "0" /f
+echo Disable Push to Install
+reg add "HKLM\Software\Policies\Microsoft\PushToInstall" /v "DisablePushToInstall" /t REG_DWORD /d 1 /f
+echo Do not allow Sound Recorder to run if not uninstalled
+:: for one reason or another, 1 is disable execution. no idea why
+reg add "HKLM\Software\Policies\Microsoft\SoundRecorder" /v "Soundrec" /t REG_DWORD /d 1 /f
 
 echo Security
 echo Permissions
@@ -1979,9 +1991,6 @@ echo Visual stuff
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DWM" /v "DisallowAnimations" /t REG_DWORD /d "1" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAnimations" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "DisableAcrylicBackgroundOnLogon" /t REG_DWORD /d "1" /f
-echo Disable changing of Desktop icons and mouse pointers by programs
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesMousePointers" /t REG_DWORD /d "0" /f
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes" /v "ThemeChangesDesktopIcons" /t REG_DWORD /d "0" /f
 echo Clean up start menu and Taskbar
 echo Hide search
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d "0" /f
@@ -2003,6 +2012,8 @@ reg delete "HKCR\*\shell\pintohomefile" /f
 echo Hide Restore previous versions
 Reg delete "HKCR\AllFilesystemObjects\shellex\PropertySheetHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /f
 Reg delete "HKCR\AllFilesystemObjects\shellex\ContextMenuHandlers\{596AB062-B4D2-4215-9F74-E9109B0A8153}" /f
+echo Disable new app alerts
+reg add "HKLM\Software\Policies\Microsoft\Windows\Explorer" /v "NoNewAppAlert" /t REG_DWORD /d 1 /f
 echo Clipboard stuff!
 echo Enable Clipboard History
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "	AllowClipboardHistory" /t REG_DWORD /d 1 /f
