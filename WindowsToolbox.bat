@@ -2023,6 +2023,4 @@ Reg delete "HKCR\AllFilesystemObjects\shellex\ContextMenuHandlers\{596AB062-B4D2
 echo Clipboard stuff!
 echo Enable Clipboard History
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "	AllowClipboardHistory" /t REG_DWORD /d 1 /f
-echo Disable Clipboard Sync
-reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "AllowCrossDeviceClipboard" /t REG_DWORD /d 0 /f
 goto :menu
