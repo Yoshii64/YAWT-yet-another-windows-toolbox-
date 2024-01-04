@@ -702,35 +702,28 @@ echo AppVClient
 sc config AppVClient start= disabled
 NET STOP AppVClient
 
-echo Removing unused apps/bloat 
+echo Removing unused apps/bloat
 echo 1527c705-839a-4832-9118-54d4Bd6a0c89
+:: I actually forgot what this is lmao
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  1527c705-839a-4832-9118-54d4Bd6a0c89*' | Remove-AppxPackage"
 
-echo Microsoft.549981C3F5F10
+echo Cortana
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.549981C3F5F10*' | Remove-AppxPackage"
 
-echo Microsoft.MixedReality.Portal
+echo Mixed Reality Portal
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MixedReality.Portal*' | Remove-AppxPackage"
 
-echo Microsoft.Windows.ContentDeliveryManager
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.ContentDeliveryManager*' | Remove-AppxPackage"
-
-echo Microsoft.Windows.OOBENetworkCaptivePortal
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.OOBENetworkCaptivePortal*' | Remove-AppxPackage"
-
-echo Microsoft.Windows.OOBENetworkConnectionFlow
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.OOBENetworkConnectionFlow*' | Remove-AppxPackage"
-
-echo microsoft.windowscommunicationsapps
+echo Communication Apps
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*microsoft.windowscommunicationsapps*' | Remove-AppxPackage"
 
-echo Microsoft.Windows.SecureAssessmentBrowser
+echo Secure Assessment
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.SecureAssessmentBrowser*' | Remove-AppxPackage"
 
-echo Microsoft.Advertising.Xaml
+echo Advertising.Xaml
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Advertising.Xaml*' | Remove-AppxPackage"
 
-echo GamingApp
+:: Xbox?
+echo Gaming App
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Microsoft.GamingApp*' | Remove-AppxPackage"
 
 echo Bing Weather
@@ -739,13 +732,13 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.BingWeath
 echo Bing News
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.BingNews*' | Remove-AppxPackage"
 
-echo Microsoft.GetHelp
+echo Get Help
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.GetHelp*' | Remove-AppxPackage"
 
-echo Microsoft.Getstarted
+echo Get Started
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Getstarted*' | Remove-AppxPackage"
 
-echo Microsoft.Microsoft3DViewer
+echo 3D Viewer
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Microsoft3DViewer*' | Remove-AppxPackage"
 
 echo Clipchamp
@@ -754,67 +747,57 @@ powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Clipchamp.
 echo Microsoft Todos
 PowerShell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Todos' | Remove-AppxPackage"
 
-echo Microsoft.MicrosoftOfficeHub
+echo Microsoft Office
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftOfficeHub*' | Remove-AppxPackage"
 
-echo Microsoft.MicrosoftSolitaireCollection
+echo Solitaire
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftSolitaireCollection*' | Remove-AppxPackage"
 
-echo Microsoft.MicrosoftStickyNotes
+echo Sticky Notes
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MicrosoftStickyNotes*' | Remove-AppxPackage"
-
-echo MicrosoftStickyNotes
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers *Microsoft.MicrosoftStickyNotes* | Remove-AppxPackage"
 
 echo Power Automate
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.PowerAutomateDesktop*' | Remove-AppxPackage"
 
-echo Microsoft.MSPaint
+echo Microsoft Paint
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MSPaint*' | Remove-AppxPackage"
 
-echo Microsoft.Office.OneNote
+echo OneNote
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Office.OneNote*' | Remove-AppxPackage"
 
-echo Microsoft.Office.Sway
+echo Office Sway
 PowerShell -ExecutionPolicy Unrestricted -Command "Get-AppxPackage 'Microsoft.Office.Sway' | Remove-AppxPackage"
 
-echo Microsoft.People
+echo People
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.People*' | Remove-AppxPackage"
-
-echo Microsoft.Windows.PeopleExperienceHost
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.PeopleExperienceHost*' | Remove-AppxPackage"
 
-echo Microsoft.ScreenSketch
+echo Snipping Tool
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.ScreenSketch*' | Remove-AppxPackage"
 
-echo Microsoft.SkypeApp
+echo Skype
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.SkypeApp*' | Remove-AppxPackage"
 
-echo Microsoft.Wallet
+echo Wallet
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Wallet*' | Remove-AppxPackage"
 
-echo Microsoft.Windows.AssignedAccessLockApp
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.AssignedAccessLockApp*' | Remove-AppxPackage"
-
-echo Microsoft.Windows.ParentalControls
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.ParentalControls*' | Remove-AppxPackage"
-
-echoMicrosoft.Windows.Photos
+echo Photos
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.Photos*' | Remove-AppxPackage"
 
-echo Microsoft.WindowsAlarms
+echo Alarms
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsAlarms*' | Remove-AppxPackage"
 
-echo Microsoft.WindowsCamera
+echo Camera
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsCamera*' | Remove-AppxPackage"
 
-echo Microsoft.WindowsFeedbackHub
+echo Feedback Hub
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsFeedbackHub*' | Remove-AppxPackage"
 
-echo  Microsoft.WindowsMaps
+echo Maps
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsMaps*' | Remove-AppxPackage"
 
-echo Microsoft.WindowsSoundRecorder
+echo Sound Recorder
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.WindowsSoundRecorder*' | Remove-AppxPackage"
 
 echo Windows Terminal
@@ -832,10 +815,10 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.WindowsPhon
 echo Microsoft Phone
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage 'Microsoft.Windows.Phone' | Remove-AppxPackage"
 
-echo Microsoft.ZuneMusic
+echo Groove Music
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage '*Microsoft.ZuneMusic*' | Remove-AppxPackage"
 
-echo Microsoft.ZuneVideo
+echo Videos
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage *Microsoft.ZuneVideo* | Remove-AppxPackage"
 
 echo Game Bar
