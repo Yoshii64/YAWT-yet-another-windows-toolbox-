@@ -514,9 +514,12 @@ echo Disabling/deleting Services
  echo RemoteAccess
  sc config RemoteAccess start= disabled
  NET STOP RemoteAccess
+ echo applockerfltr
+ sc config "applockerfltr" start= disabled
+ NET STOP "applockerfltr"
  echo AppIDSvc
  sc config AppIDSvc start= disabled
-NET STOP AppIDSvc
+ NET STOP AppIDSvc
 cls
 echo This breaks Bluetooth. are you sure you wanna disable the following
 set /p BTH=BluetoothUserService, BTAGService, BthAvctpSvc and bthserv (y/n)
@@ -557,12 +560,12 @@ NET STOP DoSvc
 echo DPS
 sc config DPS start= disabled
 NET STOP DPS
-echo fdPHost
-sc config fdPHost start= disabled
-NET STOP fdPHost
 echo FDResPub
 sc config FDResPub start= disabled
 NET STOP FDResPub
+echo fdPHost
+sc config fdPHost start= disabled
+NET STOP fdPHost
 echo InstallService
 sc config InstallService start= disabled
 NET STOP InstallService
