@@ -362,7 +362,7 @@ echo Disable Application Compatibility Engine (ACE)
 reg add "HKLM\Software\Policies\Microsoft\Windows\AppCompat" /v "DisableEngine" /t REG_DWORD /d "1" /f
 echo Disable Program Compatibility Assistant (PCA)
 reg add "HKLM\Software\Policies\Microsoft\Windows\AppCompat" /v "DisablePCA" /t REG_DWORD /d "1" /f
-echo Disable Device Health monitering
+echo Disable Device Health monitoring
 reg add "HKLM\Software\Policies\Microsoft\DeviceHealthAttestationService" /v "EnableDeviceHealthAttestationService" /t REG_DWORD /d 0 /f
 echo Disable the Diagnostic Data Viewer
 reg add "HKLM\Software\Policies\Microsoft\Windows\DataCollection" /v "DisableDiagnosticDataViewer" /t REG_DWORD /d 1 /f
