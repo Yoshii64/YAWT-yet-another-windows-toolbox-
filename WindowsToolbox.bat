@@ -187,9 +187,9 @@ if %back%==n goto :menu
 cls
 echo Type 1 to disable backround apps
 echo Type in 2 to enable backround apps
-echo Type in 3 to uninstall onedrive
-echo Type in 4 to install onedrive 
-echo Type in 5 to uninstall edge
+echo Type in 3 to uninstall OneDrive
+echo Type in 4 to install OneDrive 
+echo Type in 5 to uninstall Edge
 echo Type in 6 to disable Windows Search Indexing
 echo Type in 7 to disable User Account Control
 echo Type in 8 to enable User Account Control
@@ -234,7 +234,7 @@ reg add HKLM\Software\Policies\Microsoft\Windows\AppPrivacy /v LetAppsRunInBackg
 goto :misc
 
 :OneDriveuninstall
-echo Uninstalling onedrive...
+echo Uninstalling OneDrive
 echo Killing OneDrive processes...
 IF EXIST %SystemRoot%\System32\OneDriveSetup.exe (
     echo Uninstalling OneDrive
@@ -253,14 +253,13 @@ reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\OneDriveSetup" /f
 goto :misc
 
 :onedriveinstall
-echo installing onedrive...
-winget install Microsoft.OneDrive
+echo installing OneDrive...
+%SystemRoot%\System32\OneDriveSetup.exe
 echo done
 goto :misc
 
 :edgeuninstall
-echo Uninstalling edge...
-echo Killing edge processes...
+echo Killing Edge processes...
 taskkill /F /IM MicrosoftEdgeUpdate.exe
 taskkill /F /IM msedge.exe
 taskkill /F /IM MicrosoftEdge*
@@ -272,7 +271,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution 
 sc delete edgeupdate
 sc delete edgeupdatem
 sc delete MicrosoftEdgeElevationService
-echo deleting edge files...
+echo deleting Edge files...
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate"
 del /f /q "C:\Users\%USERNAME%\AppData\Local\Microsoft\EdgeUpdate"
 start 
