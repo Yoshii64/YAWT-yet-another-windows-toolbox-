@@ -273,7 +273,6 @@ sc delete edgeupdate
 sc delete edgeupdatem
 sc delete MicrosoftEdgeElevationService
 echo deleting edge files...
-for /f "delims=" %a in ('where /r C:\ *edge.lnk*') do (del /f /q "%a")
 del /f /q "C:\Program Files (x86)\Microsoft\EdgeUpdate"
 del /f /q "C:\Users\%USERNAME%\AppData\Local\Microsoft\EdgeUpdate"
 start 
@@ -284,6 +283,10 @@ reg add "HKLM\Software\Policies\Microsoft\Windows\EdgeUI" /v "DisableMFUTracking
 reg add "HKLM\Software\Policies\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch" /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "DoNotUpdateToEdgeWithChromium" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "InstallDefault" /t REG_DWORD /d 0 /f
+echo Delete Edge shortcuts
+del C:\Users\%USERNAME%\Desktop\edge.lnk /f
+del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\edge.lnk /f
+del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\edge.lnk
 echo Done!
 pause
 goto :misc
