@@ -284,9 +284,9 @@ reg add "HKLM\Software\Policies\Microsoft\MicrosoftEdge\Main" /v "AllowPrelaunch
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "DoNotUpdateToEdgeWithChromium" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate" /v "InstallDefault" /t REG_DWORD /d 0 /f
 echo Delete Edge shortcuts
-del C:\Users\%USERNAME%\Desktop\edge.lnk /f
-del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\edge.lnk /f
-del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\edge.lnk
+del C:\Users\%USERNAME%\Desktop\edge.lnk /f /q
+del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\edge.lnk /f /q
+del C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\edge.lnk /f /q
 echo Done!
 pause
 goto :misc
