@@ -727,13 +727,6 @@ powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.MixedReal
 echo Communication Apps
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*microsoft.windowscommunicationsapps*' | Remove-AppxPackage"
 
-echo Secure Assessment
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Windows.SecureAssessmentBrowser*' | Remove-AppxPackage"
-
-echo Advertising.Xaml
-powershell -ExecutionPolicy Unrestricted "Get-AppxPackage  '*Microsoft.Advertising.Xaml*' | Remove-AppxPackage"
-
-:: Xbox?
 echo Gaming App
 powershell -ExecutionPolicy Unrestricted "Get-Appxpackage -AllUsers '*Microsoft.GamingApp*' | Remove-AppxPackage"
 
