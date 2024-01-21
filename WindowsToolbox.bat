@@ -16,7 +16,7 @@ echo - Type 9 to disable Windows Defender (not recommended)
 echo - Type 10 to enable Windows Defender
 echo - Type 11 to disable power savings (recommended only for desktops)
 echo - Type 12 for UI improvements (recommended)
-echo - Type 13 to apply STIGs (recommended for volintile environments (forensics, Government, banking etc))
+echo - Type 13 to implement STIGs (recommended for volintile environments (forensics, Government, banking etc))
 echo - Type exit to exit
 set /p message1=
 if %message1% == 1 goto :UpdateRemoval
@@ -2330,6 +2330,6 @@ echo Limit cache of logon credentials
 reg add  "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "CachedLogonsCount" /t REG_DWORD /d 8 /f
 echo Increase default permissions of global system objects
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t REG_DWORD /d 1 /f
-echo Finished STIG implentation
+echo Finished STIG implementation
 pause
 goto :menu
