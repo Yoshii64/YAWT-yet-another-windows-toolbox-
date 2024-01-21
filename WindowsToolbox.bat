@@ -432,8 +432,6 @@ NET STOP dmwappushservice
 sc config dmwappushservice start= disabled
 echo Allow Cortana
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
-goto :Debloat1
-:Debloat1
 echo Disabling/deleting Services
  :: big thanks Nyne lol
  wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
@@ -1707,8 +1705,6 @@ echo Block unsigned fonts
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\MitigationOptions" /v "MitigationOptions_FontBocking" /t REG_QWORD /d "1000000000000" /f
 echo mitigate msdt
 reg delete HKEY_CLASSES_ROOT\ms-msdt /f
-goto :aftersecurity
-:aftersecurity
 set /p Hibernation= Do you want to disable hibernation? (y/n)
 if %Hibernation%==y powercfg /h off >nul
 if %Hibernation%==n goto :QuestionLol
