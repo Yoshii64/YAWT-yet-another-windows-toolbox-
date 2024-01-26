@@ -1524,7 +1524,10 @@ dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Client" /NoRestart
 dism /Online /Disable-Feature /FeatureName:"SMB1Protocol-Server" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"Windows-Defender-Default-Definitions" /NoRestart
 DISM /Online /Disable-Feature /FeatureName:"WorkFolders-Client" /NoRestart
-
+echo Remove Capabilities
+PowerShell -ExecutionPolicy Unrestricted -Command "Get-WindowsCapability -Online -Name 'Tools.DeveloperMode.Core*' | Remove-WindowsCapability -Online"
+PowerShell -ExecutionPolicy Unrestricted -Command "Get-WindowsCapability -Online -Name 'Analog.Holographic.Desktop*' | Remove-WindowsCapability -Online"
+PowerShell -ExecutionPolicy Unrestricted -Command "Get-WindowsCapability -Online -Name 'Rsat.WSUS.Tools*' | Remove-WindowsCapability -Online"
 
 
 
