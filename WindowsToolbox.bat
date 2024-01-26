@@ -430,8 +430,11 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Pro
 echo Disable keylogger service
 NET STOP dmwappushservice
 sc config dmwappushservice start= disabled
-echo Allow Cortana
+echo Disallow Cortana
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f
+echo If Cortana is enabled again, do not allow it any user data access
+NET STOP AarSvc
+sc config AarSvc start= disabled
 echo Disabling/deleting Services
  :: big thanks Nyne lol
  wevtutil set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false
@@ -554,6 +557,8 @@ goto :afterBluetooth
 echo CryptSvc
 sc config CryptSvc start= disabled
 NET STOP CryptSvc
+echo cldflt
+sc config cldflt start= disabled
 echo diagsvc
 sc config diagsvc start= disabled
 NET STOP diagsvc
@@ -1381,6 +1386,17 @@ echo Blocking telemetry IP addresses...
 curl -l -s https://winhelp2002.mvps.org/hosts.txt -o %SystemRoot%\System32\drivers\etc\hosts.temp
 if exist %SystemRoot%\System32\drivers\etc\hosts.temp (
     cd %SystemRoot%\System32\drivers\etc
+    echo # [added by YAWT] >> hosts.temp
+    echo 0.0.0.0 telemetry.microsoft.com >> hosts.temp
+    echo 0.0.0.0 sqm.telemetry.microsoft.com >> hosts.temp
+    echo 0.0.0.0 sqm.telecommand.telemetry.microsoft.com >> hosts.temp
+    echo 0.0.0.0 watson.telemetry.microsoft.com >> hosts.temp
+    echo 0.0.0.0 wdcp.microsoft.com >> hosts.temp
+    echo 0.0.0.0 wer.microsoft.com >> hosts.temp
+    echo 0.0.0.0 www.powershellgallery.com >> hosts.temp
+    echo 0.0.0.0 vortex.data.microsoft.com >> hosts.temp
+    echo 0.0.0.0 wer.microsoft.com >> hosts.temp
+    echo # End of HOSTS config >> hosts.temp
     del /f /q hosts
     ren hosts.temp hosts
 )
