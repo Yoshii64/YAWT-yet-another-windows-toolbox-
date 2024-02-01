@@ -111,6 +111,8 @@ goto :menu
 :cleartemp
 cls
 echo Clearing uneeded files...
+reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\SideBySide\Configuration" /v "DisableResetbase" /t "REG_DWORD" /d "0" /f
+dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
 del /s /f /q %windir%\temp\*.*
 del /s /f /q %temp%\*.*
 cd C:\Windows\SoftwareDistribution\Download
