@@ -240,18 +240,11 @@ goto :misc
 :OneDriveuninstall
 echo Uninstalling OneDrive
 echo Killing OneDrive processes...
-IF EXIST %SystemRoot%\System32\OneDriveSetup.exe (
-    echo Uninstalling OneDrive
-    taskkill /f /im OneDrive.exe
-    %SystemRoot%\System32\OneDriveSetup.exe /uninstall
-    rmdir /q /s "%ProgramData%\Microsoft OneDrive"
-    rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
-    echo done
-)
-else (
-    echo OneDrive not installed.
-    timeout 5
-)
+taskkill /f /im OneDrive.exe
+%SystemRoot%\System32\OneDriveSetup.exe /uninstall
+rmdir /q /s "%ProgramData%\Microsoft OneDrive"
+rmdir /q /s "%LOCALAPPDATA%\Microsoft\OneDrive"
+echo done
 echo Prevent auto reinstallation (or updating) of OneDrive
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run\OneDriveSetup" /f
 goto :misc
