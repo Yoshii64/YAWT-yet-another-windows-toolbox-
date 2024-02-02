@@ -1236,8 +1236,6 @@ powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageNam
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingCore*' | Remove-WindowsPackage -Online"
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl*' | Remove-WindowsPackage -Online"
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingDumpTypeControl-Deployment*' | Remove-WindowsPackage -Online"
-powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingPowershell*' | Remove-WindowsPackage -Online"
-powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-ErrorReportingUI*' | Remove-WindowsPackage -Online"
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-CourtesyEngine*' | Remove-WindowsPackage -Online"
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient*' | Remove-WindowsPackage -Online"
 powershell -ExecutionPolicy Unrestricted "Get-WindowsPackage -Online -PackageName '* Microsoft-Windows-Feedback-DeploymentMgrClient-Desktop-TaskSch*' | Remove-WindowsPackage -Online"
