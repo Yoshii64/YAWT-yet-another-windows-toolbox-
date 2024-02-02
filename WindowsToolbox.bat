@@ -440,6 +440,9 @@ echo Disabling/deleting Services
  reg add "HKLM\SYSTEM\CurrentControlSet\Services\Telemetry" /v "Start" /t REG_DWORD /d 4 /f
  echo SMB 1.x MiniRedirector
  reg add "HKLM\SYSTEM\CurrentControlSet\Services\mrxsmb10" /v "Start" /t REG_DWORD /d 4 /f
+ echo Disable RSoP Logging
+ :: RSoP gathers GPO and creates a report off of it
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "RSoPLogging" /t REG_DWORD /d 0 /f
  echo DiagTrack
  sc config "DiagTrack" start= disabled
  NET STOP DiagTrack
@@ -597,6 +600,9 @@ NET STOP luafv
 echo MSDTC
 sc config MSDTC start= disabled
 NET STOP MSDTC
+echo Ndu (Windows Network Data Usage)
+sc config Ndu start= disabled
+NET STOP Ndu
 echo PcaSvc
 sc config PcaSvc start= disabled
 NET STOP PcaSvc
@@ -1801,6 +1807,8 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsof
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting" /v "DisableGenericRePorts" /t REG_DWORD /d 1 /f
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Reporting" /v "WppTracingLevel" /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\AppHVSI" /v "AuditApplicationGuard" /t REG_DWORD /d 0 /f
+echo Disable App Control Guard
+reg add "HKLM\SYSTEM\ControlSet001\Control\CI\Policy" /v "VerifiedAndReputablePolicyState" /t REG_DWORD /d 0 /f
 echo Remove Defender packages
 echo Windows-Defender-Group-Policy-Deployment-LanguagePack
 powershell -ExecutionPolicy Unrestricted "Get-AppxPackage -AllUsers -Name Windows-Defender-Group-Policy-Deployment-LanguagePack | ForEach-Object { $_.Name }"
@@ -1920,6 +1928,8 @@ reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v
 reg add "HKLM\Software\Policies\Microsoft\Windows Defender\Signature Updates" /v "CheckAlternateDownloadLocation" /t REG_DWORD /d "1" /f
 echo Enable SmartScreen
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f
+echo Enable App Control Guard
+reg add "HKLM\SYSTEM\ControlSet001\Control\CI\Policy" /v "VerifiedAndReputablePolicyState" /t REG_DWORD /d 1 /f
 echo Enable the reinstallation of Defender
 reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.Windows.SecHealthUI_cw5n1h2txyewy" /f
 echo Done!
